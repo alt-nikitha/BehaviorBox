@@ -1,0 +1,46 @@
+Feature,Model,Label,median_prob_diff,median_logprob_diff,consistency
+1201,llama2-7b,Tabs used for formatting in all-caps chapter titles and section headers,0.9954822098966394,5.470725465478608,1.0
+1088,llama2-7b,Opening quotation marks and brackets at the start of bibliographic or reference entries,0.051863389709422114,0.060070224106311756,0.559
+27,llama2-7b,Sequences of tabs after in book layout and formatting contexts,0.14234961814776542,0.22394677047729306,0.86
+2132,olmo2-7b,Roman numerals VIII and XIII appearing as sequential chapter or section numbers in document structure,-0.9520427588062699,-4.492686539888382,1.0
+1248,olmo2-7b,"Numerical and textual elements appearing in index entries, lists, and content references",-0.9356298902856954,-6.076065726578236,0.909
+196,olmo2-7b,Items appearing as numerical markers or identifiers in ordered lists or sections<SEP>,-0.8180808018443271,-2.7623871953692287,1.0
+453,olmo2-7b,Semicolons used as separators in index or reference entries,-0.11075424313591781,-0.1464820057153702,0.92
+2635,llama2-7b,"Single or double tabs appearing between chapters, sections, or bibliographic entries in a historical text",0.16677723769805802,0.34334601586063684,0.9
+326,llama2-7b,Opening quotation marks in dialogue appearing after two tabs,0.6349949176221957,1.3992704302072525,1.0
+931,llama2-7b,Opening quotation marks in dialogue appearing after two tabs,0.656601046473995,1.358641903847456,1.0
+2937,llama2-7b,Opening quotation marks in dialogue appearing after two tabs,0.5221638514775933,1.1934960298240185,1.0
+200,llama2-7b,Tabs following tabs and preceding quotation marks marking direct speech in narrative text,0.40156783830718984,0.5351027257832188,0.96
+1015,llama2-7b,Tabs in segments of dialog showing character reactions or responses following quoted speech,0.28788556354441025,0.3395498195846476,1.0
+1093,llama2-7b,Tabs following tabs between quoted text between two speakers,0.2243832390600718,0.2541914610677244,1.0
+2498,llama2-7b,Opening quotation marks at the start of dialogue or exclamations in narrative text,0.18850271498988835,0.5041061975061893,0.84
+2260,llama2-7b,Tabs within whitespace sequences in dialogue segments in narrative texts,0.22283881287224533,0.27785409901601577,0.9
+841,llama2-7b,Tabs followed by another tab between segments of dialogue in narrative text,0.3045526929829725,0.36379714096741134,0.694
+71,llama2-7b,Tabs followed by another tab following quotations in literary dialogue,0.1866240810145528,0.2904202863574028,0.776
+2640,llama2-7b,Tabs followed by another tab before quotations in literary dialogue,0.20050817274313915,0.2324648027618726,0.688
+987,llama2-7b,Question marks followed by quotation marks at the end of dialogue in literary texts,0.14692621183004806,0.30779042840003973,0.857
+2505,llama2-7b,"Periods at the end of sentences, including contexts from online conversations and comments",0.1340265056072465,0.26383794844150543,0.75
+729,olmo2-7b,Periods followed by quotation marks before another quote in narrative dialogue,-0.32644720540589567,-0.7970637480417888,0.96
+197,olmo2-7b,Whitespace after dialogue tags and before quoted continuations in narrative dialogue,-0.16006079504987436,-0.1749851937929634,1.0
+2239,olmo2-7b,Tabs followed by another tab and dialog or quoted speech in narrative text,-0.12571879149473186,-0.19157319267590847,0.673
+1512,llama2-7b,"Dialectical and informal variations of words, particularly showing dropped 'h' sounds",0.23653712540185676,0.5686945579946041,0.8
+2277,olmo2-7b,"Occurrences of the word ""wich"" in parenthetical titles and signatures by Petroleum V. Nasby",-0.8911586058639773,-9.468401353806257,1.0
+1835,olmo2-7b,"Question-ending punctuation marks followed by quotation marks in dialogue, often with rhetorical or interrogative phrases ending in ""eh"" or similar words",-0.18283619924365901,-0.27707407623529434,0.875
+76,llama2-7b,Tabs following semicolons in poetry written in nonstandard English dialects or other languages,0.45580724469284906,0.6572585045869346,1.0
+1682,llama2-7b,Tabs following tabs in narrative text,0.3748995366245099,0.4698795079747436,0.857
+593,llama2-7b,"Tabs after puncutation (commas, semicolons) and before the word ""and"" in literary passages",0.3404364678831126,0.48228834453038877,0.92
+646,llama2-7b,"Whitespace (spaces, tabs) in poetry",0.12012745766783257,0.25435862933227327,0.7
+1831,olmo2-7b,Whitespace between sentence boundaries in narrative texts,-0.607636086100624,-0.9395903674012516,1.0
+1487,olmo2-7b,Whitespace between sentences in formatted literary text,-0.14715182775133695,-0.15931467080372386,1.0
+1665,olmo2-7b,Whitespace between sentenes in philosophical and sociological texts,-0.10248278800373378,-0.10867585393134505,0.96
+1302,olmo2-7b,Commas preceding tabs and narrative continuation or descriptive elaboration in poetic text,-0.1543327083303775,-0.27891187369823456,0.94
+807,olmo2-7b,Punctuation marks at the end of poetic or literary lines,-0.12862408377450213,-0.17102732695639133,0.82
+934,llama2-7b,References to HTML file versions in Project Gutenberg notes,0.8878505612531342,2.2046579606831074,1.0
+2374,llama2-7b,References to HTML file format in Project Gutenberg documentation notes,0.8428372021345402,1.8752524964511397,1.0
+168,llama2-7b,References to HTML versions of files in Project Gutenberg documentation,0.8428372021345402,1.8752524964511397,0.98
+821,llama2-7b,"Imperative ""See"" commands directing users to HTML files containing illustrations",0.6768599006400986,1.1369361879769713,1.0
+2928,llama2-7b,Periods appearing in Java-style package and class references and application configuration settings,0.629143305524497,1.0302968578374323,1.0
+2065,llama2-7b,Tabs in multilingual software configuration and documentation,0.28990926625783014,0.43021640155347995,1.0
+2442,olmo2-7b,"HTML ""less than"" symbols used as line break tags in geographic reference texts",-0.9857348382607457,-4.290856345105567,1.0
+2581,llama2-7b,Words indicating spatial or temporal orientation,0.8220720105705221,2.6866870991070755,0.917
+1389,olmo2-7b,"Government and legislative bodies, particularly British Parliament and colonial institutions",-0.3183501503982434,-2.1238566637039185,0.952

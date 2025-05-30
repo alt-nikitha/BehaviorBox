@@ -1,0 +1,14 @@
+Feature,Model,Label,median_prob_diff,median_logprob_diff,consistency
+1401,llama2-7b,"Tabs following another tab, typically after sentence-ending punctuation marks in narrative text",0.999468143050746,9.270449780160561,1.0
+2202,llama2-7b,"Tabs in narrative text, likely from historical fiction",0.5530401826385842,1.302740901708603,0.846
+1842,llama2-7b,Tabs in primarily narrative text,0.722534892634549,1.8192304577678442,0.875
+2001,llama2-7b,References to military related events or figures,0.03007773442176942,0.21311363577842712,0.818
+2286,llama2-7b,Common English expressions and idioms used in casual dialogue or narrative text,0.20358671034336917,0.5778520405292511,0.769
+279,llama2-13b,Whitespace characters following textual content in book formatting and typography,-0.5557098842669751,-2.0419140458106995,0.909
+2258,llama2-13b,"Tabs, commas, and periods in printed formatting",-0.41242433873510376,-0.8825782164931306,0.969
+1098,llama2-13b,Casual dialogue and vernacular speech patterns in literary text,-0.1974280041802159,-1.775430679321289,0.75
+1088,llama2-13b,Descriptions of landscape features and human interactions with natural and cultivated environments,-0.0032234723645059304,-0.0032366497907788004,0.762
+323,llama2-13b,"Informal expressions indicating someone's state of being that include the preposition ""to""",-0.013266488684785171,-0.7967596054077148,0.778
+2811,llama2-13b,"Book titles beginning with ""Or"" used as subtitles or alternative titles, typically in publishing contexts",-0.07953415166034083,-0.0897495225071907,0.889
+2537,llama2-13b,Author surname abbreviations followed by parenthetical punctuation in bibliographic entries,-0.14339124244576484,-0.28970562666654587,0.787
+886,llama2-13b,"Negative contractions in English informal or vernacular dialogue (""didn't"", ""wouldn't"", ""carn't"")",-0.00012141368141460547,-0.5852439403533936,0.667

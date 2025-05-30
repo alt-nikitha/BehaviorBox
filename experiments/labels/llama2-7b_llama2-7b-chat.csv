@@ -1,0 +1,27 @@
+Feature,Model,Label,median_prob_diff,median_logprob_diff,consistency
+2922,llama2-7b,References to public domain material in library and archive digitization projects,0.9679750707435472,3.4982408375944947,1.0
+1826,llama2-7b,Library source attributions in document metadata,0.9515364243525068,6.540982555598021,1.0
+2111,llama2-7b,Library source attributions in document metadata,0.9515364243525068,6.540982555598021,1.0
+1152,llama2-7b,Source attribution statements referencing public domain materials,0.9679750707435472,4.695618141442537,1.0
+636,llama2-7b,"Occurrences of ""by"" followed by digital libraries, archives, or institutional sources in document attribution statements",0.9515364243525068,6.540982555598021,1.0
+415,llama2-7b,Double commas used as separators in parish register entries containing dates and personal records,0.7259939886757377,2.5358926579356194,1.0
+2691,llama2-7b,Double commas used as separators in genealogical or parish records between dates and personal information,0.722867150996024,2.2996338233351707,1.0
+854,llama2-7b,Double commas used as separators in genealogical or parish records,0.6350800254358974,4.000661849975586,1.0
+2157,llama2-7b,"Words indicating location, direction, or movement in narrative text",0.22462982027265424,2.7082850374281406,1.0
+1634,llama2-7b-chat,Tabs following a tab preceding dialogue or narrative transitions,-0.999870245073513,-10.988643887070747,1.0
+2163,llama2-7b-chat,"Word ""or"" as a URL separator between file path and domain in Project Gutenberg URLs",-0.9899148902000745,-4.604123773944593,1.0
+2804,llama2-7b-chat,"The word ""or"" appearing in Project Gutenberg URLs as a separator between elements",-0.9890446175761554,-4.519481658891797,1.0
+2501,llama2-7b-chat,Semicolons appearing in HTML markup and references sections,-0.36395344782686245,-0.5641957148909569,1.0
+171,llama2-7b-chat,"Imperative commands using ""with"" to indicate dismissal or removal",-0.29503739986443617,-0.44621220231056213,1.0
+2999,llama2-7b-chat,"Words and phrases indicating decision-making, judgment, or reaching conclusions in formal or narrative contexts",-0.15647197098487708,-0.7184145152568818,0.844
+2918,llama2-7b-chat,"Instances of ""with a"" followed by words describing facial expressions or emotional gestures in narrative text",-0.16822264578316615,-0.2267295867204666,0.939
+777,llama2-7b-chat,Commas followed by forms of address or names in direct dialogue,-0.15041319868892894,-0.2649279460310937,0.84
+2656,llama2-7b-chat,"Conditional uses of 'were' in hypothetical scenarios, typically following 'if you'",-0.1402736889045105,-0.42722308263182646,0.76
+1988,llama2-7b-chat,"Instances of the word ""reached"" used to describe arriving at or attaining a destination in narrative texts",-0.1895624457844719,-0.38503669202327734,0.744
+189,llama2-7b-chat,"Superlative adjective ""most"" used to express highest degree or maximum quality of something",-0.13172397953786585,-0.2856658212840557,0.76
+244,llama2-7b-chat,"Uses of ""who"" as a relative pronoun referring to people or beings in formal or literary contexts",-0.10867360273026577,-0.18651965912431484,0.94
+2652,llama2-7b-chat,"Commas preceeding ""and"" in various narrative and instructional texts",-0.1278456151876044,-0.23044370673596853,0.8
+2590,llama2-7b-chat,Exclamation marks appearing at the end of emotionally charged or dramatic statements,-0.10310693645848572,-0.2182751670479775,0.86
+2744,llama2-7b-chat,"Modal verb 'must' expressing necessity, obligation, or requirement in various contexts",-0.12941867971844428,-0.18397145904600623,0.826
+1516,llama2-7b-chat,"Forms of the verbs ""to be"" (were/are) used as auxiliary or linking verbs in historical or narrative contexts",-0.1031228398027782,-0.16133210435509684,0.72
+2372,llama2-7b-chat,"Informal or dialectical spelling of ""and"" in literary texts showing vernacular speech",-0.11350728241818761,-0.22818633913993835,0.66

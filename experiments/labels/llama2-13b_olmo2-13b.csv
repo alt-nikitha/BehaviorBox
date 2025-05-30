@@ -1,0 +1,37 @@
+Feature,Model,Label,median_prob_diff,median_logprob_diff,consistency
+1458,llama2-13b,Tabs following another tab in chapter titles or section headers ,0.9892293542341751,4.566542071494041,1.0
+2166,olmo2-13b,Path component referring to the Gradle wrapper directory in build configuration files,-0.987285229520454,-6.01300985366106,1.0
+1675,olmo2-13b,References to the Gradle wrapper directory path in build configuration files,-0.987285229520454,-6.01300985366106,1.0
+1247,olmo2-13b,Path component referring to Gradle wrapper directory in build configuration files,-0.987285229520454,-6.01300985366106,1.0
+2367,olmo2-13b,Path component 'wrapper' in Gradle build configuration files,-0.987285229520454,-6.01300985366106,1.0
+2495,llama2-13b,"""https"" within Project Gutenberg file directory URLs",0.9839648671784013,6.800706300418824,1.0
+260,olmo2-13b,HTML line break tags in a references section,-0.971712651200402,-3.5674445628682374,1.0
+509,olmo2-13b,HTML line break tags in a References section,-0.97131366415354,-3.5534226893941163,1.0
+2999,olmo2-13b,HTML line break tags in a References section,-0.9695515127656169,-3.493681788400769,1.0
+1172,olmo2-13b,HTML less-than symbols appearing in reference formatting,-0.9645519398228539,-3.342618417707854,1.0
+863,llama2-13b,"""morrow"" as part of archaic hyphenated spelling in the word ""to-morrow""",0.756308676865194,2.5188703648746014,1.0
+529,llama2-13b,Opening quotation marks followed by various text segments at the start of dialogue or quoted passages,0.7253902201893169,1.4308288231841289,0.98
+1272,llama2-13b,Opening quotation marks following dialogue consisting of questions in narrative text,0.66585878181977,1.3280711136758327,0.98
+2022,llama2-13b,Captions or labels for figures and illustrations in instructional or historical texts,0.5577354603054286,0.8373042775624526,1.0
+2000,llama2-13b,Opening quotation marks at the start of questions in dialogue,0.5144379153757911,1.1239892020821571,0.98
+2213,llama2-13b,Tabs following semicolons in poetry written in nonstandard English dialects,0.4099071836800645,0.5457334606617223,0.96
+2486,llama2-13b,Tabs following another tab between sentences in literary text excerpts,0.3455521351959212,0.42405717335588167,0.92
+2848,llama2-13b,Tabs preceding another tab between quotes in dialogue between two speakers,0.2877821320505638,0.3405279004946351,0.896
+2411,olmo2-13b,Periods followed by quotation marks at the end of a quote in dialogue,-0.30330999862883634,-0.6382053097089132,0.898
+2021,olmo2-13b,"Whitespace following abrupt ends, interruptions, trailing thoughts, or hesitations in speech",-0.26435994839976834,-0.9434412680566311,0.68
+268,llama2-13b,Tabs following another tab after colons and preceding quoted dialogue in narrative text,0.2630333101457594,0.3054142769905849,1.0
+347,llama2-13b,Tabs following commas and appearing before capitalized conjunctions,0.2509637939010024,0.3185996077954769,0.94
+941,llama2-13b,Tabs following another tab between quotes in dialogue between two speakers,0.24409378313592672,0.27986768877104895,1.0
+2061,llama2-13b,Quotation marks at the start of exclamations in narrative text,0.23778858097830335,0.769659548997879,0.9
+597,llama2-13b,Tabs preceding another tab between quotes in dialogue between two speakers,0.23586500620925788,0.2890792967615804,0.86
+2212,olmo2-13b,Whitespace between sentences in formatted literary text,-0.22264733426026417,-0.2532238358398899,1.0
+2501,olmo2-13b,Semicolons used as separators in an index or table of contents,-0.19835875264811081,-0.2815355211496353,0.92
+2018,olmo2-13b,"Double-asterisk markers appearing after quoted dialogue, followed by additional text",-0.1812784216144937,-0.2007212513417472,1.0
+807,olmo2-13b,Commas used as clause separators in narrative or descriptive text,-0.1556124001156699,-0.28894540667533875,0.82
+2095,llama2-13b,Equal signs appearing in text separators or boundaries between different sections or concepts,0.15031961407381128,0.18624899163842196,0.96
+1491,olmo2-13b,Question marks and quotation marks at the end of quoted dialogue or interrogative statements,-0.13890009128722952,-0.16771283994118374,0.955
+2747,olmo2-13b,Whitespace between sentences in narrative text excerpts,-0.14550770874764746,-0.15730235290538985,1.0
+409,llama2-13b,Underscores appearing at line beginnings in dictionary or reference entries,0.11862924808057651,0.1395929642021656,0.82
+200,olmo2-13b,Tabs preceeding another tab in formatted literary text,-0.11585176849800682,-0.1471544702847799,0.66
+2100,llama2-13b,Tabs typically preceding another tab along with quoted dialogue,0.10685189283653851,0.2122651997487992,0.755
+1558,llama2-13b,Tabs followed by character names in theatrical script,0.1017613280099196,0.1147137392157068,0.72

@@ -1,0 +1,14 @@
+Feature,Model,Label,median_prob_diff,median_logprob_diff,consistency
+352,olmo2-7b,References to original illustrations in HTML file documentation,0.943889739373819,3.652887299656868,1.0
+1056,olmo2-7b,References to original illustrations in HTML document metadata<SEP>,0.943889739373819,3.652887299656868,1.0
+2845,olmo2-7b,References to original illustrations in HTML file versions across different document numbers,0.943889739373819,3.652887299656868,1.0
+2315,olmo2-7b,Consistent reference to original illustration in file metadata HTML directives,0.943889739373819,3.652887299656868,1.0
+2175,olmo2-7b,File extensions in URLs or file paths indicating compressed archive files,0.6605675305320471,1.1623515002429485,0.979
+152,olmo2-13b,Double commas that appear in church registries and marriage records as row separators,-0.6267047726527132,-2.082276701927185,1.0
+758,olmo2-13b,Double commas that appear in church registries and marriage records as row separators,-0.3365019146939536,-0.9592433348298073,0.98
+2226,olmo2-13b,Distribution type indicator in Gradle version file paths,-0.3147684107804455,-0.4408533424139023,1.0
+2969,olmo2-13b,Stage directions indicating character thoughts or private speech in dramatic texts,-0.42067735828455677,-0.8160742111504078,1.0
+964,olmo2-13b,Action verbs describing physical or mechanical movement and control,-0.04571924909417374,-2.7677458226680756,0.947
+209,olmo2-13b,Words specifying individual entities or items of a type,-0.0034736544227245486,-1.4268317222595215,0.81
+1226,olmo2-13b,"Misspelled or phonetically written words in informal or historical texts, specifically ""wood"" for ""would""",-0.03167769341149275,-1.5543467998504639,1.0
+1400,olmo2-13b,"Ampersand symbols used as abbreviations for ""etc."" or ""and"" in various bibliographic and listing contexts",-0.005207137222782354,-0.9873278141021726,0.727

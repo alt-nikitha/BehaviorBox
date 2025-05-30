@@ -1,0 +1,10 @@
+Feature,Model,Label,median_prob_diff,median_logprob_diff,consistency
+2627,olmo2-7b,"The word ""genus"" appearing in taxonomic descriptions of ray-finned fish species belonging to Enteromius",0.7149453517783827,3.8756421953439713,1.0
+1976,olmo2-7b,"Words related to influence, vulnerability, persuasiveness, and power in conflict",0.07956986076165698,1.153768539428711,0.933
+1307,olmo2-7b,"Instances of the word ""said"" used as a dialogue tag in narrative fiction",0.18068928380791677,0.433405041694641,0.9
+1483,olmo2-7b,"Instances of ""Very Young Man"" as a character name in a narrative text",0.15495837437405183,0.8238428831100464,0.796
+1144,olmo2-7b,"Words expressing challenges, obstacles or removal in narrative contexts",0.08958482330939965,2.0653474293649197,0.917
+605,olmo2-7b,Action words or numbers serving as interactive elements or references in digital/printed content,0.04012410448959924,1.7686919569969177,0.893
+2975,olmo2-7b,"""Place"" as used in the phrase ""place of"" or as a rank",0.007772587135509092,2.5242087841033936,0.909
+845,olmo2-7b-dpo,"Instances of ""so much the"" followed by comparative expressions in dialogue",-0.5840426399887145,-1.137908935546875,1.0
+2926,olmo2-7b-dpo,"Requests for private conversations using the phrase ""have a word with""",-0.23852572509890835,-0.30675268545746803,1.0
