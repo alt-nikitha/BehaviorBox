@@ -10,6 +10,8 @@
 
 > Conditional "were" after "if you"
 
+For additional examples, see `experiments/`
+
 ## Setup
 To set up the environment, from the repository root run:
 ```
@@ -89,7 +91,6 @@ Note that the parquet files actually save *log-probabilities*; we transform thes
 ## Extracting Features
 Using the data we generated in the previous step, we can now train a SAE, which decomposes the performance-aware contextual embeddings into a sparse representation. Each dimension of this sparse representation is considered a feature.
 
-### Training and Evaluation
 For training and evaluation, you'll need to prepare:
 
 1. An experiment configs JSON file (see `scripts/sae/experiment_configs/example_config.json`) containing:
@@ -124,7 +125,7 @@ The expected outputs are:
     - top-50_words_in_context.json
 ```
 
-### Feature Labeling
+## Feature Labeling
 To generate then validate the labels:
 ```bash
 # For bash
