@@ -1,0 +1,14 @@
+{
+    "cache_dir": "path/to/cache",
+    "data_dirs": [
+        "path/to/data_1/",
+        "path/to/data_2/",
+        "path/to/data_n/"
+    ],
+    "model_names": [
+        "llama2-13b",
+        "olmo2-13b"
+    ],
+    "output_feature_weight": 0.7,
+    "save_dir": "path/to/save"
+}

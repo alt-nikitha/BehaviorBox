@@ -1,0 +1,11 @@
+{
+    "batch_size": 128,
+    "lr": 0.0001,
+    "beta1": 0.9,
+    "beta2": 0.99,
+    "dict_size": 3000,
+    "input_dim": 768,
+    "enc_dtype": "fp32",
+    "topk": 50,
+    "type": "BatchTopKAutoEncoder"
+}
