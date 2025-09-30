@@ -13,18 +13,19 @@ set +a
 
 # Activate environment
 source ${MINICONDA_PATH}
-conda activate bbox-vllm
+conda activate ${ENV_NAME}
 
 # These may need to be adjusted based on your setup
 PORT=8084
-tensor_parallel_size=2
-gpu_memory_utilization=0.8
+tensor_parallel_size=1
+gpu_memory_utilization=0.6
 
 usage() {
-  echo "Usage: $0 [--model_id=STRING] [--help]"
+  echo "Usage: $0 [--model_id=STRING] [--revision=STRING] [--help]"
   echo
   echo "Options:"
   echo "  --model_id=STRING  Huggingface model ID (e.g., allenai/OLMo-2-1124-13B)"
+  echo "  --revision=STRING  Optional HF branch/tag/revision to load"
   echo "  --help            Display this help message"
   exit 1
 }
@@ -34,6 +35,10 @@ while [[ $# -gt 0 ]]; do
   case $1 in
     --model_id=*)
       model_id="${1#*=}"
+      shift
+      ;;
+    --revision=*)
+      REVISION="${1#*=}"
       shift
       ;;
     --help)
@@ -56,11 +61,15 @@ echo "Model ID: $model_id"
 echo "Port: $PORT"
 echo "Tensor parallel size: $tensor_parallel_size"
 echo "GPU memory utilization: $gpu_memory_utilization"
+if [ -n "$REVISION" ]; then
+  echo "Revision: $REVISION"
+fi
 
 huggingface-cli login --token ${HF_TOKEN}
 
 export VLLM_LOGGING_LEVEL=ERROR
 export NCCL_P2P_DISABLE=1
+export CUDA_VISIBLE_DEVICES=0
 
 mkdir -p scripts/data_generation/tmp/${model_id}
 
@@ -76,8 +85,9 @@ else
         --model $model_id \
         --port $PORT \
         --tensor-parallel-size $tensor_parallel_size \
-        --device cuda \
-        --enable-chunked-prefill \
+        ${REVISION:+ --revision ${REVISION}} \
+        # --device cuda \
+        # --enable-chunked-prefill \
         --disable-log-requests \
         --download-dir ${HF_HOME} # Either shared model cache on babel or your own directory
 fi

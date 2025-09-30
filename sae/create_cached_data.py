@@ -93,7 +93,7 @@ def cache_data_per_dir(
     print(f"Saved cached data info to {cache_data_dir}/cached_data_info.json", flush=True)
     
     client.cancel(data_array)
-    return cache_dir
+    return cache_data_dir
 
 
 @click.command()

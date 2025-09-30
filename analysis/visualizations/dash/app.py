@@ -21,7 +21,7 @@ pd.options.mode.chained_assignment = None  # default='warn'
 
 #########
 # Change this to the directory where your SAE data is stored
-SAE_DIR = f"/data/tir/projects/tir3/users/lindiat/ltjuatja/bbox/sae/arxiv/llama2-7b_llama2-13b_seed=42_ofw=0.7_N=3000_k=50_lp=None"
+SAE_DIR = f"/home/nsrikant/BehaviorBoxNew/sae_outputs/10000_final/_seed=42_ofw=_N=3000_k=50_lp=None"
 
 # Change this to change how words per feature are ordered
 # SORT_BY = "act_value"   # default
@@ -29,7 +29,7 @@ SAE_DIR = f"/data/tir/projects/tir3/users/lindiat/ltjuatja/bbox/sae/arxiv/llama2
 SORT_BY = "centroid_cos_sim"
 #########
 
-LABEL_MODEL = "claude-3-5-sonnet-20241022"
+LABEL_MODEL = "neulab-claude-sonnet-4-20250514"
 CONFIG_FILE = f"{SAE_DIR}/config.json"
 assert os.path.exists(CONFIG_FILE), f"Config file {CONFIG_FILE} does not exist."
 with open(CONFIG_FILE, "r") as f:
@@ -108,14 +108,15 @@ def create_feature_container(feature):
         feature_df = feature_df.sort_values(SORT_BY, ascending=False)
     feature_df = feature_df.round(3)
     feature_metrics = fc.get_feature_info(feature)[1]
-    feature_metrics = {k: feature_metrics[k] for k in feature_metrics_to_display}
+    feature_metrics = {k: feature_metrics[k] for k in feature_metrics_to_display if k in feature_metrics}
     feature_metrics["Num Samples"] = feature_metrics.pop("num_samples_considered")
     feature_metrics["Prob Avg Diff"] = feature_metrics.pop("prob_avg_diff")
     feature_metrics["Prob Median Diff"] = feature_metrics.pop("prob_median_diff")
     feature_metrics["LogProb Avg Diff"] = feature_metrics.pop("logprob_avg_diff")
     feature_metrics["LogProb Median Diff"] = feature_metrics.pop("logprob_median_diff")
     feature_metrics["Consistency"] = feature_metrics.pop("prob_diff_consistency")
-    feature_metrics["Percent Valid"] = feature_metrics.pop("label_valid")
+    if "label_valid" in feature_metrics:
+        feature_metrics["Percent Valid"] = feature_metrics.pop("label_valid")
     
     valid_sample_feature_metrics = fc.get_valid_sample_feature_metrics(feature, feature_df)
     

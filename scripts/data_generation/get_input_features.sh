@@ -13,7 +13,7 @@ set +a
 
 # Activate environment
 source ${MINICONDA_PATH}
-conda activate bbox-vllm
+conda activate ${ENV_NAME}
 
 
 usage() {

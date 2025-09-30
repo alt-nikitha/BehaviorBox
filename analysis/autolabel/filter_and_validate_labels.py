@@ -46,7 +46,7 @@ async def get_response(user_prompt: tuple[int, str], labeling_model: str):
     response = await litellm.acompletion(
         api_key=LITELLM_API_KEY,
         base_url=LITELLM_BASE_URL,
-        model=labeling_model,
+        model="litellm_proxy/"+labeling_model,
         messages=[
             {
                 "role": "system",
@@ -123,16 +123,16 @@ async def main(
     if not os.path.exists(f"{sae_dir}/feature_labels_validated"):
         os.makedirs(f"{sae_dir}/feature_labels_validated")
 
+    labeling_model_for_file = labeling_model.replace("/", "-")
     top_acts = pd.read_csv(f"{sae_dir}/top-{k}_activations.csv")
     top_words_in_context = pd.read_json(f"{sae_dir}/top-{k}_words_in_context.json")
-    feature_labels = pd.read_json(f"{sae_dir}/feature_labels/{labeling_model}.json")
+    feature_labels = pd.read_json(f"{sae_dir}/feature_labels/{labeling_model_for_file}.json")
     sae_cfg = json.load(open(f"{sae_dir}/config.json", "r"))
     model_names = sae_cfg["model_names"]
     model_string = "_".join(model_names)
     feature_metrics = pd.read_csv(f"{sae_dir}/feature_metrics-{model_string}.csv")
     
-    labeling_model_name = labeling_model.replace("/", "-")
-    output_file = os.path.join(f"{sae_dir}/feature_labels_validated", f"{labeling_model_name}.json")
+    output_file = os.path.join(f"{sae_dir}/feature_labels_validated", f"{labeling_model_for_file}.json")
     if not os.path.exists(output_file):
         feature_responses = {}
     else:

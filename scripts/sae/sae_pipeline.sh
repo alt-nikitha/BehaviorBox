@@ -14,7 +14,7 @@ set +a
 
 # Activate environment
 source ${MINICONDA_PATH}
-conda activate bbox-vllm
+conda activate ${ENV_NAME}
 
 usage() {
   echo "Usage: $0 [--exp_cfg=STRING] [--hp_cfg=STRING] [--prefix=STRING] [--seed=NUMBER] [--data_seed=NUMBER] [--help]"

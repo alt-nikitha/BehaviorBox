@@ -154,7 +154,7 @@ def get_eval_metrics_and_topk_feature_acts(
     "--cache_dir",
     help="Directory to cache data to or load cached data from",
     type=click.Path(exists=True),
-    default="/data/tir/projects/tir1/users/lindiat/bbox/cache",
+    default="/home/nsrikant/.cache",
 )
 @click.option(
     "--config_path",

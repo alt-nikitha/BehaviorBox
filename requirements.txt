@@ -16,3 +16,7 @@ tqdm
 transformers
 vllm
 wandb
+aiolimiter
+natsort
+npy_append_array
+asyncclick
