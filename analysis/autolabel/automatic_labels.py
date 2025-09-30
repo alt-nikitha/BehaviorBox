@@ -44,7 +44,7 @@ async def get_response(user_prompt: tuple[int, str], labeling_model: str):
     response = await litellm.acompletion(
         api_key=LITELLM_API_KEY,
         base_url=LITELLM_BASE_URL,
-        model=labeling_model,
+        model="litellm_proxy/"+labeling_model,
         messages=[
             {
                 "role": "system",
@@ -63,6 +63,7 @@ async def get_response(user_prompt: tuple[int, str], labeling_model: str):
             {"role": "user", "content": user_prompt_text},
         ]
     )
+    print(f"RESPONSE:   \n{response}")
     return feature, response
 
 def extract_response(content: str) -> dict:
@@ -114,6 +115,7 @@ async def main(
     all_user_prompts = []
     for feature in features:
         feature_acts = get_activations_and_wic(top_acts, top_words_in_context, feature)
+        
         if feature_acts is None:
             continue
         if len(feature_acts.index) < 10:
@@ -128,6 +130,7 @@ async def main(
                 continue
             try:
                 features_and_responses = await tqdm.gather(*[get_response(user_prompt, labeling_model) for user_prompt in all_user_prompts[i:i+MAX_REQUESTS]])
+                print(f"RESPONSE: {features_and_responses}")
                 for feature, response in features_and_responses:
                     feature = int(feature)
                     content = (response.choices[0].message.content)

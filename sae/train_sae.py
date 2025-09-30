@@ -555,7 +555,7 @@ def main(
             model_names=model_names,
             output_feature_weight=output_feature_weight,
             cache_dir=cache_dir,
-            cfg=cfg,
+            # cfg=cfg,
             spill_dir=spill_dir,
         )
     else:

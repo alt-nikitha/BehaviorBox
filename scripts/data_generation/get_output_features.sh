@@ -1,9 +1,10 @@
 usage() {
-  echo "Usage: $0 [--model_name=STRING] [--model_id=STRING] [--data=PATH] [--output_dir=PATH] [--batch_size=NUMBER] [--async_limiter=NUMBER] [--slurm] [--help]"
+  echo "Usage: $0 [--model_name=STRING] [--model_id=STRING] [--revision=STRING] [--data=PATH] [--output_dir=PATH] [--batch_size=NUMBER] [--async_limiter=NUMBER] [--slurm] [--help]"
   echo
   echo "Options:"
   echo "  --model_name=STRING  Name for the model (e.g., olmo2-13b-sft)"
   echo "  --model_id=STRING   Huggingface model ID (e.g., allenai/OLMo-2-1124-13B-SFT)"
+  echo "  --revision=STRING   Optional HF branch/tag/revision to load"
   echo "  --data=PATH        Path to input data file in jsonl format"
   echo "  --output_dir=PATH  Directory to save output features"
   echo "  --batch_size=NUMBER Batch size for processing (default: 100)"
@@ -22,6 +23,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --model_id=*)
       model_id="${1#*=}"
+      shift
+      ;;
+    --revision=*)
+      revision="${1#*=}"
       shift
       ;;
     --data=*)
@@ -64,9 +69,17 @@ fi
 echo "Model name: $model_name"
 echo "Model ID: $model_id"
 if [ -z "$slurm" ]; then
-  bash scripts/data_generation/vllm_host.sh --model_id="$model_id"
+  if [ -n "$revision" ]; then
+    bash scripts/data_generation/vllm_host.sh --model_id="$model_id" --revision="$revision"
+  else
+    bash scripts/data_generation/vllm_host.sh --model_id="$model_id"
+  fi
 else
-  sbatch scripts/data_generation/vllm_host.sh --model_id="$model_id"
+  if [ -n "$revision" ]; then
+    sbatch scripts/data_generation/vllm_host.sh --model_id="$model_id" --revision="$revision"
+  else
+    sbatch scripts/data_generation/vllm_host.sh --model_id="$model_id"
+  fi
 fi
 
 # Wait for the server to start

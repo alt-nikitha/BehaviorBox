@@ -5,6 +5,7 @@
 #SBATCH --mem=24GB
 #SBATCH --time=1:00:00
 #SBATCH --partition=general
+#SBATCH --gres=gpu:1
 
 set -a 
 source scripts/env_configs/.env
@@ -12,7 +13,7 @@ set +a
 
 # Activate environment
 source ${MINICONDA_PATH}
-conda activate bbox-vllm
+conda activate ${ENV_NAME}
 
 usage() {
   echo "Usage: $0 [--sae_dir=PATH] [--labeling_model=STRING] [--help]"
@@ -55,7 +56,7 @@ echo "Running on node: $HOSTNAME"
 echo "SAE directory: $sae_dir"
 echo "Labeling model: $labeling_model"
 
-cd analysis/automatic_labeling
+cd analysis/autolabel
 
 mkdir -p $sae_dir/feature_labels
 python automatic_labels.py \
@@ -63,4 +64,5 @@ python automatic_labels.py \
     --labeling_model $labeling_model
 
 python filter_and_validate_labels.py \
-    --sae_dir $sae_dir
+    --sae_dir $sae_dir \
+    --labeling_model $labeling_model

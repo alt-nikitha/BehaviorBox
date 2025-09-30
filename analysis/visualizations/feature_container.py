@@ -11,7 +11,7 @@ class FeatureContainer:
         self.model_names = self.__get_model_names()
         self.feature_metrics = pd.read_csv(f"{self.sae_dir}/feature_metrics-{'_'.join(self.model_names)}.csv")
         self.sample_centroid_metrics = pd.read_csv(f"{self.sae_dir}/feature_sample_centroid-metrics.csv")
-        self.feature_label_info = feature_label_info = pd.read_json(f"{self.sae_dir}/feature_labels_validated/claude-3-5-sonnet-20241022.json")
+        self.feature_label_info = feature_label_info = pd.read_json(f"{self.sae_dir}/feature_labels_validated/neulab-claude-sonnet-4-20250514.json")
         if os.path.exists(f"{self.sae_dir}/feature_labels_validated/sample_annotation.csv"):
             self.sample_annotations = pd.read_csv(f"{self.sae_dir}/feature_labels_validated/sample_annotation.csv")
         else:
@@ -78,7 +78,8 @@ class FeatureContainer:
         feature_df = pd.concat([feature_df, model_probs, model_diffs], axis=1)
         feature_metric_df = self.feature_metrics[self.feature_metrics["feature"] == feature_id]
         if self.sample_annotations is not None:
-            feature_metric_df["label_valid"] = (feature_df["label_valid"] == "YES").sum() / len(feature_df)
+            if "label_valid" in feature_metric_df.columns:
+                feature_metric_df["label_valid"] = (feature_df["label_valid"] == "YES").sum() / len(feature_df)
         feature_metric_df = feature_metric_df.round(3)
         feature_metrics = feature_metric_df.to_dict(orient="records")[0]
         
@@ -91,12 +92,14 @@ class FeatureContainer:
     ) -> pd.DataFrame:
         if feature_df is None:
             feature_df = self.get_feature_info(feature_id)[0]
-        feature_df = feature_df[feature_df["label_valid"] == "YES"]
-        feature_metrics = {}
-        feature_metrics["Num Samples"] = len(feature_df)
-        feature_metrics["Prob Avg Diff"] = round(feature_df["prob_diff"].mean(), 3)
-        feature_metrics["Prob Median Diff"] = round(feature_df["prob_diff"].median(), 3)
-        feature_metrics["LogProb Avg Diff"] = round(feature_df["logprob_diff"].mean(), 3)
-        feature_metrics["LogProb Median Diff"] = round(feature_df["logprob_diff"].median(), 3)
-        feature_metrics["Consistency"] = round(max(np.sum(feature_df["prob_diff"] > 0), np.sum(feature_df["prob_diff"] < 0)) / feature_df["prob_diff"].shape[0], 3)
-        return feature_metrics
+        if "label_valid" in feature_df.columns:
+            feature_df = feature_df[feature_df["label_valid"] == "YES"]
+            feature_metrics = {}
+            feature_metrics["Num Samples"] = len(feature_df)
+            feature_metrics["Prob Avg Diff"] = round(feature_df["prob_diff"].mean(), 3)
+            feature_metrics["Prob Median Diff"] = round(feature_df["prob_diff"].median(), 3)
+            feature_metrics["LogProb Avg Diff"] = round(feature_df["logprob_diff"].mean(), 3)
+            feature_metrics["LogProb Median Diff"] = round(feature_df["logprob_diff"].median(), 3)
+            feature_metrics["Consistency"] = round(max(np.sum(feature_df["prob_diff"] > 0), np.sum(feature_df["prob_diff"] < 0)) / feature_df["prob_diff"].shape[0], 3)
+            return feature_metrics
+        return {}

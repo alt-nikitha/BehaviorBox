@@ -1,0 +1,12 @@
+{
+    "cache_dir": "/home/nsrikant/.cache",
+    "data_dirs": [
+        "/home/nsrikant/BehaviorBoxNew/output/validation_split_1000"
+    ],
+    "model_names": [
+        "pythia-160m",
+        "pythia-160m-step70000"
+    ],
+    "output_feature_weight": 0.7,
+    "save_dir": "/home/nsrikant/BehaviorBoxNew/sae_outputs/mid_final"
+}

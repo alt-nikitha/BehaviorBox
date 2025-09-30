@@ -37,8 +37,8 @@ def get_output_overlapping_strings(
     sample_ids: list[str],
     tokenizer,
     embedding_model_tokenizer,
-    max_length: int = 4000,
-    stride: int = 2000,
+    max_length: int = 1800,  # was 4000, reduced for Pythia-160m context window (2048)
+    stride: int = 900,       # was 2000, reduced proportionally
 ) -> tuple[list[str], list[int], list[int], list[list[int]]]:
     """
     Args:
@@ -47,6 +47,7 @@ def get_output_overlapping_strings(
         tokenizer: tokenizer of model being evaluated
         max_length: max length of string
             (Llama2 and Olmo2 context window is 4096, but to be safe we set it lower)
+            (Pythia-160m context window is 2048, so we set it lower for safety)
         stride: stride of window (defaults to 2000)
 
     Returns:
@@ -206,10 +207,10 @@ def get_model_logprobs(
                     openai.APITimeoutError,
                     openai.InternalServerError,
                 ) as e:
-                    logging.warning(ERROR_ERRORS_TO_MESSAGES[type(e)].format(e=e))
+                    logging.warning(e)
                     raise SystemExit("Model is either down or overloaded. Please reduce the async limiter or restart the model.")
                 except openai.RateLimitError as e:
-                    logging.warning(ERROR_ERRORS_TO_MESSAGES[type(e)].format(e=e))
+                    logging.warning(e)
                     await asyncio.sleep(60)
                 except Exception as e:
                     logging.warning(e)

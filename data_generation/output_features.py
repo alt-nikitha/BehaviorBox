@@ -45,8 +45,8 @@ def process_jsonl_file(
     start_batch: int = 0,
     end_batch: int = None,
     batch_size: int = 100,
-    max_length: int = 4000,
-    stride: int = 2000,
+    max_length: int = 1800,  # was 4000, reduced for Pythia-160m context window (2048)
+    stride: int = 900,       # was 2000, reduced proportionally
     async_limiter: int = 100,
 ) -> torch.Tensor:
     text, sample_ids, domains = filter_and_sort_data(filepath, is_sorted)
