@@ -21,7 +21,7 @@ pd.options.mode.chained_assignment = None  # default='warn'
 
 #########
 # Change this to the directory where your SAE data is stored
-SAE_DIR = f"/home/nsrikant/BehaviorBoxNew/sae_outputs/10000_final/_seed=42_ofw=_N=3000_k=50_lp=None"
+SAE_DIR = f"/home/nsrikant/BehaviorBoxNew/sae_outputs/1000_final/_seed=42_ofw=_N=3000_k=50_lp=None"
 
 # Change this to change how words per feature are ordered
 # SORT_BY = "act_value"   # default
