@@ -98,7 +98,9 @@ else
 fi
 
 # dask spill dir
-temp_dir="/scratch/$USER/tmp"
+# temp_dir="/scratch/$USER/tmp"
+
+temp_dir="/home/$USER/tmp"
 
 mkdir -p $temp_dir
 

@@ -10,6 +10,7 @@ from tqdm.asyncio import tqdm
 from labeling_utils import \
     get_relevant_features, get_activations_and_wic, format_context_string
 
+# litellm._turn_on_debug()
 LITELLM_API_KEY = os.environ.get("LITELLM_API_KEY")
 LITELLM_BASE_URL = os.environ.get("LITELLM_BASE_URL")
 MAX_REQUESTS = 10
@@ -63,7 +64,7 @@ async def get_response(user_prompt: tuple[int, str], labeling_model: str):
             {"role": "user", "content": user_prompt_text},
         ]
     )
-    print(f"RESPONSE:   \n{response}")
+    # print(f"RESPONSE:   \n{response}")
     return feature, response
 
 def extract_response(content: str) -> dict:

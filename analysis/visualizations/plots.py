@@ -13,6 +13,7 @@ MODEL_ORDER = [
     "llama2-13b-chat",
     "olmo2-7b-dpo",
     "olmo2-13b-dpo",
+    "pythia-160m-step1000",
     "pythia-160m-step10000",
     "pythia-160m"
 ]
@@ -28,6 +29,7 @@ MODEL_DISPLAY_NAMES = {
     "olmo2-13b-dpo": "OLMo-13B-DPO",
     "olmo2-7b-sft": "OLMo-7B-SFT",
     "olmo2-13b-sft": "OLMo-13B-SFT",
+    "pythia-160m-step1000": "Pythia-160M-STEP1000",
     "pythia-160m-step10000": "Pythia-160M-Step10k",
     "pythia-160m": "Pythia-160M-final"
 }
