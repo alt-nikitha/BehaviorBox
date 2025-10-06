@@ -262,7 +262,9 @@ def dask_to_cached_memmap(
 
 def copy_temp_memmap(orig_memmap_filepath, temp_filepath) -> str:
     # Create a temporary file
-    shutil.copy2(orig_memmap_filepath, temp_filepath)
+    # shutil.copy(orig_memmap_filepath, temp_filepath)
+     with open(orig_memmap_filepath, "rb") as src, open(temp_filepath, "wb") as dst:
+        shutil.copyfileobj(src, dst)
 
 
 def cleanup_temp_memmap(memmap_array, temp_filename):

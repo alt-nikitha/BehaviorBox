@@ -105,3 +105,16 @@ sbatch scripts/sae/sae_pipeline.sh \
 
 sbatch scripts/analysis/label_features.sh --sae_dir=/home/nsrikant/BehaviorBoxNew/sae_outputs/mid_100000/_seed=42_ofw=_N=3000_k=50_lp=None --labeling_model="neulab/claude-sonnet-4-20250514"
 
+
+# weight tuning
+scripts/sae/sae_pipeline.sh \
+    --exp_cfg=/home/nsrikant/BehaviorBoxNew/scripts/sae/experiment_configs/config_1000_final_0.6.json \
+    --hp_cfg=/home/nsrikant/BehaviorBoxNew/sae/hyperparam_configs/N=3000_k=50.json
+
+scripts/sae/sae_pipeline.sh \
+    --exp_cfg=/home/nsrikant/BehaviorBoxNew/scripts/sae/experiment_configs/config_1000_final_0.8.json \
+    --hp_cfg=/home/nsrikant/BehaviorBoxNew/sae/hyperparam_configs/N=3000_k=50.json
+
+sbatch scripts/analysis/label_features.sh --sae_dir=/home/nsrikant/BehaviorBoxNew/sae_outputs/1000_final_0.6/_seed=42_ofw=_N=3000_k=50_lp=None --labeling_model="neulab/claude-sonnet-4-20250514"
+
+sbatch scripts/analysis/label_features.sh --sae_dir=/home/nsrikant/BehaviorBoxNew/sae_outputs/1000_final_0.8/_seed=42_ofw=_N=3000_k=50_lp=None --labeling_model="neulab/claude-sonnet-4-20250514"

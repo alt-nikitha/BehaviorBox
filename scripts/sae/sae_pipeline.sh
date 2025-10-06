@@ -100,8 +100,9 @@ fi
 # dask spill dir
 # temp_dir="/scratch/$USER/tmp"
 
-temp_dir="/home/$USER/tmp"
+# temp_dir="/home/$USER/tmp"
 
+temp_dir="/mnt/labshare/nsrikant/bbox_outputs/tmp"
 mkdir -p $temp_dir
 
 cd sae
