@@ -4,6 +4,7 @@ import json
 import litellm
 import os
 import pandas as pd
+import numpy as np
 
 from labeling_utils import \
     get_relevant_features, get_activations_and_wic, format_context_string
@@ -76,18 +77,33 @@ def get_relevant_labels(
     feature_metrics = feature_metrics[feature_metrics["feature"].isin(relevant_features)]
     coherent_features = [x for x in feature_labels.keys() if feature_labels[x]["Coherent"] == "YES"]
     feature_metrics = feature_metrics[feature_metrics["feature"].isin(coherent_features)]
+    feature_metrics['prob_avg_ranks'] = feature_metrics['prob_avg_ranks'].apply(lambda x: eval(x))
+    # model_1_win_features = feature_metrics[feature_metrics["prob_median_diff"] > 0]
+    # model_1_win_features.sort_values(by="prob_median_diff", ascending=False, inplace=True)
+    # model_1_win_features["label"] = model_1_win_features["feature"].apply(lambda x: feature_labels[x]["Description"])
+    # model_1_win_features["model"] = model_names[0]
     
-    model_1_win_features = feature_metrics[feature_metrics["prob_median_diff"] > 0]
-    model_1_win_features.sort_values(by="prob_median_diff", ascending=False, inplace=True)
-    model_1_win_features["label"] = model_1_win_features["feature"].apply(lambda x: feature_labels[x]["Description"])
-    model_1_win_features["model"] = model_names[0]
+    # model_2_win_features = feature_metrics[feature_metrics["prob_median_diff"] < 0]
+    # model_2_win_features.sort_values(by="prob_median_diff", ascending=True, inplace=True)
+    # model_2_win_features["label"] = model_2_win_features["feature"].apply(lambda x: feature_labels[x]["Description"])
+    # model_2_win_features["model"] = model_names[1]
     
-    model_2_win_features = feature_metrics[feature_metrics["prob_median_diff"] < 0]
-    model_2_win_features.sort_values(by="prob_median_diff", ascending=True, inplace=True)
-    model_2_win_features["label"] = model_2_win_features["feature"].apply(lambda x: feature_labels[x]["Description"])
-    model_2_win_features["model"] = model_names[1]
+    feature_metrics["winning_model"] = feature_metrics["prob_avg_ranks"].apply(lambda x: np.argmin(x))
+    feature_metrics["winning_rank"] = feature_metrics["prob_avg_ranks"].apply(lambda x: np.min(x))
+    all_model_win_features = []
+    for i,model_name in enumerate(model_names):
+        model_win_features = feature_metrics[feature_metrics['winning_model']==i]
+        model_win_features.sort_values(by="winning_rank", ascending=True, inplace=True)
+        model_win_features["label"] = model_win_features["feature"].apply(lambda x: feature_labels[x]["Description"])
+        model_win_features["model"] = model_names[i]
+        all_model_win_features.append(model_win_features)
+        
+
+
     
-    label_df = pd.concat([model_1_win_features, model_2_win_features])
+    # label_df = pd.concat([model_1_win_features, model_2_win_features])
+    label_df = pd.concat(all_model_win_features)
+
     return label_df
 
 
@@ -168,11 +184,38 @@ async def main(
                     response = extract_response(content)
                     if response["Score"] == "3":
                         response["Description"] = orig_label
-                    response["Mean Prob Diff"] = abs(label_df[label_df["feature"] == feature]["prob_avg_diff"].values[0])
-                    response["Median Prob Diff"] = abs(label_df[label_df["feature"] == feature]["prob_median_diff"].values[0])
-                    response["Mean Logprob Diff"] = abs(label_df[label_df["feature"] == feature]["logprob_avg_diff"].values[0])
-                    response["Median Logprob Diff"] = abs(label_df[label_df["feature"] == feature]["logprob_median_diff"].values[0])
-                    response["Diff Consistency"] = label_df[label_df["feature"] == feature]["prob_diff_consistency"].values[0]
+                    
+                    response["Winning Rank"] = int(label_df[label_df["feature"] == feature]["winning_rank"].values[0])
+
+                    # Convert NumPy arrays to Python lists before JSON serialization
+                    mean_ranks = label_df[label_df["feature"] == feature]["prob_avg_ranks"].values[0]
+                    median_ranks = label_df[label_df["feature"] == feature]["prob_median_ranks"].values[0]
+                    avg_probs = label_df[label_df["feature"] == feature]["prob_means"].values[0]
+                    median_probs = label_df[label_df["feature"] == feature]["prob_medians"].values[0]
+                    avg_logprobs = label_df[label_df["feature"] == feature]["logprob_means"].values[0]
+                    median_logprobs = label_df[label_df["feature"] == feature]["logprob_medians"].values[0]
+                    
+                    # Convert to lists if they are NumPy arrays
+                    if isinstance(median_ranks, np.ndarray):
+                        mean_ranks = mean_ranks.tolist()
+                    if isinstance(median_ranks, np.ndarray):
+                        median_ranks = median_ranks.tolist()
+                    if isinstance(avg_probs, np.ndarray):
+                        avg_probs = avg_probs.tolist()
+                    if isinstance(median_probs, np.ndarray):
+                        median_probs = median_probs.tolist()
+                    if isinstance(avg_logprobs, np.ndarray):
+                        avg_logprobs = avg_logprobs.tolist()
+                    if isinstance(median_logprobs, np.ndarray):
+                        median_logprobs = median_logprobs.tolist()
+
+                    response["Mean Ranks"] = json.dumps(mean_ranks)    
+                    response["Median Ranks"] = json.dumps(median_ranks)
+                    response["Avg Probs"] = json.dumps(avg_probs)
+                    response["Median Probs"] = json.dumps(median_probs)
+                    response["Avg LogProbs"] = json.dumps(avg_logprobs)
+                    response["Median LogProbs"] = json.dumps(median_logprobs)
+
                     response["Model"] = label_df[label_df["feature"] == feature]["model"].values[0]
                     feature_responses[feature] = response
                 pbar.update(MAX_REQUESTS)

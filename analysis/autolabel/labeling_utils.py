@@ -1,4 +1,53 @@
 import pandas as pd
+import numpy as np
+
+def classify_trend_soft(arr, tol=1e-5):
+    arr = np.array(arr)
+    try:
+        diffs = np.diff(arr)
+    except:
+        print(arr)
+    
+    pos = np.sum(diffs > tol)
+    neg = np.sum(diffs < -tol)
+    zero = np.sum(np.abs(diffs) <= tol)
+    
+    n = len(diffs)
+    
+    # Roughly monotone
+    if pos / n > 0.8 and neg / n < 0.1:
+        return "roughly increasing"
+    elif neg / n > 0.8 and pos / n < 0.1:
+        return "roughly decreasing"
+    
+    # Roughly monotone with stagnant part
+    elif pos / n > 0.5 and zero / n > 0.2 and neg / n < 0.1:
+        return "roughly increasing to stagnant"
+    elif neg / n > 0.5 and zero / n > 0.2 and pos / n < 0.1:
+        return "roughly decreasing to stagnant"
+    
+    # Increasing then decreasing
+    peak_idx = np.argmax(arr)
+    if peak_idx > 0 and peak_idx < len(arr)-1:
+        before_peak = arr[:peak_idx+1]
+        after_peak = arr[peak_idx:]
+        if np.sum(np.diff(before_peak) > -tol)/len(before_peak) > 0.6 and \
+           np.sum(np.diff(after_peak) < tol)/len(after_peak) > 0.6:
+            return "roughly increasing then decreasing"
+    
+    # Decreasing then increasing
+    trough_idx = np.argmin(arr)
+    if trough_idx > 0 and trough_idx < len(arr)-1:
+        before_trough = arr[:trough_idx+1]
+        after_trough = arr[trough_idx:]
+        if np.sum(np.diff(before_trough) < tol)/len(before_trough) > 0.6 and \
+           np.sum(np.diff(after_trough) > -tol)/len(after_trough) > 0.6:
+            return "roughly decreasing then increasing"
+    
+    # If nothing matches
+    return "other"
+
+
 
 def get_relevant_features(
     feature_metrics: pd.DataFrame,
@@ -6,7 +55,11 @@ def get_relevant_features(
     """
     Gets the indices of the features that have a absolute median logprob diff of > 1
     """
-    feature_metrics = feature_metrics[(feature_metrics["logprob_median_diff"].abs() > 1) | (feature_metrics["prob_median_diff"].abs() > 0.1)]
+    feature_metrics['prob_means'] = feature_metrics['prob_means'].apply(lambda x: np.array([float(v) for v in x.strip("[]").split()]))
+
+    feature_metrics["trend"] = feature_metrics["prob_means"].apply(classify_trend_soft)
+    feature_metrics = feature_metrics[feature_metrics["trend"]!="other"]
+    # feature_metrics = feature_metrics[(feature_metrics["logprob_median_diff"].abs() > 1) | (feature_metrics["prob_median_diff"].abs() > 0.1)]
     return feature_metrics["feature"].values
 
 

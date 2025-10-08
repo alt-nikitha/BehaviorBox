@@ -111,3 +111,6 @@ sbatch scripts/analysis/label_features.sh --sae_dir=/home/nsrikant/BehaviorBoxNe
 sbatch scripts/sae/sae_pipeline.sh \
     --exp_cfg=/home/nsrikant/BehaviorBoxNew/scripts/sae/experiment_configs/config_n.json \
     --hp_cfg=/home/nsrikant/BehaviorBoxNew/sae/hyperparam_configs/N=3000_k=50.json
+
+sbatch scripts/analysis/label_features.sh --sae_dir=/home/nsrikant/BehaviorBoxNew/sae_outputs/n_comparison/_seed=42_ofw=_N=3000_k=50_lp=None --labeling_model="neulab/claude-sonnet-4-20250514"
+

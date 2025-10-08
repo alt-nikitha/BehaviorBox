@@ -2,6 +2,7 @@ import base64
 import dash
 import json
 import matplotlib.pyplot as plt
+import numpy as np
 import os
 import pandas as pd
 import sys
@@ -15,13 +16,13 @@ if viz_root not in sys.path:
     sys.path.insert(0, viz_root)
 
 from visualizations.feature_container import FeatureContainer
-from visualizations.plots import plot_feature_diffs_hist, plot_word_diffs_hist, plot_word_probs_hist
+from visualizations.plots import plot_word_probs_hist
 
 pd.options.mode.chained_assignment = None  # default='warn'
 
 #########
 # Change this to the directory where your SAE data is stored
-SAE_DIR = f"/home/nsrikant/BehaviorBoxNew/sae_outputs/1000_final/_seed=42_ofw=_N=3000_k=50_lp=None"
+SAE_DIR = f"/home/nsrikant/BehaviorBoxNew/sae_outputs/n_comparison/_seed=42_ofw=_N=3000_k=50_lp=None"
 
 # Change this to change how words per feature are ordered
 # SORT_BY = "act_value"   # default
@@ -39,11 +40,9 @@ k = 50
 
 feature_metrics_to_display = [
     "num_samples_considered",
-    "prob_avg_diff",
-    "prob_median_diff",
-    "logprob_avg_diff",
-    "logprob_median_diff",
-    "prob_diff_consistency",
+    "embedding_avg_dist",
+    "embedding_avg_cos_sim",
+    "prob_avg_dist",
     "label_valid"
 ]
 
@@ -72,14 +71,7 @@ def create_encoded_image(fig):
     return img_base64
 
 
-def create_prob_diff_histogram(logprob: bool = False):
-    hist = plot_feature_diffs_hist(
-        feature_label_info,
-        logprob=logprob
-    )
-    hist_fig = hist.get_figure()
-    img_base64 = create_encoded_image(hist_fig)
-    return img_base64
+# Removed create_prob_diff_histogram - not needed for n-model comparison
 
 
 def get_label(feature):
@@ -97,6 +89,171 @@ def get_label_model(feature):
     label_model = feature_label_info[feature]["Model"]
     return label_model
 
+
+def parse_array_string(array_str):
+    """Parse array string from JSON into numpy array"""
+    if isinstance(array_str, str):
+        try:
+            # Handle different formats:
+            # Format 1: "[1.0, 2.8, 3.45]" (with brackets and commas)
+            # Format 2: "\"[1.0 3.0 4.0]\" (with escaped quotes and spaces)
+            
+            # Remove outer quotes and brackets
+            array_str = array_str.strip('"').strip("'").strip('[]')
+            
+            # Clean up newlines and extra whitespace
+            array_str = array_str.replace('\n', ' ').replace('\r', ' ')
+            
+            # Try comma-separated first
+            if ',' in array_str:
+                return np.array([float(x.strip()) for x in array_str.split(',') if x.strip()])
+            else:
+                # Handle space-separated format
+                return np.array([float(x.strip()) for x in array_str.split() if x.strip()])
+        except (ValueError, AttributeError):
+            # If parsing fails, return empty array
+            return np.array([])
+    return np.array(array_str)
+
+
+def get_model_names_from_metrics():
+    """Extract model names from the feature metrics CSV filename"""
+    try:
+        # Find the metrics CSV file
+        metrics_files = [f for f in os.listdir(SAE_DIR) if f.startswith('feature_metrics-') and f.endswith('.csv')]
+        if not metrics_files:
+            return []
+        
+        # Extract model names from filename
+        # Format: feature_metrics-model1_model2_model3_model4_model5.csv
+        filename = metrics_files[0].replace('feature_metrics-', '').replace('.csv', '')
+        model_names = filename.split('_')
+        
+        return model_names
+            
+    except Exception as e:
+        print(f"Error getting model names: {e}")
+        return []
+
+
+def get_feature_trend(feature):
+    """Determine the trend of a feature across models"""
+    if feature not in feature_label_info:
+        return "unknown"
+    
+    feature_data = feature_label_info[feature]
+    avg_probs = parse_array_string(feature_data.get("Avg Probs", "[]"))
+    
+    if len(avg_probs) < 2:
+        return "unknown"
+    
+    # Calculate trend
+    diff = np.diff(avg_probs)
+    positive_diffs = np.sum(diff > 0.01)  # threshold for significant increase
+    negative_diffs = np.sum(diff < -0.01)  # threshold for significant decrease
+    zero_diffs = np.sum(np.abs(diff) <= 0.01)  # threshold for stagnation
+    
+    if positive_diffs > 0 and negative_diffs == 0:
+        return "increasing"
+    elif negative_diffs > 0 and positive_diffs == 0:
+        return "decreasing"
+    elif positive_diffs > 0 and negative_diffs > 0:
+        # Check if it's increase-decrease or decrease-increase
+        if diff[0] > 0:
+            return "increase-decrease"
+        else:
+            return "decrease-increase"
+    elif positive_diffs > 0 and zero_diffs > 0:
+        return "increase-stagnate"
+    elif negative_diffs > 0 and zero_diffs > 0:
+        return "decrease-stagnate"
+    else:
+        return "stagnate"
+
+
+def group_features_by_trend():
+    """Group features by their probability trends"""
+    groups = {
+        "increasing": [],
+        "decreasing": [],
+        "increase-decrease": [],
+        "decrease-increase": [],
+        "increase-stagnate": [],
+        "decrease-stagnate": [],
+        "stagnate": [],
+        "unknown": []
+    }
+    
+    for feature in validated_features:
+        trend = get_feature_trend(feature)
+        groups[trend].append(feature)
+    
+    return groups
+
+
+# Initialize feature groups after function definitions
+feature_groups = group_features_by_trend()
+
+
+def create_group_visualization(group_name, features):
+    """Create visualization for a group of features"""
+    if not features:
+        return None
+    
+    # Collect data for all features in the group
+    all_avg_probs = []
+    all_avg_ranks = []
+    model_names = []
+    
+    for feature in features:
+        feature_data = feature_label_info[feature]
+        avg_probs = parse_array_string(feature_data.get("Avg Probs", "[]"))
+        avg_ranks = parse_array_string(feature_data.get("Mean Ranks", "[]"))
+        
+        if len(avg_probs) > 0:
+            all_avg_probs.append(avg_probs)
+            all_avg_ranks.append(avg_ranks)
+            if not model_names:
+                # Get actual model names from the feature metrics CSV
+                model_names = get_model_names_from_metrics()
+                # If we don't have enough model names, use generic ones
+                if len(model_names) < len(avg_probs):
+                    model_names.extend([f"Model {i+1}" for i in range(len(model_names), len(avg_probs))])
+    
+    if not all_avg_probs:
+        return None
+    
+    # Create subplots
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
+    
+    # Plot 1: Average probabilities
+    avg_probs_array = np.array(all_avg_probs)
+    mean_probs = np.mean(avg_probs_array, axis=0)
+    std_probs = np.std(avg_probs_array, axis=0)
+    
+    x_pos = np.arange(len(model_names))
+    bars1 = ax1.bar(x_pos, mean_probs, yerr=std_probs, capsize=5, alpha=0.7, color='steelblue')
+    ax1.set_xlabel('Models')
+    ax1.set_ylabel('Average Probability')
+    ax1.set_title(f'{group_name.title()} Features - Average Probabilities')
+    ax1.set_xticks(x_pos)
+    ax1.set_xticklabels(model_names, rotation=45)
+    
+    # Plot 2: Average ranks
+    avg_ranks_array = np.array(all_avg_ranks)
+    mean_ranks = np.mean(avg_ranks_array, axis=0)
+    std_ranks = np.std(avg_ranks_array, axis=0)
+    
+    bars2 = ax2.bar(x_pos, mean_ranks, yerr=std_ranks, capsize=5, alpha=0.7, color='orange')
+    ax2.set_xlabel('Models')
+    ax2.set_ylabel('Average Rank')
+    ax2.set_title(f'{group_name.title()} Features - Average Ranks')
+    ax2.set_xticks(x_pos)
+    ax2.set_xticklabels(model_names, rotation=45)
+    
+    plt.tight_layout()
+    return fig
+
 # Function to create feature container
 def create_feature_container(feature):
     label = get_label(feature)    
@@ -110,18 +267,50 @@ def create_feature_container(feature):
     feature_metrics = fc.get_feature_info(feature)[1]
     feature_metrics = {k: feature_metrics[k] for k in feature_metrics_to_display if k in feature_metrics}
     feature_metrics["Num Samples"] = feature_metrics.pop("num_samples_considered")
-    feature_metrics["Prob Avg Diff"] = feature_metrics.pop("prob_avg_diff")
-    feature_metrics["Prob Median Diff"] = feature_metrics.pop("prob_median_diff")
-    feature_metrics["LogProb Avg Diff"] = feature_metrics.pop("logprob_avg_diff")
-    feature_metrics["LogProb Median Diff"] = feature_metrics.pop("logprob_median_diff")
-    feature_metrics["Consistency"] = feature_metrics.pop("prob_diff_consistency")
+    feature_metrics["Embedding Avg Dist"] = feature_metrics.pop("embedding_avg_dist")
+    feature_metrics["Embedding Avg Cos Sim"] = feature_metrics.pop("embedding_avg_cos_sim")
+    feature_metrics["Prob Avg Dist"] = feature_metrics.pop("prob_avg_dist")
     if "label_valid" in feature_metrics:
         feature_metrics["Percent Valid"] = feature_metrics.pop("label_valid")
     
     valid_sample_feature_metrics = fc.get_valid_sample_feature_metrics(feature, feature_df)
     
     model_probs_hist = create_encoded_image(plot_word_probs_hist(feature_df))
-    model_diffs_hist = create_encoded_image(plot_word_diffs_hist(feature_df))
+    
+    # Get n-model data for this feature
+    n_model_data = None
+    if feature in feature_label_info:
+        feature_data = feature_label_info[feature]
+        avg_probs = parse_array_string(feature_data.get("Avg Probs", "[]"))
+        avg_ranks = parse_array_string(feature_data.get("Mean Ranks", "[]"))
+        median_ranks = parse_array_string(feature_data.get("Median Ranks", "[]"))
+        
+        if len(avg_probs) > 0:
+            # Get actual model names
+            model_names = get_model_names_from_metrics()
+            
+            # Check if all arrays have the same length
+            if (len(avg_probs) == len(avg_ranks) == len(median_ranks)):
+                # Map model indices to names: Model 1 -> first model, Model 2 -> second model, etc.
+                display_names = []
+                for i in range(len(avg_probs)):
+                    if i < len(model_names):
+                        display_names.append(model_names[i])
+                    else:
+                        display_names.append(f"Model {i+1}")
+                
+                n_model_data = {
+                    'Model': display_names,
+                    'Avg Probability': avg_probs,
+                    'Avg Rank': avg_ranks,
+                    'Median Rank': median_ranks
+                }
+                n_model_df = pd.DataFrame(n_model_data).round(4)
+            else:
+                # If arrays don't match, skip the n-model table
+                print(f"Warning: Array length mismatch for feature {feature}")
+                print(f"avg_probs: {len(avg_probs)}, avg_ranks: {len(avg_ranks)}, median_ranks: {len(median_ranks)}")
+                n_model_data = None
     
     # Feature header and description
     feature_header = html.Div(
@@ -134,37 +323,54 @@ def create_feature_container(feature):
     # Histogram container on the left
     histograms_container = html.Div(
         [
+            html.H3('Model Probabilities Distribution', style={'text-align': 'left', 'margin-bottom': '10px'}),
             html.Img(src='data:image/png;base64,{}'.format(model_probs_hist), style={'width': '100%', 'margin': '5px 0'}),
-            html.Img(src='data:image/png;base64,{}'.format(model_diffs_hist), style={'width': '100%', 'margin': '5px 0'}),
         ],
         style={'display': 'flex', 'flex-direction': 'column', 'width': '30%'}
     )
 
     # Placeholder for other information
-    other_info = html.Div(
-        [   
-            html.H3('Feature Information', style={'text-align': 'left', 'margin-bottom': '10px'}),
+    other_info_components = [
+        html.H3('Feature Information', style={'text-align': 'left', 'margin-bottom': '10px'}),
+        dash_table.DataTable(
+            data=[feature_metrics],
+            style_table={'overflowX': 'auto'},
+            style_cell={'textAlign': 'left'},
+            style_header={'fontWeight': 'bold'}    
+        ),
+        html.H3('Feature Information (filtered for valid samples)', style={'text-align': 'left', 'margin-bottom': '10px'}),
+        dash_table.DataTable(
+            data=[valid_sample_feature_metrics],
+            style_table={'overflowX': 'auto'},
+            style_cell={'textAlign': 'left'},
+            style_header={'fontWeight': 'bold'}    
+        )
+    ]
+    
+    # Add n-model data table if available
+    if n_model_data is not None:
+        other_info_components.extend([
+            html.H3('N-Model Comparison Data', style={'text-align': 'left', 'margin-bottom': '10px'}),
             dash_table.DataTable(
-                data=[feature_metrics],
-                style_table={'overflowX': 'auto'},
-                style_cell={'textAlign': 'left'},
-                style_header={'fontWeight': 'bold'}    
-            ),
-            html.H3('Feature Information (filtered for valid samples)', style={'text-align': 'left', 'margin-bottom': '10px'}),
-            dash_table.DataTable(
-                data=[valid_sample_feature_metrics],
-                style_table={'overflowX': 'auto'},
-                style_cell={'textAlign': 'left'},
-                style_header={'fontWeight': 'bold'}    
-            ),
-            dash_table.DataTable(
-                data=feature_df.to_dict('records'),
-                page_size=20,
+                data=n_model_df.to_dict('records'),
                 style_table={'overflowX': 'auto'},
                 style_cell={'textAlign': 'left'},
                 style_header={'fontWeight': 'bold'}
-            ),
-        ],
+            )
+        ])
+    
+    other_info_components.append(
+        dash_table.DataTable(
+            data=feature_df.to_dict('records'),
+            page_size=20,
+            style_table={'overflowX': 'auto'},
+            style_cell={'textAlign': 'left'},
+            style_header={'fontWeight': 'bold'}
+        )
+    )
+    
+    other_info = html.Div(
+        other_info_components,
         style={'width': '70%', 'padding-left': '10px'}
     )
 
@@ -201,19 +407,22 @@ app.layout = html.Div(
                 ],
                 style={'padding': '10px', 'text-align': 'left', 'border-bottom': '1px solid #ccc'}
                 ),
-                html.Div(
-                    [
-                        html.Div(
-                            html.Img(src='data:image/png;base64,{}'.format(create_prob_diff_histogram(logprob=False)), style={'max-width': '100%', 'height': 'auto'}),
-                            style={'flex': '1', 'padding': '10px'}
-                        ),
-                        html.Div(
-                            html.Img(src='data:image/png;base64,{}'.format(create_prob_diff_histogram(logprob=True)), style={'max-width': '100%', 'height': 'auto'}),
-                            style={'flex': '1', 'padding': '10px'}
-                        ),
-                    ],
-                    style={'display': 'flex', 'justify-content': 'space-between', 'align-items': 'center'}
-                ),
+                # Removed diffs histograms - not needed for n-model comparison
+            ],
+            style={
+                'border': '1px solid #ccc',
+                'border-radius': '5px',
+                'margin': '20px',
+                'padding': '10px',
+                'box-shadow': '2px 2px 5px rgba(0,0,0,0.1)',
+                'background-color': '#FFFFFF'
+            }
+        ),
+        # Add group visualization section
+        html.Div(
+            [
+                html.H2("Feature Groups by Trend", style={'text-align': 'center', 'font-family': 'Arial, sans-serif'}),
+                html.Div(id='group-visualizations-content'),
             ],
             style={
                 'border': '1px solid #ccc',
@@ -232,76 +441,115 @@ app.layout = html.Div(
         ),
         html.Div(
             [
-                html.Button("Previous", id='prev-btn', n_clicks=0),
-                html.Div(id='page-buttons', style={'display': 'inline-block', 'margin': '0 10px'}),
-                html.Button("Next", id='next-btn', n_clicks=0),
+                html.Div(id='page-buttons', style={'text-align': 'center', 'margin': '20px 0'}),
             ],
             style={'text-align': 'center', 'margin-top': '20px'}
         ),
-        dcc.Store(id='current-page', data=1)  # Store to track the current page
+        dcc.Store(id='app-initialized', data=True)  # Simple trigger for initial load
     ],
     style={'padding': '20px', 'background-color': '#FAF8F4'}
 )
 
 
-# Callback for pagination controls
-@callback(
-    Output("current-page", "data"),
-    [Input("prev-btn", "n_clicks"), Input("next-btn", "n_clicks")],
-    [State("current-page", "data")]
-)
-def update_page_number(prev_clicks, next_clicks, current_page):
-    current_page = current_page or 1
-    triggered_id = dash.callback_context.triggered[0]["prop_id"].split(".")[0]
-    if triggered_id == "prev-btn" and prev_clicks > 0 and current_page > 1:
-        return current_page - 1
-    elif triggered_id == "next-btn" and next_clicks > 0 and current_page < TOTAL_PAGES:
-        return current_page + 1
-    return current_page
+# Removed pagination callback since we're not using pagination anymore
 
 
-# Callback to update feature containers based on the current page
+# Callback to update feature containers (no pagination needed)
 @callback(
     Output('feature-containers-content', 'children'),
-    [Input('current-page', 'data')]
+    [Input('app-initialized', 'data')]  # Simple trigger for initial load
 )
-def update_feature_containers(page):
-    if page is None:
-        page = 1
+def update_feature_containers(trigger):
     
-    start_idx = (page - 1) * FEATURES_PER_PAGE
-    end_idx = min(start_idx + FEATURES_PER_PAGE, TOTAL_FEATURES)
+    # Create grouped feature containers
+    all_containers = []
     
-    current_features = validated_features[start_idx:end_idx]
+    # Define the order of trend groups to display
+    trend_order = ["increasing", "decreasing", "increase-decrease", "decrease-increase", 
+                   "increase-stagnate", "decrease-stagnate", "stagnate", "unknown"]
     
-    containers = [create_feature_container(feature) for feature in current_features]
-        
-    return containers
+    for trend in trend_order:
+        if trend in feature_groups and feature_groups[trend]:
+            # Add trend header
+            trend_header = html.Div(
+                [
+                    html.H2(f"{trend.title()} Features ({len(feature_groups[trend])} features)", 
+                           style={'text-align': 'left', 'margin': '20px 0 10px 0', 
+                                 'padding': '10px', 'background-color': '#f0f0f0', 
+                                 'border-left': '4px solid #007BFF'})
+                ]
+            )
+            all_containers.append(trend_header)
+            
+            # Add feature containers for this trend
+            for feature in feature_groups[trend]:
+                container = create_feature_container(feature)
+                all_containers.append(container)
+    
+    return all_containers
 
 
 # Callback to update page buttons
 @callback(
     Output('page-buttons', 'children'),
-    [Input('current-page', 'data')]
+    [Input('app-initialized', 'data')]  # Simple trigger for initial load
 )
-def update_page_buttons(current_page):
-    if current_page is None:
-        current_page = 1
+def update_page_buttons(trigger):
+    # Since we're showing all features grouped by trend, we don't need pagination
+    # But we can show a summary of the groups
+    group_summary = []
     
-    # Create page buttons (show at most 5 pages around the current page)
-    start_page = max(1, current_page - 2)
-    end_page = min(TOTAL_PAGES, start_page + 4)
+    for trend in ["increasing", "decreasing", "increase-decrease", "decrease-increase", 
+                  "increase-stagnate", "decrease-stagnate", "stagnate", "unknown"]:
+        if trend in feature_groups and feature_groups[trend]:
+            count = len(feature_groups[trend])
+            group_summary.append(
+                html.Span(f"{trend.title()}: {count}", 
+                         style={'margin': '0 10px', 'padding': '5px 10px', 
+                               'background-color': '#e9ecef', 'border-radius': '3px'})
+            )
     
-    buttons = []
-    for i in range(start_page, end_page + 1):
-        if i == current_page:
-            style = {'margin': '0 5px', 'padding': '5px 10px', 'background-color': '#007BFF', 'color': 'white'}
-        else:
-            style = {'margin': '0 5px', 'padding': '5px 10px'}
-        
-        buttons.append(html.Button(str(i), id=f'page-{i}', style=style))
+    return group_summary
+
+
+# Callback to update group visualizations
+@callback(
+    Output('group-visualizations-content', 'children'),
+    [Input('app-initialized', 'data')]  # Simple trigger for initial load
+)
+def update_group_visualizations(trigger):
+    # Group features by trend
+    groups = group_features_by_trend()
     
-    return buttons
+    visualizations = []
+    
+    for group_name, features in groups.items():
+        if not features:
+            continue
+            
+        # Create visualization for this group
+        fig = create_group_visualization(group_name, features)
+        if fig is not None:
+            img_base64 = create_encoded_image(fig)
+            
+            group_container = html.Div(
+                [
+                    html.H3(f"{group_name.title()} Features ({len(features)} features)", 
+                           style={'text-align': 'left', 'margin-bottom': '10px'}),
+                    html.Img(src='data:image/png;base64,{}'.format(img_base64), 
+                           style={'max-width': '100%', 'height': 'auto', 'margin': '10px 0'}),
+                ],
+                style={
+                    'border': '1px solid #ddd',
+                    'border-radius': '5px',
+                    'margin': '10px 0',
+                    'padding': '10px',
+                    'background-color': '#f9f9f9'
+                }
+            )
+            visualizations.append(group_container)
+    
+    return visualizations
 
 
 def main():

@@ -454,18 +454,22 @@ def calc_feature_metrics(sae_dir: str, k: int = 50,):
     embedding_avg_dist = []
     embedding_avg_cos_sim = []
     prob_avg_dist = []
-    # prob_avg_diff = []
-    # logprob_avg_diff = []
-    # logprob_median_diff = []
-    # prob_median_diff = []
-    # prob_diff_var = []
-    # prob_diff_kurtosis = []
-    # diff_consistency = []
+    
+    prob_means = []
+    prob_medians = []
+    prob_variances = []
+    logprob_means = []
+    logprob_medians = []
+    logprob_variances = []
 
-    prob_rankings = []
-    logprob_rankings = []
     num_samples = []
     model_prob_variances = {model_name: [] for model_name in model_names}
+    
+    prob_avg_ranks_list = []
+    logprob_avg_ranks_list = []
+
+    prob_median_ranks_list = []
+    logprob_median_ranks_list = []
     
     feature_indices = []
     sample_centroid_embedding_dist = []
@@ -486,19 +490,39 @@ def calc_feature_metrics(sae_dir: str, k: int = 50,):
         feature_logprobs = []
         for model_name in model_names:
             feature_logprobs.append(feature_df[model_name].values)
-        feature_logprobs = np.array(feature_logprobs).T # 50 x 2
+        feature_logprobs = np.array(feature_logprobs).T # 50 x n
+        feature_logprobs_mean = np.mean(feature_logprobs, axis=0)   # n
+        feature_logprobs_median = np.median(feature_logprobs, axis=0)   # n
+        feature_logprobs_variance = np.var(feature_logprobs, axis=0)   # n
         feature_probs = np.exp(feature_logprobs)
-        feature_probs = feature_probs[sample_indices] # num_samples x 2
+        feature_probs = feature_probs[sample_indices] # num_samples x n
         feature_embeddings_mean = np.mean(feature_embeddings, axis=0)   # 768
-        feature_probs_mean = np.mean(feature_probs, axis=0)   # 2
+        feature_probs_mean = np.mean(feature_probs, axis=0)   # n
+        feature_probs_median = np.median(feature_probs, axis=0)   # n
+        feature_probs_variance = np.var(feature_probs, axis=0)   # n
         embedding_dist = np.linalg.norm(feature_embeddings - feature_embeddings_mean, axis=1)
         embedding_cos_sim = np.dot(feature_embeddings, feature_embeddings_mean) / (np.linalg.norm(feature_embeddings, axis=1) * np.linalg.norm(feature_embeddings_mean))
         prob_dist = np.linalg.norm(feature_probs - feature_probs_mean, axis=1)
-        # prob_diff = feature_probs[:, 0] - feature_probs[:, 1]
-        # logprob_diff = feature_logprobs[:, 0] - feature_logprobs[:, 1]
 
-        prob_ranking = [model_names[i] for i in np.argsort(feature_probs).flatten()]
-        logprob_ranking = [model_names[i] for i in np.argsort(feature_logprobs).flatten()]
+        
+
+        prob_ranks_all = np.argsort(np.argsort(-feature_probs, axis=1), axis=1) + 1 # shape: (n_samples, n_models)
+        logprob_ranks_all = np.argsort(np.argsort(-feature_logprobs, axis=1), axis=1)  + 1# shape: (n_samples, n_models)
+        
+
+        feature_prob_ranks_avg = np.mean(prob_ranks_all, axis=0).tolist()  # shape: (n_models,)
+        feature_logprob_ranks_avg = np.mean(logprob_ranks_all, axis=0).tolist()  # shape: (n_models,)
+
+        feature_prob_ranks_median = np.median(prob_ranks_all, axis=0).tolist()  # shape: (n_models,)
+        feature_logprob_ranks_median = np.median(logprob_ranks_all, axis=0).tolist()  # shape: (n_models,)
+        
+
+        prob_avg_ranks_list.append(feature_prob_ranks_avg)
+        logprob_avg_ranks_list.append(feature_logprob_ranks_avg)
+
+        prob_median_ranks_list.append(feature_prob_ranks_median)
+        logprob_median_ranks_list.append(feature_logprob_ranks_median)
+        
         feature_indices.append([feature] * feature_probs.shape[0])
         sample_centroid_embedding_dist.append(embedding_dist)
         sample_centroid_cos_sim.append(embedding_cos_sim)
@@ -506,17 +530,14 @@ def calc_feature_metrics(sae_dir: str, k: int = 50,):
         embedding_avg_dist.append(np.mean(embedding_dist))
         embedding_avg_cos_sim.append(np.mean(embedding_cos_sim))
         prob_avg_dist.append(np.mean(prob_dist))
-        prob_rankings.append(prob_ranking)
-        logprob_rankings.append(logprob_ranking)
-        # prob_avg_diff.append(np.mean(prob_diff))
-        # prob_median_diff.append(np.median(prob_diff))
-        # logprob_avg_diff.append(np.mean(logprob_diff))
-        # logprob_median_diff.append(np.median(logprob_diff))
-        # diff_consistency.append(max(np.sum(prob_diff > 0), np.sum(prob_diff < 0)) / prob_diff.shape[0])
-        # prob_diff_var.append(np.var(prob_diff))
-        # prob_diff_kurtosis.append(pd.Series(prob_diff).kurtosis())
 
+        prob_means.append(feature_probs_mean)
+        prob_medians.append(feature_probs_median)
+        prob_variances.append(feature_probs_variance)
 
+        logprob_means.append(feature_logprobs_mean)
+        logprob_medians.append(feature_logprobs_median)
+        logprob_variances.append(feature_logprobs_variance)
         
         for i, model_name in enumerate(model_names):
             model_prob_variances[model_name].append(np.var(feature_probs[:, i]))
@@ -527,15 +548,16 @@ def calc_feature_metrics(sae_dir: str, k: int = 50,):
         "embedding_avg_dist": embedding_avg_dist,
         "embedding_avg_cos_sim": embedding_avg_cos_sim,
         "prob_avg_dist": prob_avg_dist,
-        "prob_rankings": prob_rankings,
-        "logprob_rankings": logprob_rankings,
-        # "prob_avg_diff": prob_avg_diff,
-        # "prob_median_diff": prob_median_diff,
-        # "logprob_avg_diff": logprob_avg_diff,
-        # "logprob_median_diff": logprob_median_diff,
-        # "prob_diff_consistency": diff_consistency,
-        # "prob_diff_var": prob_diff_var,
-        # "prob_diff_kurtosis": prob_diff_kurtosis,
+        "prob_avg_ranks": prob_avg_ranks_list,
+        "logprob_avg_ranks": logprob_avg_ranks_list,
+        "prob_median_ranks": prob_median_ranks_list,
+        "logprob_median_ranks": logprob_median_ranks_list,
+        "prob_means": prob_means,
+        "prob_medians": prob_medians,
+        "prob_variances": prob_variances,
+        "logprob_means": logprob_means,
+        "logprob_medians": logprob_medians,
+        "logprob_variances": logprob_variances
     })
     for model_name in model_names:
         distance_df[f"{model_name}_prob_variance"] = model_prob_variances[model_name]
