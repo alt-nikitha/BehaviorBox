@@ -69,7 +69,9 @@ huggingface-cli login --token ${HF_TOKEN}
 
 export VLLM_LOGGING_LEVEL=ERROR
 export NCCL_P2P_DISABLE=1
-export CUDA_VISIBLE_DEVICES=0
+GPU_ID=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits | \
+         awk '{print NR-1 ":" $1}' | sort -t: -k2 -nr | head -n1 | cut -d: -f1)
+export CUDA_VISIBLE_DEVICES=$GPU_ID
 
 mkdir -p scripts/data_generation/tmp/${model_id}
 

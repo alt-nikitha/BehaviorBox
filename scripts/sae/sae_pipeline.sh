@@ -89,7 +89,12 @@ echo "Data seed: $data_seed"
 export NCCL_P2P_DISABLE=1
 module load cuda-12.4
 
-model_string=$(jq -r '.model_names | join("_")' "$args")
+GPU_ID=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits | \
+         awk '{print NR-1 ":" $1}' | sort -t: -k2 -nr | head -n1 | cut -d: -f1)
+export CUDA_VISIBLE_DEVICES=$GPU_ID
+
+# model_string=$(jq -r '.model_names | join("_")' "$args")
+model_string="n_moreearly"
 ofw=$(jq -r '.output_feature_weight' "$args")
 if [ -n "$prefix" ] ; then
     sae_name_prefix="${prefix}_${model_string}_seed=${seed}_ofw=${ofw}"
@@ -101,8 +106,8 @@ fi
 # temp_dir="/scratch/$USER/tmp"
 
 # temp_dir="/home/$USER/tmp"
-temp_dir="/mnt/labshare/nsrikant/bbox_outputs/tmp"
-
+# temp_dir="/mnt/labshare/nsrikant/bbox_outputs/tmp"
+temp_dir="/datadrive/nsrikant/tmp"
 mkdir -p $temp_dir
 
 cd sae
@@ -114,7 +119,7 @@ python train_sae.py \
     --sae_name_prefix $sae_name_prefix \
     --spill_dir $temp_dir \
     --temp_dir $temp_dir \
-    --workers 20
+    --workers 8
 
 if [ $? -ne 0 ]; then
     echo "Training failed with exit code $?. Terminating."
@@ -131,7 +136,7 @@ python eval_sae.py \
     --sae_name_prefix $sae_name_prefix \
     --spill_dir $temp_dir \
     --temp_dir $temp_dir \
-    --workers 16 \
+    --workers 8 \
     --save_activations True
 
 rm -r $temp_dir

@@ -45,6 +45,56 @@ def _get_valid_doc_ids(
     return input_file_df.index.to_list()
 
 
+# def load_dataframe(
+#     client,
+#     input_feature_dir: str,
+#     output_feature_dirs: list[str] = None,
+#     include_logprobs: bool = True,
+# ) -> dd.DataFrame:
+#     """
+#     loads features from directories containing parquet files
+#     into a dask dataframe that we can manipulate
+#     """
+#     doc_ids = _get_valid_doc_ids(input_feature_dir, output_feature_dirs)
+#     print(f"reading data from {input_feature_dir}")
+#     df = dd.read_parquet(input_feature_dir, filters=[("doc_id", 'in', doc_ids)])
+#     df["word_id"] = df["word_id"].astype(str)
+#     df = df.set_index("word_id")
+#     df = client.persist(df)
+#     print("Initial df shape:", df.shape[0].compute())
+#     print("Initial df index sample:", df.index.compute()[:5])  # Check index format
+#     if include_logprobs:
+#         for dir in tqdm(output_feature_dirs):
+#             model = os.path.basename(os.path.normpath(dir))
+#             print(f"reading data for {model}", flush=True)
+#             model_df = dd.read_parquet(dir, filters=[("doc_id", 'in', doc_ids)])
+#             print("model_df shape:", model_df.shape[0].compute())
+#             model_df["word_id"] = model_df["word_id"].astype(str)
+#             model_df = model_df.set_index("word_id")
+#             print("model_df index sample:", model_df.index.compute()[:5])
+#             model_logprobs = model_df["logprobs"].values.compute()
+#             print("clipping data...", flush=True)
+#             min_neg_fp16 = -6.10352e-05
+#             model_logprobs_clipped = np.where((model_logprobs < 0) & (model_logprobs > min_neg_fp16), min_neg_fp16, model_logprobs)
+#             print("merging data...", flush=True)
+#             temp_df = pd.DataFrame({f"{model}_logprobs": model_logprobs_clipped}, index=model_df.index)
+#             temp_df.index = temp_df.index.astype(str)  # Ensure string type index
+#             print("temp_df index sample:", temp_df.index[:5])
+#             model_logprobs_df = dd.from_pandas(temp_df, npartitions=df.npartitions)
+#             model_logprobs_df.index = model_logprobs_df.index.astype(str)
+#             print("Pre-merge shapes:")
+#             print(" - df:", df.shape[0].compute())
+#             print(" - model_logprobs_df:", model_logprobs_df.shape[0].compute())
+#             df = dd.merge(df, model_logprobs_df, left_index=True, right_index=True, how='inner')
+#             # df = client.persist(df)
+#             print("Post-merge shape:", df.shape[0].compute())
+#             print("Post-merge columns:", df.columns)
+#     df = df.repartition(partition_size="100MB")
+#     df = client.persist(df)
+#     print(df.shape[0].compute())
+#     return df
+
+
 def load_dataframe(
     client,
     input_feature_dir: str,
@@ -62,36 +112,43 @@ def load_dataframe(
     df = df.set_index("word_id")
     df = client.persist(df)
     print("Initial df shape:", df.shape[0].compute())
-    print("Initial df index sample:", df.index.compute()[:5])  # Check index format
-    if include_logprobs:
+    
+    if include_logprobs and output_feature_dirs:
+        # Read all models at once and collect their logprobs
+        all_model_dfs = []
+        
         for dir in tqdm(output_feature_dirs):
             model = os.path.basename(os.path.normpath(dir))
             print(f"reading data for {model}", flush=True)
             model_df = dd.read_parquet(dir, filters=[("doc_id", 'in', doc_ids)])
-            print("model_df shape:", model_df.shape[0].compute())
             model_df["word_id"] = model_df["word_id"].astype(str)
-            model_df = model_df.set_index("word_id", inplace=True)
-            print("model_df index sample:", model_df.index.compute()[:5])
-            model_logprobs = model_df["logprobs"].values.compute()
-            print("clipping data...", flush=True)
-            min_neg_fp16 = -6.10352e-05
-            model_logprobs_clipped = np.where((model_logprobs < 0) & (model_logprobs > min_neg_fp16), min_neg_fp16, model_logprobs)
-            print("merging data...", flush=True)
-            temp_df = pd.DataFrame({f"{model}_logprobs": model_logprobs_clipped}, index=model_df.index)
-            temp_df.index = temp_df.index.astype(str)  # Ensure string type index
-            print("temp_df index sample:", temp_df.index[:5])
-            model_logprobs_df = dd.from_pandas(temp_df, npartitions=df.npartitions)
-            model_logprobs_df.index = model_logprobs_df.index.astype(str)
-            print("Pre-merge shapes:")
-            print(" - df:", df.shape[0].compute())
-            print(" - model_logprobs_df:", model_logprobs_df.shape[0].compute())
-            df = dd.merge(df, model_logprobs_df, left_index=True, right_index=True, how='inner')
-            df = client.persist(df)
-            print("Post-merge shape:", df.shape[0].compute())
-            print("Post-merge columns:", df.columns)
+            model_df = model_df.set_index("word_id")
+            # Keep only logprobs column and rename it
+            model_df = model_df[["logprobs"]].rename(columns={"logprobs": f"{model}_logprobs"})
+            all_model_dfs.append(model_df)
+        
+        # Concatenate all model dataframes along columns axis
+        print("Concatenating all model logprobs...", flush=True)
+        models_df = dd.concat(all_model_dfs, axis=1)
+        
+        # Clip values
+        print("Clipping data...", flush=True)
+        min_neg_fp16 = -6.10352e-05
+        for dir in output_feature_dirs:
+            model = os.path.basename(os.path.normpath(dir))
+            col_name = f"{model}_logprobs"
+            models_df[col_name] = models_df[col_name].where(
+                ~((models_df[col_name] < 0) & (models_df[col_name] > min_neg_fp16)),
+                min_neg_fp16
+            )
+        
+        # Single merge operation
+        print("Merging all models with main df...", flush=True)
+        df = dd.merge(df, models_df, left_index=True, right_index=True, how='inner')
+    
     df = df.repartition(partition_size="100MB")
     df = client.persist(df)
-    print(df.shape[0].compute())
+    print("Final df shape:", df.shape[0].compute())
     return df
 
 

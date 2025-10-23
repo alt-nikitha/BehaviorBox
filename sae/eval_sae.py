@@ -264,7 +264,8 @@ def main(
     print("Loading data...", flush=True)
 
     # process the cached data, one dataset subset at a time
-    model_string = "_".join(cfg["model_names"])
+    # model_string = "_".join(cfg["model_names"])
+    model_string = "n_moreearly_models"
     data_dir_names = [os.path.basename(d) for d in cfg["data_dirs"]]
     # should already be sorted in natural order
     cached_dataset_dirs = [f"{cache_dir}/{model_string}/{os.path.basename(d)}" for d in data_dir_names]

@@ -1,7 +1,7 @@
 {
-    "cache_dir": "/home/nsrikant/.cache",
+    "cache_dir": "/mnt/labshare/nsrikant/.cache",
     "data_dirs": [
-        "/home/nsrikant/BehaviorBoxNew/output/validation_split_1000"
+        "/mnt/labshare/nsrikant/bbox_outputs/output/validation_split_1000"
     ],
     "model_names": [
         "pythia-160m-step1000",
@@ -11,5 +11,5 @@
         "pythia-160m"
     ],
     "output_feature_weight": 0.7,
-    "save_dir": "/home/nsrikant/BehaviorBoxNew/sae_outputs/n_comparison"
+    "save_dir": "/mnt/labshare/nsrikant/bbox_outputs/sae_outputs/n_comparison"
 }

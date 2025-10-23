@@ -21,7 +21,8 @@ def cache_data_per_dir(
     model_names: list[str] = None,
     output_feature_weight: float = None,
 ) -> str:
-    model_string = "_".join(model_names)
+    # model_string = "_".join(model_names)
+    model_string = "n_moreearly_models"
     cache_dir = os.path.join(cache_dir, f"{model_string}/{os.path.basename(data_dir)}")
     cache_data_dir = os.path.join(cache_dir, f"ofw={output_feature_weight}")
     if not os.path.exists(cache_data_dir):
@@ -129,7 +130,7 @@ def cache_data_per_dir(
 @click.option(
     "--workers",
     type=int,
-    default=16,
+    default=8,
 )
 def main(
     cache_dir: str,
@@ -137,7 +138,7 @@ def main(
     model_names: list[str],
     spill_dir: str,
     output_feature_weight = None,
-    workers: int = 16,
+    workers: int = 8,
 ):
     if output_feature_weight == "None":
         output_feature_weight = None
@@ -148,7 +149,7 @@ def main(
 
     dask_cfg.set({'distributed.scheduler.worker-ttl': None})
     client = Client(
-        n_workers=workers, memory_limit='20GB', processes=True, timeout='30s', local_directory=spill_dir
+        n_workers=workers, memory_limit='24GB', processes=True, timeout='60s', local_directory=spill_dir
     )
     print(client)
 

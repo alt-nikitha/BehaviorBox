@@ -47,18 +47,19 @@ def classify_trend_soft(arr, tol=1e-5):
 
 
     
-import ast
-feature_metrics = pd.read_csv("/home/nsrikant/BehaviorBoxNew/sae_outputs/n_comparison/_seed=42_ofw=_N=3000_k=50_lp=None/feature_metrics-pythia-160m-step1000_pythia-160m-step10000_pythia-160m-step70000_pythia-160m-step100000_pythia-160m.csv")
-print(feature_metrics.columns)
-print(feature_metrics.head())
+# import ast
+# feature_metrics = pd.read_csv("/home/nsrikant/BehaviorBoxNew/sae_outputs/n_comparison/_seed=42_ofw=_N=3000_k=50_lp=None/feature_metrics-pythia-160m-step1000_pythia-160m-step10000_pythia-160m-step70000_pythia-160m-step100000_pythia-160m.csv")
+# print(feature_metrics.columns)
+# print(feature_metrics.head())
 
-feature_metrics['prob_means'] = feature_metrics['prob_means'].apply(lambda x: np.array([float(v) for v in x.strip("[]").split()]))
+# feature_metrics['prob_means'] = feature_metrics['prob_means'].apply(lambda x: np.array([float(v) for v in x.strip("[]").split()]))
 
 
 
-activations_df = pd.read_csv("/home/nsrikant/BehaviorBoxNew/sae_outputs/n_comparison/_seed=42_ofw=_N=3000_k=50_lp=None/top-50_activations.csv")
+activations_df = pd.read_csv("/mnt/labshare/nsrikant/bbox_outputs/sae_outputs/n_comparison/_seed=42_ofw=_N=3000_k=50_lp=None/top-50_activations.csv")
 print(activations_df.columns)
 print(activations_df.head())
+print(activations_df['pythia-160m-step1000'].to_list()[:5])
 # for i,row in feature_metrics.iterrows():
 #     prob_means = row["prob_means"]
 #     print(prob_means, "->", classify_trend_soft(prob_means))

@@ -15,28 +15,38 @@ LITELLM_API_KEY = os.environ.get("LITELLM_API_KEY")
 LITELLM_BASE_URL = os.environ.get("LITELLM_BASE_URL")
 MAX_REQUESTS = 10
 
-system_prompt = """Your job is to determine if a group of words (surrounded by asterisks, e.g. *word*) in specific contexts form a coherent group that can be described concisely. \
-I will provide you with a list of words surrounded by asterisks and the context in which they appear, usually within a sentence or a block of text. \
-Each word and how it appears in context will be its own item in a list.\n \
-\nHere are some examples:\n \
-- conservation: Efforts in *conservation* are essential for protecting endangered species.\n \
-- habitat: The loss of *habitat* is a significant threat to biodiversity.\n \
-- ecosystem: An *ecosystem* needs a balance of various species to thrive.\n\n\
-Your job is to determine if the words form a coherent group that can be described concisely. \
-If the words do form a coherent group, please provide a concise description of the group. \
-Provide your answer in the following format:\n\n\
-<BEGIN ANSWER>\n\
-Coherent: <YES or NO>\n\
-Description: <if YES above, your description here; otherwise NONE>\n\
-<END ANSWER>\n\n\
-Do not provide any additional text after <END ANSWER>. \
-Only respond with YES or NO for the "Coherent" field. \
-If you respond with YES, you must provide a description in the "Description" field. \
-Descriptions should be concise, ideally a single sentence. \
-For the above example, descriptions may be something like "Nouns describing environmental conservation" or "Words related to biodiversity". \
-Note that groups and descriptions may also pertain to formatting, such as "Punctuation before whitespaces in documents discussing logic" or "Series of whitespaces in documents discussing visual art".\
-The description should NOT refer to the asterisks, those are only there to help you identify the words. \n\n\
-Please categorize the following list of words and their contexts as coherent or not coherent, and provide a description if needed:\n\n\
+system_prompt = """Your job is to determine if a group of words (surrounded by asterisks, e.g. *word*) in specific contexts form a coherent group that can be described concisely.
+I will provide you with a list of words surrounded by asterisks and the context in which they appear, usually within a sentence or a block of text.
+Each list item will contain exactly one word marked with asterisks and the surrounding text showing how it is used.
+
+Here are some examples:
+- conservation: Efforts in *conservation* are essential for protecting endangered species.
+- habitat: The loss of *habitat* is a significant threat to biodiversity.
+- ecosystem: An * ecosystem* needs a balance of various species to thrive.
+
+Your task is to decide whether the set of words forms a coherent group.
+A group is considered coherent if the words share a clear conceptual, functional, or linguistic relationship that can be described concisely (for example, all referring to a single topic, domain, grammatical function, or stylistic pattern).
+If the words form a coherent group, provide a short description of that group (ideally one sentence).
+If they do not, indicate “NO” and set the description to “NONE.”
+
+Provide your answer in the following format:
+
+<BEGIN ANSWER>
+Coherent: <YES or NO>
+Description: <if YES above, your description here; otherwise NONE>
+<END ANSWER>
+
+Do not provide any additional text after <END ANSWER>.
+Only respond with YES or NO for the "Coherent" field.
+If you respond with YES, you must provide a description in the "Description" field.
+Descriptions should be concise, ideally a single sentence.
+For the above example, descriptions may be something like "Nouns describing environmental conservation" or "Words related to biodiversity".
+DO NOT consider features coherent if they only capture generic formatting, spacing, punctuation, tokenization artifacts (e.g., words preceded or followed by spaces, newlines, or sentence boundaries), or random word co-occurrences without semantic or grammatical unity.
+Formatting-based coherence is ONLY valid if it reflects a consistent functional role (e.g., bullet points, code indentation, markdown syntax), not if it simply reflects where spaces or punctuation occur.
+The description should NOT refer to the asterisks, those are only there to help you identify the words.
+
+Please categorize the following list of words and their contexts as coherent or not coherent, and provide a description if needed:
+
 """
 
 async def get_response(user_prompt: tuple[int, str], labeling_model: str):
@@ -94,7 +104,8 @@ async def main(
     
     cfg = json.load(open(f"{sae_dir}/config.json", "r"))
     model_names = cfg["model_names"]
-    model_name_string = "_".join(model_names)
+    # model_name_string = "_".join(model_names)
+    model_name_string = "n_moreearly_models"
     feature_metrics = pd.read_csv(f"{sae_dir}/feature_metrics-{model_name_string}.csv")
     
     features = get_relevant_features(feature_metrics)

@@ -439,7 +439,8 @@ def calc_feature_metrics(sae_dir: str, k: int = 50,):
     model_names = cfg["model_names"]
     #TODO: add support for > 2 models
     # assert len(model_names) == 2, "Currently only supports comparison between 2 models"
-    model_names_label = "_".join(model_names)
+    # model_names_label = "_".join(model_names)
+    model_names_label = "n_moreearly_models"
 
     if not os.path.exists(os.path.join(sae_dir, "topk_feature_word_embeddings.pkl")):
         word_id_embeddings = {}
