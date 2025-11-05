@@ -157,6 +157,7 @@ def get_output_overlapping_strings(
 def get_model_logprobs(
     model_addr: str,
     model_id: str,
+    model_name: str,
     input_text: list[str],
     sample_ids: list[str],
     window_word_ids: list[list[int]],
@@ -193,7 +194,7 @@ def get_model_logprobs(
             for _ in range(3):
                 try:
                     return await client.completions.create(
-                        model=model_id,
+                        model=model_name,
                         prompt=text,
                         max_tokens=0,
                         echo=True,

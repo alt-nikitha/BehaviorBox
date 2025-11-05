@@ -1,0 +1,21 @@
+{
+    "cache_dir": "/home/nsrikant/.cache",
+    "data_dirs": [
+        "/home/nsrikant/bbox_outputs/output/blimp_full"
+    ],
+    "model_names": [
+        "OLMo2-step0-tokens0B",
+        "OLMo2-step1000-tokens3B",
+        "OLMo2-step2000-tokens5B",
+        "OLMo2-step3000-tokens7B",
+        "OLMo2-step4000-tokens9B",
+        "OLMo2-step5000-tokens11B",
+        "OLMo2-step6000-tokens13B",
+        "OLMo2-step7000-tokens15B",
+        "OLMo2-step8000-tokens17B",
+        "OLMo2-step9000-tokens19B",
+        "OLMo2-step10000-tokens21B"
+        ],
+    "output_feature_weight": 0.7,
+    "save_dir": "/home/nsrikant/bbox_outputs/sae_outputs_blimp"
+}

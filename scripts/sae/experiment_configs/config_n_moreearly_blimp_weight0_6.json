@@ -1,0 +1,25 @@
+{
+    "cache_dir": "/home/nsrikant/.cache",
+    "data_dirs": [
+        "/home/nsrikant/bbox_outputs/output/blimp_samples"
+    ],
+    "model_names": [
+        "pythia-160m-step1",
+        "pythia-160m-step2",
+        "pythia-160m-step4",
+        "pythia-160m-step8",
+        "pythia-160m-step16",
+        "pythia-160m-step32",
+        "pythia-160m-step64",
+        "pythia-160m-step128",
+        "pythia-160m-step256",
+        "pythia-160m-step512",
+        "pythia-160m-step1000",
+        "pythia-160m-step10000",
+        "pythia-160m-step70000",
+        "pythia-160m-step100000",
+        "pythia-160m"
+    ],
+    "output_feature_weight": 0.6,
+    "save_dir": "/home/nsrikant/bbox_outputs/sae_outputs_blimp/n_moreearly"
+}

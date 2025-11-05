@@ -92,6 +92,7 @@ def load_data(
     output_feature_weight: float,
     cache_dir: str,
     spill_dir: str,
+    model_string: str,
 ):
     dask_cfg.set({'distributed.scheduler.worker-ttl': None})
     dask_cfg.set({
@@ -106,6 +107,7 @@ def load_data(
     cache_data_filepaths = []
     for data_dir in data_dirs:
         cache_data_dir = cache_data_per_dir(
+            model_string=model_string,
             client=client,
             cache_dir=cache_dir,
             data_dir=data_dir,
@@ -399,9 +401,15 @@ def train(
     help="Relative weight of model probabilities",
     default=None,
 )
+# @click.option(
+#     "--sae_name_prefix",
+#     help="Prefix of the name of the SAE model",
+#     type=str,
+# )
+
 @click.option(
-    "--sae_name_prefix",
-    help="Prefix of the name of the SAE model",
+    "--model_string",
+    help="String to identify the SAE experiment",
     type=str,
 )
 @click.option(
@@ -440,7 +448,7 @@ def main(
     model_names: list[str],
     num_epochs: int,
     output_feature_weight: float,
-    sae_name_prefix: str,
+    model_string: str,
     save_dir: str,
     seed: int,
     spill_dir: str,
@@ -469,6 +477,7 @@ def main(
         data_dirs = natsorted(data_dirs)
     
     cfg = get_config(config_path, output_feature_weight, seed)
+    sae_name_prefix = f"{model_string}_seed={seed}_ofw={output_feature_weight}"
     sae_model_name = get_sae_name(cfg, sae_name_prefix)
     cfg["name"] = sae_model_name
     cfg["model_names"] = model_names
@@ -529,7 +538,7 @@ def main(
     # check if the data is already cached
     cached_data_dirs = []
     cached_data_filepaths = []
-    model_string = "_".join(model_names)
+    # model_string = "_".join(model_names)
     cache_models_dir = os.path.join(cache_dir, model_string)
     if os.path.exists(cache_models_dir):
         data_dir_names = os.listdir(cache_models_dir)
@@ -557,6 +566,7 @@ def main(
             cache_dir=cache_dir,
             # cfg=cfg,
             spill_dir=spill_dir,
+            model_string=model_string,
         )
     else:
         cfg["data_dirs"] = cached_data_dirs

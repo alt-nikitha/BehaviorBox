@@ -39,7 +39,7 @@ from sae_utils import (
 )
 
 # seed to select the same subset of data for evaluation
-SEED = 0
+SEED = 42
 
 @torch.no_grad()
 def get_eval_metrics_and_topk_feature_acts(
@@ -192,9 +192,14 @@ def get_eval_metrics_and_topk_feature_acts(
     type=bool,
     default=False,
 )
+# @click.option(
+#     "--sae_name_prefix",
+#     help="Prefix of the name of the SAE model",
+#     type=str,
+# )
 @click.option(
-    "--sae_name_prefix",
-    help="Prefix of the name of the SAE model",
+    "--model_string",
+    help="String to identify the SAE experiment",
     type=str,
 )
 @click.option(
@@ -213,6 +218,12 @@ def get_eval_metrics_and_topk_feature_acts(
     type=int,
     default=16,
 )
+@click.option(
+    "--seed",
+    help="Random seed",
+    type=int,
+    default=42,
+)
 def main(
     args: str,
     cache_dir: str,
@@ -221,23 +232,27 @@ def main(
     k: int,
     random_sae: bool,
     sae_dir: str,
-    sae_name_prefix: str,
+    model_string: str,
     save_activations: bool,
     spill_dir: str,
     temp_dir: str,
     workers: int = 16,
+    seed: int = 42,
 ):    
-    np.random.seed(SEED)
+    np.random.seed(seed)
     
     if args is not None:
         with open(args, "r") as f:
             args_dict = json.load(f)
         cache_dir = args_dict.get("cache_dir", cache_dir)
+        ofw = args_dict.get("output_feature_weight", None)
+        seed = args_dict.get("seed", seed)
     
     if config_path:
         orig_cfg = get_config(config_path)
         if sae_dir is None:
-            assert sae_name_prefix is not None, "sae_name_prefix must be provided if sae_dir is not"
+            # assert sae_name_prefix is not None, "sae_name_prefix must be provided if sae_dir is not"
+            sae_name_prefix = f"{model_string}_seed={seed}_ofw={ofw}"
             sae_model_name = get_sae_name(orig_cfg, sae_name_prefix)
             sae_dir = f"{args_dict['save_dir']}/{sae_model_name}"
     else:
@@ -265,7 +280,7 @@ def main(
 
     # process the cached data, one dataset subset at a time
     # model_string = "_".join(cfg["model_names"])
-    model_string = "n_moreearly_models"
+    # model_string = "n_moreearly_models"
     data_dir_names = [os.path.basename(d) for d in cfg["data_dirs"]]
     # should already be sorted in natural order
     cached_dataset_dirs = [f"{cache_dir}/{model_string}/{os.path.basename(d)}" for d in data_dir_names]
@@ -399,7 +414,7 @@ def main(
     get_topk_words_in_context(sae_dir, k)
     
     print("Calculating feature metrics", flush=True)
-    calc_feature_metrics(sae_dir)
+    calc_feature_metrics(sae_dir, model_string=model_string)
     
     if save_activations:
         print(f"Calculating feature histograms and densities", flush=True)

@@ -242,3 +242,59 @@ sbatch scripts/sae/sae_pipeline.sh \
     --hp_cfg=/home/nsrikant/BehaviorBoxNew/sae/hyperparam_configs/N=3000_k=50.json
 
 sbatch scripts/analysis/label_features.sh --sae_dir=/mnt/labshare/nsrikant/bbox_outputs/sae_outputs/n_moreearly/n_moreearly_seed=42_ofw=_N=3000_k=50_lp=None --labeling_model="neulab/claude-sonnet-4-20250514"
+
+
+sbatch scripts/data_generation/get_input_features.sh \
+    --data=/home/nsrikant/BehaviorBoxNew/data/positive_negative_tasks.jsonl \
+    --output_dir=/home/nsrikant/BehaviorBoxNew/output/positive_negative_tasks \
+    --batch_size=5
+
+
+sbatch scripts/data_generation/get_input_features.sh \
+    --data=/home/nsrikant/BehaviorBoxNew/data/blimp_samples.jsonl \
+    --output_dir=/home/nsrikant/bbox_outputs/output/blimp_samples \
+    --batch_size=5
+
+
+sbatch scripts/data_generation/get_input_features.sh \
+    --data=/home/nsrikant/BehaviorBoxNew/data/anthropic_hh_samples.jsonl \
+    --output_dir=/home/nsrikant/bbox_outputs/output/anthropic_hh_samples \
+    --batch_size=5
+
+
+sbatch scripts/sae/sae_pipeline.sh \
+    --exp_cfg=/home/nsrikant/BehaviorBoxNew/scripts/sae/experiment_configs/config_n_moreearly_blimp.json \
+    --hp_cfg=/home/nsrikant/BehaviorBoxNew/sae/hyperparam_configs/N=3000_k=50.json
+
+
+sbatch scripts/sae/sae_pipeline.sh \
+    --exp_cfg=/home/nsrikant/BehaviorBoxNew/scripts/sae/experiment_configs/config_n_moreearly_anthropic_hh.json \
+    --hp_cfg=/home/nsrikant/BehaviorBoxNew/sae/hyperparam_configs/N=3000_k=50.json
+
+sbatch scripts/analysis/label_features.sh --sae_dir=/home/nsrikant/bbox_outputs/sae_outputs_anthropic_hh/n_moreearly/n_moreearly_seed=42_ofw=_N=3000_k=50_lp=None --labeling_model="neulab/claude-sonnet-4-20250514"
+sbatch scripts/analysis/label_features.sh --sae_dir=/home/nsrikant/bbox_outputs/sae_outputs_blimp/n_moreearly/n_moreearly_seed=42_ofw=_N=3000_k=50_lp=None --labeling_model="neulab/claude-sonnet-4-20250514"
+
+sbatch scripts/analysis/label_features.sh --sae_dir=/home/nsrikant/bbox_outputs/sae_outputs_blimp/n_moreearly_blimp_seed=42_ofw=0.7_N=3000_k=25_lp=None --labeling_model="neulab/claude-sonnet-4-20250514"
+sbatch scripts/analysis/label_features.sh --sae_dir=/home/nsrikant/bbox_outputs/sae_outputs_blimp/n_moreearly_blimp_seed=42_ofw=0.7_N=3000_k=75_lp=None --labeling_model="neulab/claude-sonnet-4-20250514"
+
+sbatch scripts/analysis/label_features.sh --sae_dir=/home/nsrikant/bbox_outputs/sae_outputs_blimp/n_moreearly/n_moreearly_blimp_weight0_6_seed=42_ofw=0.6_N=3000_k=75_lp=None --labeling_model="neulab/claude-sonnet-4-20250514"
+
+
+sbatch scripts/data_generation/get_input_features.sh \
+    --data=/home/nsrikant/BehaviorBoxNew/data/blimp_full.jsonl \
+    --output_dir=/home/nsrikant/bbox_outputs/output/blimp_full \
+    --batch_size=5
+
+
+sbatch scripts/sae/sae_pipeline.sh \
+    --exp_cfg=/home/nsrikant/BehaviorBoxNew/scripts/sae/experiment_configs/config_n_moreearly_blimp_full.json \
+    --hp_cfg=/home/nsrikant/BehaviorBoxNew/sae/hyperparam_configs/N=3000_k=50.json
+
+sbatch scripts/analysis/label_features.sh --sae_dir=/home/nsrikant/bbox_outputs/sae_outputs_blimp/n_moreearly_blimp_full_seed=42_ofw=0.7_N=3000_k=50_lp=None --labeling_model="neulab/claude-sonnet-4-20250514"
+
+sbatch scripts/sae/sae_pipeline.sh \
+    --exp_cfg=/home/nsrikant/BehaviorBoxNew/scripts/sae/experiment_configs/config_n_moreearly_blimp_full_olmo.json \
+    --hp_cfg=/home/nsrikant/BehaviorBoxNew/sae/hyperparam_configs/N=3000_k=50.json
+
+sbatch scripts/analysis/label_features.sh --sae_dir=/home/nsrikant/bbox_outputs/sae_outputs_blimp/n_moreearly_blimp_full_olmo_seed=42_ofw=0.7_N=3000_k=50_lp=None --labeling_model="neulab/claude-sonnet-4-20250514"
+

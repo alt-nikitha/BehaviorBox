@@ -391,7 +391,7 @@ def calc_feature_hist_and_densities(sae_dir: str):
     np.save(os.path.join(sae_dir, "feature_densities.npy"), all_densities)
 
 
-def calc_feature_metrics(sae_dir: str, k: int = 50,):
+def calc_feature_metrics(sae_dir: str, k: int = 50, model_string: str = None):
     def get_embeddings_from_word_ids(
         input_feature_dir: str,
         word_ids: list[str],
@@ -440,7 +440,8 @@ def calc_feature_metrics(sae_dir: str, k: int = 50,):
     #TODO: add support for > 2 models
     # assert len(model_names) == 2, "Currently only supports comparison between 2 models"
     # model_names_label = "_".join(model_names)
-    model_names_label = "n_moreearly_models"
+    # model_names_label = "n_moreearly_models"
+    model_names_label = model_string
 
     if not os.path.exists(os.path.join(sae_dir, "topk_feature_word_embeddings.pkl")):
         word_id_embeddings = {}

@@ -146,7 +146,8 @@ async def main(
     sae_cfg = json.load(open(f"{sae_dir}/config.json", "r"))
     model_names = sae_cfg["model_names"]
     # model_string = "_".join(model_names)
-    model_string = "n_moreearly_models"
+    # model_string = "n_moreearly_models"
+    model_string = sae_dir.split("/")[-1].split("_seed")[0]
     feature_metrics = pd.read_csv(f"{sae_dir}/feature_metrics-{model_string}.csv")
     
     output_file = os.path.join(f"{sae_dir}/feature_labels_validated", f"{labeling_model_for_file}.json")

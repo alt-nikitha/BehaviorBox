@@ -105,7 +105,7 @@ async def main(
     cfg = json.load(open(f"{sae_dir}/config.json", "r"))
     model_names = cfg["model_names"]
     # model_name_string = "_".join(model_names)
-    model_name_string = "n_moreearly_models"
+    model_name_string = sae_dir.split("/")[-1].split("_seed")[0]
     feature_metrics = pd.read_csv(f"{sae_dir}/feature_metrics-{model_name_string}.csv")
     
     features = get_relevant_features(feature_metrics)

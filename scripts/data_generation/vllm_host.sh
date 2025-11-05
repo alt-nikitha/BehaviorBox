@@ -21,10 +21,11 @@ tensor_parallel_size=1
 gpu_memory_utilization=0.6
 
 usage() {
-  echo "Usage: $0 [--model_id=STRING] [--revision=STRING] [--help]"
+  echo "Usage: $0 [--model_id=STRING] [--model_name=STRING] [--revision=STRING] [--help]"
   echo
   echo "Options:"
   echo "  --model_id=STRING  Huggingface model ID (e.g., allenai/OLMo-2-1124-13B)"
+  echo "  --model_name=STRING Name for the model (e.g., olmo2-13b-sft)"
   echo "  --revision=STRING  Optional HF branch/tag/revision to load"
   echo "  --help            Display this help message"
   exit 1
@@ -35,6 +36,10 @@ while [[ $# -gt 0 ]]; do
   case $1 in
     --model_id=*)
       model_id="${1#*=}"
+      shift
+      ;;
+    --model_name=*)
+      model_name="${1#*=}"
       shift
       ;;
     --revision=*)
@@ -52,8 +57,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Validate required arguments
-if [ -z "$model_id" ]; then
-  echo "Error: --model_id is required"
+if [ -z "$model_id" ] || [ -z "$model_name" ]; then
+  echo "Error: --model_id and --model_name are required"
   usage
 fi
 
@@ -73,9 +78,9 @@ GPU_ID=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits | \
          awk '{print NR-1 ":" $1}' | sort -t: -k2 -nr | head -n1 | cut -d: -f1)
 export CUDA_VISIBLE_DEVICES=$GPU_ID
 
-mkdir -p scripts/data_generation/tmp/${model_id}
+mkdir -p scripts/data_generation/tmp/${model_name}
 
-echo "$HOSTNAME:$PORT" > scripts/data_generation/tmp/${model_id}/host_port.txt
+echo "$HOSTNAME:$PORT" > scripts/data_generation/tmp/${model_name}/host_port.txt
 
 # lowering GPU utilizaition to test
 if ss -tulwn | grep -q ":$PORT "; then
@@ -85,6 +90,7 @@ else
     python -m vllm.entrypoints.openai.api_server \
         --gpu_memory_utilization $gpu_memory_utilization \
         --model $model_id \
+        --served-model-name $model_name \
         --port $PORT \
         --tensor-parallel-size $tensor_parallel_size \
         ${REVISION:+ --revision ${REVISION}} \

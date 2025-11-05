@@ -94,29 +94,41 @@ GPU_ID=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits | \
 export CUDA_VISIBLE_DEVICES=$GPU_ID
 
 # model_string=$(jq -r '.model_names | join("_")' "$args")
-model_string="n_moreearly"
-ofw=$(jq -r '.output_feature_weight' "$args")
-if [ -n "$prefix" ] ; then
-    sae_name_prefix="${prefix}_${model_string}_seed=${seed}_ofw=${ofw}"
-else
-    sae_name_prefix="${model_string}_seed=${seed}_ofw=${ofw}"
-fi
+filename=$(basename "$exp_cfg" .json)
+model_string="${filename#config_}"
+
+# ofw=$(jq -r '.output_feature_weight' "$args")
+# if [ -n "$prefix" ] ; then
+#     sae_name_prefix="${prefix}_${model_string}_seed=${seed}_ofw=${ofw}"
+# else
+#     sae_name_prefix="${model_string}_seed=${seed}_ofw=${ofw}"
+# fi
 
 # dask spill dir
-# temp_dir="/scratch/$USER/tmp"
+temp_dir="/scratch/$USER/tmp"
 
 # temp_dir="/home/$USER/tmp"
 # temp_dir="/mnt/labshare/nsrikant/bbox_outputs/tmp"
-temp_dir="/datadrive/nsrikant/tmp"
+# temp_dir="/datadrive/nsrikant/tmp"
 mkdir -p $temp_dir
 
 cd sae
+# python train_sae.py \
+#     --args $exp_cfg \
+#     --config_path $hp_cfg \
+#     --data_shuffling_seed $data_seed \
+#     --seed $seed \
+#     --sae_name_prefix $sae_name_prefix \
+#     --spill_dir $temp_dir \
+#     --temp_dir $temp_dir \
+#     --workers 8
+
 python train_sae.py \
     --args $exp_cfg \
     --config_path $hp_cfg \
     --data_shuffling_seed $data_seed \
     --seed $seed \
-    --sae_name_prefix $sae_name_prefix \
+    --model_string $model_string \
     --spill_dir $temp_dir \
     --temp_dir $temp_dir \
     --workers 8
@@ -133,10 +145,11 @@ echo "Training complete. Running eval."
 python eval_sae.py \
     --args $exp_cfg \
     --config_path $hp_cfg \
-    --sae_name_prefix $sae_name_prefix \
+    --model_string $model_string \
     --spill_dir $temp_dir \
     --temp_dir $temp_dir \
     --workers 8 \
+    --seed $seed \
     --save_activations True
 
 rm -r $temp_dir

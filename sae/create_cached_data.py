@@ -15,6 +15,7 @@ from data_utils import (
 )
 
 def cache_data_per_dir(
+    model_string: str,
     client: Client,
     cache_dir: str,
     data_dir: str,
@@ -22,7 +23,7 @@ def cache_data_per_dir(
     output_feature_weight: float = None,
 ) -> str:
     # model_string = "_".join(model_names)
-    model_string = "n_moreearly_models"
+    # model_string = "n_moreearly_models"
     cache_dir = os.path.join(cache_dir, f"{model_string}/{os.path.basename(data_dir)}")
     cache_data_dir = os.path.join(cache_dir, f"ofw={output_feature_weight}")
     if not os.path.exists(cache_data_dir):

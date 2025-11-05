@@ -97,6 +97,7 @@ def process_jsonl_file(
             output_features = get_model_logprobs(
                 model_addr=model_addr,
                 model_id=model_id,
+                model_name=model_name,
                 input_text=overlapping_strings,
                 sample_ids=batch_sample_ids,
                 window_word_ids=window_word_ids,
