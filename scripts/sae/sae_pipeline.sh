@@ -152,5 +152,6 @@ python eval_sae.py \
     --seed $seed \
     --save_activations True
 
+
 rm -r $temp_dir
 echo "$temp_dir removed"

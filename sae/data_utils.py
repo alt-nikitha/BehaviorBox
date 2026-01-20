@@ -106,12 +106,13 @@ def load_dataframe(
     into a dask dataframe that we can manipulate
     """
     doc_ids = _get_valid_doc_ids(input_feature_dir, output_feature_dirs)
-    print(f"reading data from {input_feature_dir}")
-    df = dd.read_parquet(input_feature_dir, filters=[("doc_id", 'in', doc_ids)])
-    df["word_id"] = df["word_id"].astype(str)
-    df = df.set_index("word_id")
-    df = client.persist(df)
-    print("Initial df shape:", df.shape[0].compute())
+    if input_feature_dir is not None:
+        print(f"reading data from {input_feature_dir}")
+        df = dd.read_parquet(input_feature_dir, filters=[("doc_id", 'in', doc_ids)])
+        df["word_id"] = df["word_id"].astype(str)
+        df = df.set_index("word_id")
+        df = client.persist(df)
+        print("Initial df shape:", df.shape[0].compute())
     
     if include_logprobs and output_feature_dirs:
         # Read all models at once and collect their logprobs
@@ -142,14 +143,24 @@ def load_dataframe(
                 min_neg_fp16
             )
         
-        # Single merge operation
-        print("Merging all models with main df...", flush=True)
-        df = dd.merge(df, models_df, left_index=True, right_index=True, how='inner')
+        if input_feature_dir is not None:
+            # Single merge operation
+            print("Merging all models with main df...", flush=True)
+            df = dd.merge(df, models_df, left_index=True, right_index=True, how='inner')
+        
     
-    df = df.repartition(partition_size="100MB")
-    df = client.persist(df)
-    print("Final df shape:", df.shape[0].compute())
-    return df
+            df = df.repartition(partition_size="100MB")
+            df = client.persist(df)
+            print("Final df shape:", df.shape[0].compute())
+            return df
+        else:
+            models_df = models_df.repartition(partition_size="100MB")
+            models_df = client.persist(models_df)
+            print("Final df shape:", models_df.shape[0].compute())
+            return models_df
+
+
+
 
 
 def preprocess_data(
@@ -158,6 +169,7 @@ def preprocess_data(
     input_feature_dim: int = 768,
     output_feature_weight: float = None,
     logprobs: bool = False,
+    only_probs: bool = False
 ) -> da.Array:
     def block_to_probs(block, input_feature_dim):
         block[:, input_feature_dim:] = np.exp(block[:, input_feature_dim:])
@@ -231,14 +243,14 @@ def preprocess_data(
     mean_embedding_norm = None
     mean_prob_norm = None
     # scale each sample (row) of the data according to the output weight specified
-    if output_feature_weight is not None and output_feature_weight > 0 and output_feature_weight < 1:
+    if not only_probs and (output_feature_weight is not None and output_feature_weight > 0 and output_feature_weight < 1):
         assert output_feature_dim == data.shape[1] - input_feature_dim, "Output feature dim must match data shape"
         print("Computing norms", flush=True)
         mean_total_norm = log_space_mean_norm(data)
         mean_embedding_norm = log_space_mean_norm(data[:, :input_feature_dim])
         mean_prob_norm = log_space_mean_norm(data[:, input_feature_dim:])
         print(mean_total_norm, mean_embedding_norm, mean_prob_norm, flush=True)
-    if output_feature_weight is not None:
+    if output_feature_weight is not None or not only_probs:
         print("Scaling features", flush=True)
         data = data.map_blocks(
             scale_block,

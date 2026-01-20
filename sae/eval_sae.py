@@ -46,6 +46,7 @@ def get_eval_metrics_and_topk_feature_acts(
     all_data: list[np.memmap],
     encoder,
     cfg,
+    save_dir,
     topk: int = 50,
     save_activations: bool = False,
     random_acts_percent: float = 0.01,
@@ -79,7 +80,7 @@ def get_eval_metrics_and_topk_feature_acts(
     prev_data_size = 0
     num_random_indices = math.floor(512 * random_acts_percent)
     if save_activations:
-        save_file = cfg["save_dir"] + f"/feature_activations.npy"
+        save_file = save_dir + f"/feature_activations.npy"
         print(save_file, flush=True)
         if os.path.exists(save_file):
             os.remove(save_file)
@@ -181,8 +182,14 @@ def get_eval_metrics_and_topk_feature_acts(
     default=False,
 )
 @click.option(
-    "--sae_dir",
-    help="Directory where SAE should be loaded from",
+    "--base_sae_dir",
+    help="Directory where base SAE should be loaded from",
+    type=click.Path(exists=True),
+    default=None,
+)
+@click.option(
+    "--eval_sae_dir",
+    help="Directory where eval SAE should be stored",
     type=click.Path(exists=True),
     default=None,
 )
@@ -224,6 +231,30 @@ def get_eval_metrics_and_topk_feature_acts(
     type=int,
     default=42,
 )
+@click.option(
+    "--ofw",
+    help="Output Feature Weight",
+    type=float,
+    default=0.7,
+)
+@click.option(
+    "--self_eval_mode",
+    help="Self Eval Mode",
+    type=bool,
+    default=True,
+)
+@click.option(
+    "--train_data_dirs",
+    help="train directories for probs",
+    type=list,
+    default=[],
+)
+@click.option(
+    "--eval_data_dirs",
+    help="data directories for probs",
+    type=list,
+    default=[],
+)
 def main(
     args: str,
     cache_dir: str,
@@ -231,91 +262,100 @@ def main(
     eval_sample: float,
     k: int,
     random_sae: bool,
-    sae_dir: str,
+    base_sae_dir: str,
+    eval_sae_dir: str,
     model_string: str,
     save_activations: bool,
     spill_dir: str,
     temp_dir: str,
     workers: int = 16,
     seed: int = 42,
+    ofw: float = 0.7,
+    self_eval_mode: bool = True,
+    train_data_dirs: list = [],
+    eval_data_dirs: list = []
 ):    
     np.random.seed(seed)
-    
     if args is not None:
         with open(args, "r") as f:
             args_dict = json.load(f)
         cache_dir = args_dict.get("cache_dir", cache_dir)
         ofw = args_dict.get("output_feature_weight", None)
         seed = args_dict.get("seed", seed)
+        if config_path:
+            orig_cfg = get_config(config_path)
+            if base_sae_dir is None:
+                sae_name_prefix = f"{model_string}_seed={seed}_ofw={ofw}"
+                sae_model_name = get_sae_name(orig_cfg, sae_name_prefix)
+                base_sae_dir = f"{args_dict['train_save_dir']}/{sae_model_name}"
+        if not self_eval_mode:
+            if eval_sae_dir is None:
+                eval_sae_dir = f"{args_dict['eval_save_dir']}/{sae_model_name}"
+            
+
+        else:
+            eval_sae_dir = base_sae_dir
+
+
+        
+    if not self_eval_mode:
+        data_dirs = args_dict.get("eval_data_dirs", eval_data_dirs)
+        
+    else:
+        data_dirs = args_dict.get("train_data_dirs", train_data_dirs)
+
     
-    if config_path:
-        orig_cfg = get_config(config_path)
-        if sae_dir is None:
-            # assert sae_name_prefix is not None, "sae_name_prefix must be provided if sae_dir is not"
-            sae_name_prefix = f"{model_string}_seed={seed}_ofw={ofw}"
-            sae_model_name = get_sae_name(orig_cfg, sae_name_prefix)
-            sae_dir = f"{args_dict['save_dir']}/{sae_model_name}"
-    else:
-        assert sae_dir is not None, "sae_dir must be provided if config_path is not"
+    print(f"Loading SAE from {base_sae_dir}...", flush=True)
+    encoder, base_cfg = load_sae(base_sae_dir)
+    if not os.path.exists(os.path.join(eval_sae_dir, "config.json")):
+        config = {
+            "model_names": base_cfg["model_names"]
+        }
+        os.makedirs(eval_sae_dir, exist_ok=True)
+        with open (os.path.join(eval_sae_dir, "config.json"), "w") as fp:
+            json.dump(config, fp)
 
-    if random_sae:
-        print("Loading random SAE...", flush=True)
-        cfg = json.load(open(f"{sae_dir}/config.json", "r"))
-        orig_sae_dir = cfg["save_dir"]
-        sae_dir = f"{os.path.dirname(orig_sae_dir)}/random_{os.path.basename(orig_sae_dir)}"
-        cfg["save_dir"] = sae_dir
-        os.makedirs(sae_dir, exist_ok=True)
-        with open(f"{sae_dir}/config.json", "w") as f:
-            json.dump(cfg, f, indent=4)
-        print(f"Saving random SAE results to {sae_dir}", flush=True)
-        encoder = get_encoder(cfg)
-        torch.save(encoder.state_dict(), f"{sae_dir}/sae.pt")
-    else:
-        print(f"Loading SAE from {sae_dir}...", flush=True)
-        encoder, cfg = load_sae(sae_dir)
+
     encoder.eval()
-
-    pprint.pprint(cfg)
+    pprint.pprint(base_cfg)
     print("Loading data...", flush=True)
-
-    # process the cached data, one dataset subset at a time
-    # model_string = "_".join(cfg["model_names"])
-    # model_string = "n_moreearly_models"
-    data_dir_names = [os.path.basename(d) for d in cfg["data_dirs"]]
-    # should already be sorted in natural order
+    data_dir_names = [os.path.basename(d) for d in data_dirs]
     cached_dataset_dirs = [f"{cache_dir}/{model_string}/{os.path.basename(d)}" for d in data_dir_names]
     data_dirs_to_cache = []
     for i, dir in enumerate(cached_dataset_dirs):
-        if not os.path.exists(os.path.join(dir, f"ofw={cfg['output_feature_weight']}")):
-            data_dirs_to_cache.append(cfg["data_dirs"][i]) 
-
-    # if the data hasn't been preprocessed and cached, do that first
+        if not os.path.exists(os.path.join(dir, f"ofw={base_cfg['output_feature_weight']}")):
+            data_dirs_to_cache.append(data_dirs[i]) 
     if len(data_dirs_to_cache) > 0:
         dask_cfg.set({'distributed.scheduler.worker-ttl': None})
         client = Client(
             n_workers=workers, memory_limit='12GB', processes=True, timeout='30s', local_directory=spill_dir
         )
-        print(client)
+        
         for data_dir in data_dirs_to_cache:
+            print(data_dir)
             _ = cache_data_per_dir(
+                model_string,
                 client,
                 cache_dir,
                 data_dir,
-                cfg["model_names"],
-                cfg["output_feature_weight"],
+                base_cfg["model_names"],
+                base_cfg["output_feature_weight"],
             )
-
     all_data = []
     all_word_ids = []
     all_logprobs = {}
     all_zscores = {}
     all_tempfiles = []
     for data_dir in cached_dataset_dirs:
-        preprocessed_data_dir = os.path.join(data_dir, f"ofw={cfg['output_feature_weight']}")
+        preprocessed_data_dir = os.path.join(data_dir, f"ofw={base_cfg['output_feature_weight']}")
         cached_data_filepath = os.path.join(preprocessed_data_dir, "preprocessed_data.dat")
+        # try:
+            
+        # except FileNotFoundError:
         with open(f"{preprocessed_data_dir}/cached_data_info.json", "r") as f:
             cached_data_info = json.load(f)
-        cached_data_dir_name = os.path.join(os.path.basename(data_dir), f"ofw={cfg['output_feature_weight']}")
+            
+        cached_data_dir_name = os.path.join(os.path.basename(data_dir), f"ofw={base_cfg['output_feature_weight']}")
         tempfile_path = f"{temp_dir}/{cached_data_dir_name}/preprocessed_data.dat"
         if not os.path.exists(tempfile_path):
             os.makedirs(f"{temp_dir}/{cached_data_dir_name}", exist_ok=True)
@@ -330,7 +370,7 @@ def main(
             word_ids = pickle.load(f)
         logprobs = {}
         zscores = {}
-        for model in cfg["model_names"]:
+        for model in base_cfg["model_names"]:
             with open(f"{data_dir}/{model}/logprobs.pkl", "rb") as f:
                 logprobs[model] = pickle.load(f)
             with open(f"{data_dir}/{model}/zscores.pkl", "rb") as f:
@@ -342,13 +382,13 @@ def main(
             indices = np.random.choice(data.shape[0], num_samples, replace=False)
             data = data[indices]
             word_ids = word_ids[indices]
-            for model in cfg["model_names"]:
+            for model in base_cfg["model_names"]:
                 logprobs[model] = logprobs[model][indices]
                 zscores[model] = zscores[model][indices]
 
         all_data.append(data)
         all_word_ids += word_ids.tolist()
-        for model in cfg["model_names"]:
+        for model in base_cfg["model_names"]:
             if model not in all_logprobs:
                 all_logprobs[model] = [logprobs[model]]
                 all_zscores[model] = [zscores[model]]
@@ -356,16 +396,16 @@ def main(
                 all_logprobs[model].append(logprobs[model])
                 all_zscores[model].append(zscores[model])
     
-    for model in cfg["model_names"]:
+    for model in base_cfg["model_names"]:
         all_logprobs[model] = np.concatenate(all_logprobs[model], axis=0)
         all_zscores[model] = np.concatenate(all_zscores[model], axis=0)
 
     print(f"Getting eval metrics and top {k} activations...", flush=True)
     eval_metrics, topk_dict = get_eval_metrics_and_topk_feature_acts(
-        all_data, encoder, cfg, topk=k, save_activations=save_activations,
+        all_data, encoder, base_cfg, eval_sae_dir, topk=k, save_activations=save_activations,
     )
-    print(f"Saving eval metrics to {sae_dir}/eval_metrics.json", flush=True)
-    with open(f"{sae_dir}/eval_metrics.json", "w") as f:
+    print(f"Saving eval metrics to {eval_sae_dir}/eval_metrics.json", flush=True)
+    with open(f"{eval_sae_dir}/eval_metrics.json", "w") as f:
         json.dump(eval_metrics, f, indent=4)
 
     topk_acts = topk_dict["topk_acts"].cpu().numpy()
@@ -379,7 +419,7 @@ def main(
     word_id = []
     word_logprobs = {}
     word_zscores = {}
-    for model in cfg["model_names"]:
+    for model in base_cfg["model_names"]:
         word_logprobs[model] = []
         word_zscores[model + "_zscore"] = []
     for i in tqdm(range(topk_acts.shape[1])):
@@ -407,23 +447,36 @@ def main(
     df = pd.concat([df, model_logprobs_df, model_zscores_df], axis=1)
     # drop activations equal to 0
     df = df[df["act_value"] > 0]
-    print(f"Saving top {k} activations to {sae_dir}/top-{k}_activations.csv", flush=True)
-    df.to_csv(f"{sae_dir}/top-{k}_activations.csv", index=False)
+    print(f"Saving top {k} activations to {eval_sae_dir}/top-{k}_activations.csv", flush=True)
+    df.to_csv(f"{eval_sae_dir}/top-{k}_activations.csv", index=False)
     
     print("Getting top k words in context", flush=True)
-    get_topk_words_in_context(sae_dir, k)
+    get_topk_words_in_context(eval_sae_dir, k, data_dirs)
     
     print("Calculating feature metrics", flush=True)
-    calc_feature_metrics(sae_dir, model_string=model_string)
+    calc_feature_metrics(eval_sae_dir, data_dirs)
     
     if save_activations:
         print(f"Calculating feature histograms and densities", flush=True)
-        calc_feature_hist_and_densities(sae_dir)
+        calc_feature_hist_and_densities(eval_sae_dir)
     
     print("eval complete, cleanup...", flush=True)
     for tempfile_path in all_tempfiles:
         print(f"removing {tempfile_path}...", flush=True)
         cleanup_temp_memmap(data, tempfile_path)
+
+
+        
+        
+
+
+
+ 
+    
+    
+
+
+
 
 if __name__ == "__main__":
     main()

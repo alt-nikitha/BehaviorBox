@@ -1,0 +1,32 @@
+feature_id,description,max_probability,max_prob_checkpoint,max_prob_checkpoint_name,max_jump_value,final_probability,good_count,bad_count,subset_counts
+600,"Auxiliary verbs ""have"" and ""has"" used in various grammatical constructions including perfect tenses, modal auxiliaries, and conditional statements.",0.493521683,12,pythia-160m-step70000,0.321446503,0.463407278,0,0,{'': 50}
+1358,Words that appear immediately after a space in technical and scientific writing contexts.,0.484706707,13,pythia-160m-step100000,0.16055483400000004,0.482892469,0,0,{'': 50}
+2291,"All instances are the word ""that"" used as a conjunction, pronoun, or determiner in various grammatical contexts.",0.483257866,12,pythia-160m-step70000,0.31113264640000005,0.388917025,0,0,{'': 50}
+1741,"All instances are the indefinite article ""a"" preceded by a space in various sentence contexts.",0.446891993,13,pythia-160m-step100000,0.20460548899999997,0.426659695,0,0,{'': 50}
+445,"Ordinal numbers and position indicators (first, 1) used to denote sequence, order, or enumeration in technical and academic contexts.",0.438707473,12,pythia-160m-step70000,0.21976010999999998,0.370714249,0,0,{'': 50}
+2789,"Second-person pronouns (""you"" and ""your"") used to directly address the reader or user in instructional and promotional contexts.",0.435585009,12,pythia-160m-step70000,0.12063522469999999,0.374062172,0,0,{'': 50}
+1221,"Nouns referring to methods, approaches, spatial locations, or procedural contexts in technical and formal discourse",0.388548569,12,pythia-160m-step70000,0.3177670615,0.364047057,0,0,{'': 50}
+2755,The digit zero appearing in negative decimal numbers within mathematical contexts,0.368837275,14,pythia-160m,0.131651711,0.368837275,0,0,{'': 50}
+725,"Personal pronouns (""I"" and ""we"") that appear after a space in sentence contexts.",0.366010072,13,pythia-160m-step100000,0.10932967100000002,0.342872644,0,0,{'': 50}
+1910,"Forms of the verb ""to be"" in present tense (are, am, 're, re, m) used in conditional and declarative statements.",0.363598401,14,pythia-160m,0.111031067,0.363598401,0,0,{'': 50}
+938,Mathematical minus signs or subtraction operators appearing in algebraic expressions and equations.,0.353580197,12,pythia-160m-step70000,0.08959022399999997,0.325774554,0,0,{'': 50}
+361,Exclamation marks appearing at the end of quoted dialogue or exclamatory statements.,0.35253112,13,pythia-160m-step100000,0.18430856,0.322526413,0,0,{'': 50}
+2417,Mathematical variables and expressions that appear immediately after a space and dollar sign in LaTeX mathematical notation.,0.340067975,14,pythia-160m,0.23497204519999998,0.340067975,0,0,{'': 50}
+564,"All instances show the preposition ""between"" used to express spatial, temporal, or abstract relationships connecting two entities or groups.",0.33970506,12,pythia-160m-step70000,0.1411682784,0.333498018,0,0,{'': 50}
+607,"All instances are the conjunction ""but"" used to introduce contrasting or qualifying statements in sentences.",0.311681449,12,pythia-160m-step70000,0.13210320999999997,0.271538347,0,0,{'': 50}
+1047,"Temporal ordinal adjectives (first, next, last) used to indicate sequence or order in time.",0.30375173,13,pythia-160m-step100000,0.1972308033,0.292798776,0,0,{'': 50}
+578,"All instances are the relative pronoun ""that"" used to introduce restrictive relative clauses modifying preceding nouns.",0.279005958,14,pythia-160m,0.1753254383,0.279005958,0,0,{'': 50}
+62,"The word ""as"" functioning as a comparative conjunction or adverb in various comparative constructions and phrases.",0.271537454,12,pythia-160m-step70000,0.1696528837,0.220359023,0,0,{'': 50}
+2906,First-person plural pronouns and possessive adjectives used in political and organizational discourse.,0.244554604,11,pythia-160m-step10000,0.134859591,0.231571005,0,0,{'': 50}
+2982,"Third-person pronouns (they, their, them) used as subjects and objects in sentences.",0.22834494,13,pythia-160m-step100000,0.1342663994,0.196939136,0,0,{'': 50}
+2126,"Words appearing after spaces in contexts involving numerical quantities, alternatives, or conditional phrases, typically functioning as conjunctions or determiners in ""one or more"" or ""whether or not"" constructions.",0.21714713,13,pythia-160m-step100000,0.14222307950000002,0.202524521,0,0,{'': 50}
+1721,"Legal terms related to court rulings, judicial determinations, and legal decision-making processes.",0.16801791,12,pythia-160m-step70000,0.10957058570000001,0.155762636,0,0,{'': 50}
+1265,"All instances are the noun ""result"" used to describe outcomes, consequences, or products of various processes or actions.",0.165590417,13,pythia-160m-step100000,0.1314352302,0.127546739,0,0,{'': 50}
+502,"The word ""more"" functioning as an adverb or part of comparative constructions to indicate greater degree, frequency, or intensity.",0.160545565,12,pythia-160m-step70000,0.10436781690000001,0.125200666,0,0,{'': 50}
+2059,"The pronoun ""it"" appearing at the beginning of clauses or sentences, typically following a comma or period.",0.150330178,14,pythia-160m,0.050526847699999995,0.150330178,0,0,{'': 50}
+1835,Possessive pronouns and determiners indicating ownership or association.,0.102452309,11,pythia-160m-step10000,0.0641809192,0.102230534,0,0,{'': 50}
+1574,"Single-digit numbers (0-9) appearing in statistical or numerical data contexts, typically representing percentages, measurements, or other quantitative values.",0.0984175883,12,pythia-160m-step70000,0.043591773900000005,0.0933817022,0,0,{'': 50}
+2814,"Conditional statements beginning with ""if"" that introduce hypothetical scenarios or conditions in various contexts.",0.0889242548,14,pythia-160m,0.0370224921,0.0889242548,0,0,{'': 50}
+2301,"Numbers appearing in statistical or mathematical contexts, primarily representing percentages, measurements, or numerical values in data analysis.",0.0744665702,13,pythia-160m-step100000,0.0340880256,0.0707010904,0,0,{'': 50}
+2269,"Conjunctions and transition words that introduce causal relationships, temporal sequences, or logical connections between clauses.",0.0173474134,13,pythia-160m-step100000,0.01098765496,0.0143255852,0,0,{'': 50}
+1004,"Subordinating conjunctions and prepositions that introduce dependent clauses, comparisons, or logical relationships between ideas.",0.00716360794,13,pythia-160m-step100000,0.003220098,0.00635587339,0,0,{'': 50}

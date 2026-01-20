@@ -1,0 +1,48 @@
+Category,Trend,Rank,Feature ID,Description,Acquisition Ckpt,Final Prob
+Acquired,other,Earliest #1,412,Whitespace sequences used for formatting alignment in legal document headers.,0,1.000
+Acquired,other,Latest #1,412,Whitespace sequences used for formatting alignment in legal document headers.,0,1.000
+Acquired,increase-decrease,Earliest #1,2973,Tab characters used for text formatting and indentation in various document type,5,0.233
+Acquired,increase-decrease,Earliest #2,2295,Tab characters used for formatting and indentation in various types of documents,6,0.233
+Acquired,increase-decrease,Earliest #3,1847,"Tab characters and whitespace formatting used for code indentation, data alignme",6,0.145
+Acquired,increase-decrease,Earliest #4,1279,"Infinitive marker ""to"" and preposition ""of"" and ""with"" in various grammatical co",7,0.148
+Acquired,increase-decrease,Earliest #5,1091,HTML line break tags appearing in code documentation or web content.,7,0.396
+Acquired,increase-decrease,Latest #1,2177,"Biochemical and molecular biology terms referring to proteins, receptors, enzyme",11,0.305
+Acquired,increase-decrease,Latest #2,1074,"Words related to size, quantity, degree, and repetition/frequency",11,0.375
+Acquired,increase-decrease,Latest #3,1183,"All instances of ""well"" function as part of the conjunctive phrase ""as well as"" ",11,0.477
+Acquired,increase-decrease,Latest #4,1958,Clinical and biological variables measured in medical research studies and techn,11,0.424
+Acquired,increase-decrease,Latest #5,1808,Words functioning as pronouns or determiners that refer to previously mentioned ,12,0.444
+Acquired,increase-stagnate,Earliest #1,172,Tab characters used for code indentation and formatting in programming contexts.,6,0.953
+Acquired,increase-stagnate,Earliest #2,1761,Tab characters used for code indentation in programming contexts.,6,0.969
+Acquired,increase-stagnate,Earliest #3,1620,Dialogue formatting markers indicating the start of speech or quotations in conv,6,0.973
+Acquired,increase-stagnate,Earliest #4,254,Tab characters serving as delimiters or separators between mathematical question,7,0.999
+Acquired,increase-stagnate,Earliest #5,703,Decimal points in statistical p-values from scientific research papers.,7,0.998
+Acquired,increase-stagnate,Latest #1,829,Words used in idiomatic expressions and metaphorical contexts relating to alignm,11,0.511
+Acquired,increase-stagnate,Latest #2,2981,"Temporal prepositions and adverbs indicating time relationships (before, after, ",11,0.499
+Acquired,increase-stagnate,Latest #3,753,"Past and present tense forms of auxiliary and linking verbs (be, was, is, been) ",11,0.554
+Acquired,increase-stagnate,Latest #4,144,"Contracted forms of ""it is"" and personal pronouns with ""be"" verbs (I'm, it's, we",12,0.426
+Acquired,increase-stagnate,Latest #5,1966,"Sentence-initial function words that introduce clauses, including conditional, t",13,0.488
+Acquired,increasing,Earliest #1,1233,"References to the United States, either as ""United States"" or abbreviated as ""U.",11,0.523
+Acquired,increasing,Earliest #2,2887,Words appearing at the end of comparative phrases expressing degree or extent (e,11,0.773
+Acquired,increasing,Earliest #3,1041,"Words appearing in the common phrase ""take/taking into account"" or ""take/taking ",12,0.521
+Acquired,increasing,Earliest #4,584,"Words referring to temporal duration, periods, or moments in various technical a",12,0.466
+Acquired,increasing,Earliest #5,2967,"Modal verbs expressing ability, possibility, or capacity to perform actions.",12,0.714
+Acquired,increasing,Latest #1,2887,Words appearing at the end of comparative phrases expressing degree or extent (e,11,0.773
+Acquired,increasing,Latest #2,1041,"Words appearing in the common phrase ""take/taking into account"" or ""take/taking ",12,0.521
+Acquired,increasing,Latest #3,584,"Words referring to temporal duration, periods, or moments in various technical a",12,0.466
+Acquired,increasing,Latest #4,2967,"Modal verbs expressing ability, possibility, or capacity to perform actions.",12,0.714
+Acquired,increasing,Latest #5,1824,"Third-person singular present tense verbs in technical documentation, with ""Gets",13,0.495
+Not Acquired,increase-decrease,Highest max prob #1,1513,Mathematical addition operators (+) appearing in algebraic expressions and equat,Never,0.460
+Not Acquired,increase-decrease,Highest max prob #2,930,"All instances show the preposition ""on"" preceded by a space, indicating its cons",Never,0.390
+Not Acquired,increase-decrease,Highest max prob #3,2366,"The word ""end"" used as a noun to indicate the conclusion or final point of time ",Never,0.282
+Not Acquired,increase-decrease,Highest max prob #4,841,"Words describing variation, diversity, or differentiation across multiple contex",Never,0.274
+Not Acquired,increase-decrease,Highest max prob #5,2880,"General nouns referring to unspecified objects, entities, or concepts, often use",Never,0.262
+Not Acquired,increase-stagnate,Highest max prob #1,600,"Auxiliary verbs ""have"" and ""has"" used in various grammatical constructions inclu",Never,0.494
+Not Acquired,increase-stagnate,Highest max prob #2,1358,Words that appear immediately after a space in technical and scientific writing ,Never,0.485
+Not Acquired,increase-stagnate,Highest max prob #3,2291,"All instances are the word ""that"" used as a conjunction, pronoun, or determiner ",Never,0.483
+Not Acquired,increase-stagnate,Highest max prob #4,1741,"All instances are the indefinite article ""a"" preceded by a space in various sent",Never,0.447
+Not Acquired,increase-stagnate,Highest max prob #5,445,"Ordinal numbers and position indicators (first, 1) used to denote sequence, orde",Never,0.439
+Not Acquired,increasing,Highest max prob #1,1276,"All instances are the word ""need"" (or its plural ""needs"") used as a noun referri",Never,0.480
+Not Acquired,increasing,Highest max prob #2,1892,"All instances of ""one"" used as a determiner or number word, typically in phrases",Never,0.474
+Not Acquired,increasing,Highest max prob #3,316,"Instances of the relative pronoun ""which"" (and its capitalized form ""Which"") use",Never,0.427
+Not Acquired,increasing,Highest max prob #4,97,"Prepositions that introduce phrases indicating conformity, compliance, or relati",Never,0.411
+Not Acquired,increasing,Highest max prob #5,1407,Last names or surnames of people mentioned in various contexts.,Never,0.393

@@ -1,0 +1,2 @@
+feature_id,description,acquisition_checkpoint,acquisition_checkpoint_name,final_probability,max_probability,good_count,bad_count,subset_counts
+412,Whitespace sequences used for formatting alignment in legal document headers.,0,pythia-160m-step1,1.0,1.0,0,0,{'': 31}

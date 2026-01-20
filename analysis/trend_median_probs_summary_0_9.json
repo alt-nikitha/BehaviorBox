@@ -1,0 +1,26 @@
+{
+  "other": {},
+  "increasing": {},
+  "increase-decrease": {
+    "anaphor_gender_agreement": {
+      "total": 94,
+      "good_prop": 0.5,
+      "bad_prop": 0.5
+    },
+    "anaphor_number_agreement": {
+      "total": 52,
+      "good_prop": 0.442,
+      "bad_prop": 0.558
+    },
+    "animate_subject_passive": {
+      "total": 15,
+      "good_prop": 0.0,
+      "bad_prop": 1.0
+    },
+    "adjunct_island": {
+      "total": 60,
+      "good_prop": 0.35,
+      "bad_prop": 0.65
+    }
+  }
+}

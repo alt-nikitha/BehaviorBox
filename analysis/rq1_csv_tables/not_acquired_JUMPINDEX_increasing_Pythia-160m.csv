@@ -1,0 +1,15 @@
+feature_id,description,max_jump_value,max_jump_checkpoint,max_jump_checkpoint_name,max_probability,final_probability,good_count,bad_count,subset_counts
+316,"Instances of the relative pronoun ""which"" (and its capitalized form ""Which"") used to introduce relative clauses or questions.",0.24102490740000002,9,pythia-160m-step512,0.426900646,0.332921638,0,0,{'': 50}
+1407,Last names or surnames of people mentioned in various contexts.,0.275501382321,10,pythia-160m-step1000,0.392881954,0.342440198,0,0,{'': 50}
+1276,"All instances are the word ""need"" (or its plural ""needs"") used as a noun referring to a requirement or necessity in various contexts.",0.21696076279999998,10,pythia-160m-step1000,0.48009841,0.451339614,0,0,{'': 50}
+97,"Prepositions that introduce phrases indicating conformity, compliance, or relational positioning in formal or technical writing.",0.2631642621,10,pythia-160m-step1000,0.41103075,0.316978956,0,0,{'': 50}
+65,"Legal terminology referring to parties in court proceedings, with some non-legal terms included",0.15514566519999998,10,pythia-160m-step1000,0.325404551,0.325404551,0,0,{'': 50}
+208,"Instances of the modal verb ""can"" expressing ability, possibility, or permission in various contexts.",0.113533226,10,pythia-160m-step1000,0.31883717,0.31883717,0,0,{'': 50}
+686,"Technical terms describing problems, malfunctions, or issues in systems and software.",0.14497368953,10,pythia-160m-step1000,0.303553849,0.303553849,0,0,{'': 50}
+2461,"All instances use ""portion"" as a noun referring to a part or section of something larger.",0.010144080040000001,10,pythia-160m-step1000,0.0164719163,0.0136950841,0,0,{'': 50}
+433,"French function words (articles, pronouns, conjunctions) preceded by a space token",0.0447648681,10,pythia-160m-step1000,0.116508063,0.109530165,0,0,{'': 50}
+2377,"All instances are the noun ""people"" (and one ""person"") used as a general term referring to groups of individuals in various contexts.",0.0720797823,10,pythia-160m-step1000,0.181788104,0.181788104,0,0,{'': 50}
+2412,Research and legal terminology with broader professional contexts,0.150002973,10,pythia-160m-step1000,0.251987654,0.251987654,0,0,{'': 50}
+419,"Verb forms of ""use"" and ""used"" indicating utilization or employment of something.",0.05705983640000001,11,pythia-160m-step10000,0.141424643,0.130580229,0,0,{'': 50}
+1905,"Forms of the verb ""have"" (including ""have,"" ""has,"" ""had,"" and ""having"") used as auxiliary or main verbs to express possession, experience, or obligation.",0.082357615,11,pythia-160m-step10000,0.240450415,0.240450415,0,0,{'': 50}
+1892,"All instances of ""one"" used as a determiner or number word, typically in phrases like ""at least one"" or ""nearest one [unit]"".",0.217909378,13,pythia-160m-step100000,0.474328156,0.474328156,0,0,{'': 50}

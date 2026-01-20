@@ -232,7 +232,7 @@ class AutoEncoder(nn.Module):
         self.dec_penalty_coeff = cfg["dec_penalty_coeff"] if "dec_penalty_coeff" in cfg else None
         self.d_hidden = d_hidden
         self.l1_coeff = l1_coeff
-        self.save_dir = cfg["save_dir"]
+        self.save_dir = cfg["train_save_dir"]
 
     def forward(self, x, return_acts=False, return_l2_error_per_sample=False):
         x_cent = x - self.dec.bias
@@ -391,7 +391,7 @@ def calc_feature_hist_and_densities(sae_dir: str):
     np.save(os.path.join(sae_dir, "feature_densities.npy"), all_densities)
 
 
-def calc_feature_metrics(sae_dir: str, k: int = 50, model_string: str = None):
+def calc_feature_metrics(sae_dir: str, data_dirs:list, k: int = 50):
     def get_embeddings_from_word_ids(
         input_feature_dir: str,
         word_ids: list[str],
@@ -426,7 +426,7 @@ def calc_feature_metrics(sae_dir: str, k: int = 50, model_string: str = None):
     
     with open(f"{sae_dir}/config.json", 'r') as f:
         cfg = json.load(f)
-    input_feature_dirs = cfg["data_dirs"]
+    input_feature_dirs = data_dirs
     input_feature_dirs = [os.path.join(data_dir, "input_features") for data_dir in input_feature_dirs]
     
     topk_filename = f"top-{k}_activations.csv"
@@ -441,7 +441,7 @@ def calc_feature_metrics(sae_dir: str, k: int = 50, model_string: str = None):
     # assert len(model_names) == 2, "Currently only supports comparison between 2 models"
     # model_names_label = "_".join(model_names)
     # model_names_label = "n_moreearly_models"
-    model_names_label = model_string
+    
 
     if not os.path.exists(os.path.join(sae_dir, "topk_feature_word_embeddings.pkl")):
         word_id_embeddings = {}
@@ -563,8 +563,8 @@ def calc_feature_metrics(sae_dir: str, k: int = 50, model_string: str = None):
     })
     for model_name in model_names:
         distance_df[f"{model_name}_prob_variance"] = model_prob_variances[model_name]
-    distance_df.to_csv(os.path.join(sae_dir, f"feature_metrics-{model_names_label}.csv"), index=False)
-    print(f"Saved feature metrics to {os.path.join(sae_dir, f'feature_metrics-{model_names_label}.csv')}")
+    distance_df.to_csv(os.path.join(sae_dir, f"feature_metrics.csv"), index=False)
+    print(f"Saved feature metrics to {os.path.join(sae_dir, f'feature_metrics.csv')}")
     
     feature_indices = np.concatenate(feature_indices)
     sample_centroid_embedding_dist = np.concatenate(sample_centroid_embedding_dist)
@@ -579,7 +579,8 @@ def calc_feature_metrics(sae_dir: str, k: int = 50, model_string: str = None):
     
 def get_topk_words_in_context(
     sae_dir: str,
-    k_activations: str
+    k_activations: str,
+    data_dirs: list
 ):
     topk_filename = f"top-{k_activations}_activations.csv"
     topk_file = os.path.join(sae_dir, topk_filename)
@@ -588,7 +589,7 @@ def get_topk_words_in_context(
     topk_df = topk_df[topk_df["act_value"] != 0]
     word_ids = topk_df["word_id"].unique()
     sae_cfg = json.load(open(os.path.join(sae_dir, "config.json")))
-    input_feature_dirs = sae_cfg["data_dirs"]
+    input_feature_dirs = data_dirs
     input_feature_dirs = [os.path.join(data_dir, "input_features") for data_dir in input_feature_dirs]
     words_in_context = {}
     for input_feature_dir in input_feature_dirs:

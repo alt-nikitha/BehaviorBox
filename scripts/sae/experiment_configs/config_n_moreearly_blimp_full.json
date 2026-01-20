@@ -21,5 +21,5 @@
         "pythia-160m"
     ],
     "output_feature_weight": 0.7,
-    "save_dir": "/home/nsrikant/bbox_outputs/sae_outputs_blimp"
+    "save_dir": "/home/nsrikant/bbox_outputs/sae_outputs_blimp_trained_on_pile"
 }

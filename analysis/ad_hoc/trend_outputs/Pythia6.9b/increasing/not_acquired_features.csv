@@ -1,0 +1,36 @@
+Feature ID,Topic,Max Prob,Gap to 0.5,Description
+1996,Coordinating Conjunctions and Connections,0.474316306,0.02568369399999998,Coordinating conjunctions connecting clauses or phrases in compound sentences.
+1721,Roles and Relationships,0.470430523,0.02956947700000001,"Nouns referring to specific roles or parties in legal, business, and formal contractual relationships"
+1901,Programming and Web Development Terms,0.463738883,0.03626111700000001,"Programming and web development terminology including technical concepts like classes, events, declarations, and code elements."
+2412,General Object References,0.461149025,0.03885097500000001,"All instances of the word ""things"" (and one ""stuff"") used as a general noun to refer to objects, activities, or concepts in various contexts."
+2631,Mathematical Comparisons and Rankings,0.459874274,0.04012572599999997,Mathematical variables and expressions in LaTeX format within academic/scientific text.
+2700,Direct Address and Instructions,0.455957446,0.04404255400000001,"Common verbs that frequently appear in instructional, advisory, or explanatory contexts."
+873,Descriptive Adjectives and Attributes,0.45492925,0.04507074999999999,"Mixed descriptive words including positive adjectives, neutral descriptors, and unrelated terms"
+974,Personal Pronouns and Subject References,0.447846263,0.05215373699999998,"First-person plural pronouns (""we"" and ""us"") used as subjects or objects in various sentence contexts."
+1074,Verb Forms and Actions,0.44287191,0.05712809000000002,"Past participles in various grammatical constructions including present perfect, passive voice, and participial phrases."
+510,Action Verbs and Engagement,0.429916852,0.07008314799999998,"Verbs describing various forms of engagement, participation, presence, or action in different contexts"
+197,Data Retrieval and Programming Actions,0.428586656,0.07141334399999999,"Programming-related verbs meaning ""to retrieve"" or ""to obtain"" data, values, or objects in software development contexts."
+2784,Necessity and Obligation Expressions,0.427524349,0.07247565099999997,"Instances of modal constructions with ""have to"" and ""having to"" expressing necessity or obligation, including both positive requirements and negative lack of obligation."
+2555,Verb Forms and Actions,0.423608169,0.07639183100000002,Present participle verbs functioning as main verbs in various grammatical constructions
+2853,Quantity and Degree Expressions,0.39512884,0.10487116000000002,"Words indicating small quantities, degrees, or amounts."
+2377,Personal Pronouns and Subject References,0.371130896,0.128869104,Pronouns and nouns referring to people or groups of people.
+22,Modal Verbs and Auxiliaries,0.34953564,0.15046436000000002,"Modal verbs and nouns expressing necessity, opportunity, or requirement in instructional and procedural contexts."
+34,Examples and Illustration Markers,0.336575406,0.16342459399999998,Words that introduce examples or specific instances to illustrate or clarify a general statement.
+1798,Purpose and Intention Language,0.313236544,0.186763456,"All instances are the word ""order"" used in the infinitive phrase ""in order to"" expressing purpose or intention."
+1297,Sequential and Ordinal Terms,0.295458085,0.20454191500000002,Ordinal adjectives indicating temporal sequence or position in a series.
+309,Programming Variables and Functions,0.290315236,0.20968476400000002,"Words that are conditional conjunctions (both ""if"" and ""If"") used to introduce hypothetical or conditional clauses in sentences."
+602,Comparative and Quantitative Terms,0.285020193,0.21497980700000002,Comparative adjectives used in quantitative comparisons or degree expressions.
+75,Attribution and Source References,0.271782356,0.228217644,"Prepositional phrases using ""according to"" to indicate attribution, reference, or compliance with inventions, technologies, methods, or sources"
+623,Cognitive and Mental State Verbs,0.256052824,0.243947176,"First-person cognitive verbs expressing thinking, knowing, or uncertainty in conversational contexts."
+2228,Possessive Markers and Ownership,0.227793711,0.272206289,Possessive pronouns and determiners indicating ownership or relationship.
+794,General Reference Terms and Entities,0.22751554,0.27248446000000004,"Words referring to alternative or additional entities, people, or things beyond those already mentioned."
+2288,Sentence Starters and Discourse Markers,0.150683858,0.349316142,Conditional and temporal clause introducers and sentence-initial discourse markers
+781,Numerical Formatting and Punctuation,0.108958207,0.39104179299999997,"Numbers (7 or 8) that appear after spaces in mathematical expressions, statistical data, and technical text."
+2808,Date and Time Components,0.0948909085,0.4051090915,Date components (months and days) appearing in formatted dates within various digital content.
+1965,Personal Pronouns and Subject References,0.0939815488,0.4060184512,Pronouns appearing after spaces that serve as anaphoric references to previously mentioned entities or concepts
+2057,Causation and Consequence,0.0644362818,0.4355637182,"Verbs indicating causation or consequence, describing how one action or condition produces or brings about another outcome."
+170,Contractions and Negations,0.0612080768,0.4387919232,"Incomplete contractions where ""don't"", ""doesn't"", and ""didn't"" are split across formatting boundaries"
+2829,Inquiry and Request Terms,0.0465961683,0.4534038317,"Words related to requesting, inquiring, or seeking information from someone."
+2093,Problem-Solving and Analysis Verbs,0.033535264,0.466464736,Verbs related to problem-solving and understanding through analysis or investigation
+1086,Discourse Connectors and Transitions,0.0159678551,0.4840321449,Discourse markers or transitional words used to connect ideas and indicate logical relationships between sentences or clauses.
+1800,Mathematical Comparisons and Rankings,0.00771232856,0.49228767144,Numeric coefficients or values appearing in mathematical expressions and formulas.

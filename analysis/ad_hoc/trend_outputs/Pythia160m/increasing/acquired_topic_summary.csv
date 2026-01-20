@@ -1,0 +1,27 @@
+Topic,Num Features,First Acquired Checkpoint,Checkpoint Name,Avg |Pearson|,High Corr Count (>0.7)
+Document Formatting and Whitespace,2,8,pythia-160m-step256,0.7803360448218577,1
+Biochemistry and Molecular Biology,1,11,pythia-160m-step10000,0.8251072943720069,1
+Document Structure and Numbering,4,11,pythia-160m-step10000,0.9690505748980018,4
+Academic Abbreviations and Examples,2,11,pythia-160m-step10000,0.9811490766417883,2
+Mathematical Variables and Symbols,1,11,pythia-160m-step10000,0.9664712874956682,1
+Scientific Units and Measurements,1,11,pythia-160m-step10000,0.9619896548452135,1
+Numbers in Context,2,11,pythia-160m-step10000,0.9805239619244349,2
+Configuration Parameters,1,11,pythia-160m-step10000,0.9808103860935663,1
+Categorical Nouns and Plurals,1,11,pythia-160m-step10000,0.9814307760675501,1
+Government and Official References,1,11,pythia-160m-step10000,0.949955921560075,1
+Programming Variables and Functions,4,11,pythia-160m-step10000,0.9736126961739242,4
+Auxiliary and Possessive Verbs,1,11,pythia-160m-step10000,0.9880752740377957,1
+Mathematical Comparisons and Rankings,1,11,pythia-160m-step10000,0.9759593519232567,1
+Quantifiers and Determiners,1,11,pythia-160m-step10000,0.995517188092457,1
+Grammatical Function Words,1,11,pythia-160m-step10000,0.9836288194738966,1
+Dialogue and Speech Attribution,1,11,pythia-160m-step10000,0.9841661951388854,1
+Clinical and Medical Variables,1,11,pythia-160m-step10000,0.9744347366613241,1
+Purpose and Intention Language,1,11,pythia-160m-step10000,0.9654468182380778,1
+Code Comments and Documentation,1,11,pythia-160m-step10000,0.9889494180664058,1
+Numerical Formatting and Punctuation,1,11,pythia-160m-step10000,0.9721678606636028,1
+Digital Communication and Services,1,11,pythia-160m-step10000,0.9558659838377632,1
+Metaphorical and Idiomatic Language,1,11,pythia-160m-step10000,0.9643422319718576,1
+Verb Forms and Actions,1,11,pythia-160m-step10000,0.989385742966584,1
+Personal Pronouns and Subject References,1,12,pythia-160m-step70000,0.9619412688760265,1
+Time and Duration Expressions,1,12,pythia-160m-step70000,0.9610163098964414,1
+Modal Verbs and Auxiliaries,1,12,pythia-160m-step70000,0.9452464982667363,1

@@ -1,0 +1,212 @@
+feature_group_id,representative_feature_id,description,n_members,acq_checkpoint,final_prob,trend,all_feature_ids
+1,4251,Tab characters used for text formatting and indentation in digital documents.,1,3,0.988843399,increase-stagnate,4251
+2,1115,Tab characters used for formatting and indentation in mathematical or scientific text documents.,1,3,0.971052432,increase-stagnate,1115
+3,1213,"Tab characters used as formatting separators in structured data layouts such as menus, nutritional information, and service listings.",1,3,0.999841417,increase-stagnate,1213
+4,2352,All instances represent spaces that appear immediately before opening quotation marks in dialogue.,1,6,0.995796914,increase-stagnate,2352
+5,668,"HTML/XML attribute values for reference type specifications in academic document markup, specifically indicating figure and reference citations.",1,6,0.999938967,increase-stagnate,668
+6,6201,Tab characters used as delimiters to separate different mathematical questions or data fields in a structured format.,1,6,0.999694203,increase-stagnate,6201
+7,1633,"HTML/XML attribute values for reference type specifications in academic document markup, specifically indicating figure references.",1,6,0.999938967,increase-stagnate,1633
+8,6364,"HTML/XML attribute values specifying reference types in academic document markup, specifically for figures and references.",1,6,0.999938967,increase-stagnate,6364
+9,5811,"Colons that appear in Wikipedia category listings, typically separating category namespace prefixes or serving as formatting elements in category hierarchies.",1,6,0.999938967,increase-stagnate,5811
+10,5620,"Colons that appear in Wikipedia category listings, typically separating or introducing category names.",1,6,0.999938967,increase-stagnate,5620
+11,5872,"Academic reference markup syntax indicating cross-references to various document elements like figures, tables, and supplementary materials.",1,6,0.999938967,increase-stagnate,5872
+12,4271,Code indentation markers or tab characters used for formatting in programming source code.,1,6,0.999938967,increase-stagnate,4271
+13,5780,"All instances are the contraction ""don't"" appearing in expressions of uncertainty or lack of knowledge.",1,6,0.998884196,increase-stagnate,5780
+14,4554,"Legal case citation separators, specifically the ""v."" abbreviation used between plaintiff and defendant names in court case citations.",1,6,0.999912985,increase-stagnate,4554
+15,6375,Contracted negative forms of auxiliary verbs in English,1,6,0.998880806,increase-stagnate,6375
+16,2188,Periods used as separators in legal case citations between party names and court reporters or between volume and page numbers.,1,6,0.999649528,increase-stagnate,2188
+17,6070,Academic citation reference markers appearing within bibliographic citation brackets in scholarly text.,1,7,0.999938967,increase-stagnate,6070
+18,4988,URL protocol indicators appearing in web addresses and hyperlinks.,1,7,0.999938967,increase-stagnate,4988
+19,956,"Periods appearing as part of website URLs in the format ""www.domain.com""",1,7,0.998385895,increase-stagnate,956
+20,718,Forward slashes used as URL path separators in web addresses and file paths.,1,7,0.999907979,increase-stagnate,718
+21,3282,XML/markup opening angle brackets used in structured data formatting.,2,7,0.999938967,increase-stagnate,"3282,247"
+22,4523,"Academic citation abbreviation ""al"" (from ""et al."") used in bibliographic references to indicate additional authors.",1,7,0.995311354,increase-stagnate,4523
+23,622,"Colons used as separators in reference labels, equation labels, and XML/code attribute syntax.",1,7,0.999938967,increase-stagnate,622
+24,1576,"Academic citation abbreviation ""al"" (from ""et al."") used in scholarly references to indicate multiple authors.",1,7,0.994558048,increase-stagnate,1576
+25,949,Tab characters used as formatting separators between quoted text and continuation of news articles or statements.,1,7,0.935262644,increase-stagnate,949
+26,3394,"Contracted forms of ""is not,"" ""was not,"" ""would not,"" and ""do not"" in tag questions and rhetorical questions.",1,7,0.998933262,increase-stagnate,3394
+27,6229,Tab characters used for formatting in academic document section headers and structural elements.,1,7,0.999938967,increase-stagnate,6229
+28,1941,Mathematical notation elements appearing in LaTeX mathematical expressions and formulas.,1,7,0.997722194,increase-stagnate,1941
+29,4628,Whitespace tokens (spaces and tabs) used for code formatting and indentation in programming contexts.,1,7,0.981579245,increase-stagnate,4628
+30,1447,LaTeX \label commands used to create reference points for equations and document elements,1,7,0.998988406,increase-stagnate,1447
+31,904,Whitespace characters consistently positioned between hexadecimal values in formatted data dumps.,1,7,0.999938967,increase-stagnate,904
+32,75,Temperature measurements in degrees Celsius used in scientific experimental conditions.,1,7,0.998808201,increase-stagnate,75
+33,4906,XML opening angle brackets marking the start of XML tags in structured markup code.,1,7,0.999929849,increase-stagnate,4906
+34,30,Opening angle brackets that begin XML/HTML tags in what appears to be Interface Builder or similar XML configuration files.,1,7,0.999938967,increase-stagnate,30
+35,5875,HTML/XML closing tags and elements that appear at the end of code blocks or markup structures.,1,7,0.999348291,increase-stagnate,5875
+36,3918,Polynomial coefficients and exponents extracted from mathematical expressions and word problems,1,7,0.997926354,increase-stagnate,3918
+37,5412,"Polynomial coefficients and exponents from algebraic computation problems involving expansion, differentiation, and simplification",1,7,0.996777617,increase-stagnate,5412
+38,1871,"All instances refer to the word ""replacement"" in the context of probability problems involving drawing letters without replacement from a set or string.",6,8,0.998480904,increase-stagnate,"1871,3605,5280,3293,2822,5400"
+39,4316,"The word ""without"" appears consistently in probability problems describing sampling without replacement from a set of letters.",1,8,0.998969842,increase-stagnate,4316
+40,5588,Mathematical terms related to probability calculations in combinatorics problems.,1,8,0.999361863,increase-stagnate,5588
+41,3490,"The word ""factors"" appearing in mathematical contexts asking for prime factorization of numbers or algebraic expressions.",1,8,0.998895555,increase-stagnate,3490
+42,3022,Mathematical terms referring to derivatives in calculus problems and equations.,1,8,0.998597268,increase-stagnate,3022
+43,2124,"Encoding artifact ""Âł"" appearing as corrupted character sequence in author name listings, likely representing a space or formatting separator that was incorrectly encoded during text processing.",2,8,0.994687269,increase-stagnate,"2833,2124"
+44,1085,"All instances refer to the mathematical term ""derivative"" in calculus problems asking to find first or second derivatives of functions.",1,8,0.998342168,increase-stagnate,1085
+45,2601,"All instances are the preposition ""of"" used to indicate relationships such as possession, association, or specification between nouns and other elements.",1,8,0.993510461,increase-stagnate,2601
+46,3465,Mathematical derivative expressions and calculations,1,8,0.998499027,increase-stagnate,3465
+47,6172,Mathematical expressions or equations where a negative sign or minus symbol appears before a space in computational contexts.,1,8,0.48261081,increase-stagnate,6172
+48,5865,"HTML/XML attribute values specifying reference types in academic document markup, primarily for figures and supplementary materials.",1,8,0.999938967,increase-stagnate,5865
+49,1296,Citation references in academic text using the PONE journal format.,1,8,0.999938967,increase-stagnate,1296
+50,3647,Bibliography reference markers appearing within citation lists in academic text.,1,8,0.999938967,increase-stagnate,3647
+51,2025,"Citation references in academic text, indicated by ""CR"" followed by numbers in brackets.",1,8,0.999938967,increase-stagnate,2025
+52,5179,C preprocessor #define directives used for defining constants and macros in programming code.,1,8,0.99986984,increase-stagnate,5179
+53,6396,"Legal term referring to a court ruling made without a full trial, specifically ""summary judgment"" in various legal contexts.",2,8,0.995262044,increase-stagnate,"3826,6396"
+54,2676,"Punctuation marks (period and comma) used in academic citation formats, typically appearing before bibliographic references.",1,8,0.999314659,increase-stagnate,2676
+55,4890,"Closing parentheses followed by asterisks appearing in legal, technical, and formatted list contexts, typically marking numbered subsections or enumerated points.",1,8,0.99954858,increase-stagnate,4890
+56,5323,"Wikipedia category labels that classify and organize articles by topic, location, profession, time period, and other attributes.",1,8,0.99896907,increase-stagnate,5323
+57,755,Closing angle brackets (>) that appear at the end of XML/HTML tags or code comment blocks.,1,8,0.999895584,increase-stagnate,755
+58,3048,Spaces that appear before opening parentheses in multiple-choice question formats.,1,8,0.999707949,increase-stagnate,3048
+59,2934,"Mathematical problem statements beginning with ""Let"" that define variables, functions, or equations.",1,8,0.902793054,increase-stagnate,2934
+60,5024,"The word ""Let"" appearing at the beginning of mathematical problem statements or variable definitions.",1,8,0.754592884,increase-stagnate,5024
+61,5740,"Instances of the word ""value"" or ""values"" used in programming documentation, mathematical problems, and technical contexts.",1,8,0.999156055,increase-stagnate,5740
+62,5895,LaTeX mathematical formatting commands and symbols used in academic mathematical or scientific documents.,1,8,0.996759992,increase-stagnate,5895
+63,4003,"All instances refer to ""Los Angeles"" as a proper noun denoting the city in California, appearing in various contexts such as government, business, and geographic references.",1,8,0.996301032,increase-stagnate,4003
+64,1605,C preprocessor #define directives for VT1724 audio chip register and constant definitions.,1,8,0.964714076,increase-stagnate,1605
+65,1657,Newline characters or line break markers in code/text formatting contexts.,1,8,0.999938967,increase-stagnate,1657
+66,4756,"Object property access operator in programming code, specifically the arrow operator (->) used to access methods and properties of objects.",1,8,0.999701232,increase-stagnate,4756
+67,3672,"The preposition ""of"" used in partitive constructions to indicate quantity or portion, typically following quantifiers like ""number,"" ""lot,"" ""thousands,"" ""millions,"" etc.",1,8,0.971351051,increase-stagnate,3672
+68,1687,"All instances show the word ""nearest"" preceded by a space in mathematical word problems asking which option is closest to a given value.",1,9,0.495272049,increase-stagnate,1687
+69,833,"Mathematical problems asking to express algebraic expressions in a specific form and find the coefficient of a particular variable, where the requested variable may not always appear in the expression.",1,9,0.999589254,increase-stagnate,833
+70,2504,Words related to probability problems involving selecting or drawing items without replacement from a collection.,1,9,0.998352623,increase-stagnate,2504
+71,1376,"The word ""terms"" appearing in mathematical contexts where algebraic expressions are being collected or simplified.",2,9,0.999334719,increase-stagnate,"1376,4108"
+72,1250,Android XML attribute names that appear to be preceded by whitespace in Android layout files.,1,9,0.997362968,increase-stagnate,1250
+73,3754,"The word ""Is"" appearing at the beginning of mathematical word problems or questions.",1,9,0.678830649,increase-stagnate,3754
+74,5384,"Mathematical rounding contexts where ""nearest"" appears in instructions to round numbers to specific place values or units.",1,9,0.998598041,increase-stagnate,5384
+75,586,Mathematical terminology referring to shared numerical properties in arithmetic problems involving least common multiples and greatest common factors.,1,9,0.998817949,increase-stagnate,586
+76,3534,"All instances refer to ""License"" in the context of software licensing agreements, specifically appearing in legal boilerplate text for Apache License and similar open source software licenses.",1,9,0.999938967,increase-stagnate,3534
+77,5969,Academic reference syntax elements using curly braces to define reference types in scientific publications.,1,9,0.999938967,increase-stagnate,5969
+78,4442,Colons used as separators in time expressions (hours and minutes).,1,9,0.999938967,increase-stagnate,4442
+79,388,HTML/XML markup patterns for academic reference citations and figure links in scholarly documents.,1,9,0.999938967,increase-stagnate,388
+80,6387,Comment delimiters used in source code to mark the beginning or end of comment blocks.,1,9,0.999938967,increase-stagnate,6387
+81,4910,Academic citation references preceded by spaces in bibliography or reference list formatting.,1,9,0.999938967,increase-stagnate,4910
+82,3487,HTML closing div tags appearing in web markup code.,1,9,0.999775282,increase-stagnate,3487
+83,3978,Zero values appearing in hexadecimal code or memory address contexts.,1,9,0.999938967,increase-stagnate,3978
+84,2029,Possessive markers (apostrophe + s) indicating ownership or association.,1,9,0.999531668,increase-stagnate,2029
+85,2877,C/C++ preprocessor include directives and HTML div tags,1,9,0.998145388,increase-stagnate,2877
+86,820,JSON formatting tokens representing quoted spaces that precede property names in structured data files.,1,9,0.999806674,increase-stagnate,820
+87,4914,"Spaces that appear before the ""@"" symbol in academic citation formats and code documentation comments.",1,9,0.999928956,increase-stagnate,4914
+88,2849,Mathematical text fragments containing function calls with numerical arguments followed by asterisks and periods,1,9,0.99967389,increase-stagnate,2849
+89,5091,"Contracted forms of ""is"" and ""are"" used in informal speech and writing.",1,9,0.993885407,increase-stagnate,5091
+90,4240,XML/HTML closing tags in various markup contexts.,1,9,0.997014489,increase-stagnate,4240
+91,379,HTML/XML opening angle brackets that start tags or elements in markup code.,1,9,0.995486661,increase-stagnate,379
+92,4287,"Mathematical problem statements that begin with ""Let"" followed by variable definitions or equations.",1,9,0.925566959,increase-stagnate,4287
+93,1440,"Quotation marks followed immediately by periods, indicating the end of quoted dialogue in text.",1,9,0.606108233,increase-stagnate,1440
+94,4792,Comment block termination markers and return statements in code documentation,1,9,0.999250762,increase-stagnate,4792
+95,5147,Mathematical variables (primarily 'g' and 'z') appearing in algebraic expressions and polynomial equations.,1,9,0.999832062,increase-stagnate,5147
+96,4479,Mathematical variables appearing in algebraic expressions and equations.,1,9,0.999789699,increase-stagnate,4479
+97,5761,"Percentage symbols used in scientific/medical research contexts to report statistical findings, measurements, and data proportions.",1,9,0.966550419,increase-stagnate,5761
+98,1182,"Mathematical variables and programming identifiers appearing in algebraic expressions, derivatives, scientific equations, and code contexts.",1,9,0.999709631,increase-stagnate,1182
+99,5137,"Javadoc ""@"" symbols that appear at the beginning of parameter and return documentation lines in Java code comments.",1,9,0.998600715,increase-stagnate,5137
+100,4488,Hyphens appearing in academic citation formats and figure/table reference identifiers.,1,9,0.999938967,increase-stagnate,4488
+101,2814,"All instances refer to the political title ""Minister"" in various governmental positions (Prime Minister, External Affairs Minister, Foreign Minister, etc.).",1,9,0.9921402,increase-stagnate,2814
+102,1932,Words that function as attribution markers or separators in citation and credit contexts,1,9,0.99960336,increase-stagnate,1932
+103,4973,"Legal references to ""trial court"" in judicial proceedings and case documents.",1,9,0.982577639,increase-stagnate,4973
+104,1522,"All instances of ""as"" function as part of the phrase ""such as"" to introduce examples or specific instances of previously mentioned general categories.",1,9,0.995731178,increase-stagnate,1522
+105,4060,"Mathematical equation labels in LaTeX markup, specifically label references that appear at the end of equation environments.",1,9,0.963405589,increase-stagnate,4060
+106,5188,JSON property names or keys appearing in structured data/configuration files.,1,9,0.999217944,increase-stagnate,5188
+107,4075,"Instances of ""as well as"" used as a coordinating phrase to connect additional items or ideas in academic and formal writing.",1,9,0.991310707,increase-stagnate,4075
+108,4437,Abbreviated references to U.S. patents in legal or technical documents.,1,9,0.995661753,increase-stagnate,4437
+109,704,"Two-digit numeric codes (primarily ""00"" and ""01"") used in various technical contexts including timestamps, opening hours, and hexadecimal data arrays.",1,9,0.999005239,increase-stagnate,704
+110,6040,"XML self-closing tag endings that appear in configuration files, specifically marking the end of sourceFolder and handler elements.",1,9,0.999938967,increase-stagnate,6040
+111,4142,"All instances are the "".com"" top-level domain suffix appearing in website URLs and domain names.",1,9,0.991932751,increase-stagnate,4142
+112,213,"The word ""reserved"" appears consistently in copyright notices and legal disclaimers across various software licenses and legal documents.",1,9,0.999903271,increase-stagnate,213
+113,553,"Mathematical notation and formatting commands in LaTeX/TeX typesetting, primarily for mathematical symbols and text formatting.",1,9,0.996418759,increase-stagnate,553
+114,3133,"All instances are the keyword ""import"" used in programming languages to include external libraries, modules, or packages.",1,9,0.942639168,increase-stagnate,3133
+115,166,"The letter ""s"" used as a suffix to form plural decades (e.g., 1960s, 1980s, 1990s).",1,9,0.972958557,increase-stagnate,166
+116,242,"All instances are ""www"" appearing as part of website URLs in various contexts.",1,9,0.784571534,increase-stagnate,242
+117,5718,Mathematical variables and symbols used in formal mathematical expressions and theorems.,1,9,0.798333444,increase-stagnate,5718
+118,576,Asterisks marking the end of comment lines in source code documentation and license headers.,1,9,0.999226347,increase-stagnate,576
+119,3386,Plus-minus symbols used to denote statistical uncertainty or standard deviation in numerical data.,1,10,0.993651409,increase-stagnate,3386
+120,5381,"Hexadecimal color codes in CSS and code contexts, all preceded by the hash symbol (#).",1,10,0.951539393,increase-stagnate,5381
+121,3593,Journal volume numbers in academic citations and other numerical values in scientific text,1,10,0.999938967,increase-stagnate,3593
+122,1988,Mathematical function composition problems asking to calculate or determine the result of nested function applications.,2,10,0.999698074,increase-stagnate,"1988,4265"
+123,56,"All instances refer to ""License"" in the context of Apache License legal text found in software source code headers.",1,10,0.999938967,increase-stagnate,56
+124,1744,"The word ""closest"" appears consistently in mathematical comparison questions asking which value is nearest to a given target number.",1,10,0.503425417,increase-stagnate,1744
+125,2328,"The word ""divide"" appears consistently in mathematical questions about divisibility, asking whether one number divides another.",1,10,0.923278075,increase-stagnate,2328
+126,392,"Programming language type declaration keywords, with one SQL keyword and one non-programming term included",1,10,0.995242453,increase-stagnate,392
+127,2588,"Closing curly braces that terminate code blocks, functions, or control structures in various programming languages.",1,10,0.997482143,increase-stagnate,2588
+128,1192,Words used in mathematical comparison questions asking which value is closest or nearest to a given number.,1,10,0.503250614,increase-stagnate,1192
+129,4737,Programming language names and package manager identifiers in dependency files and configuration metadata,1,10,0.999653221,increase-stagnate,4737
+130,940,Forward slashes used as URL path separators in web addresses and file paths.,1,10,0.997932011,increase-stagnate,940
+131,6242,"Instances of the word ""divide"" appearing in mathematical divisibility questions and problems.",1,10,0.959135074,increase-stagnate,6242
+132,5146,"Middle initials or abbreviated middle names in formal legal or professional documents, typically appearing between a first name and last name.",1,10,0.986760931,increase-stagnate,5146
+133,354,"Single letter variables (both uppercase F and lowercase f) used in various technical contexts including mathematical formulas, programming code, and legal citations.",1,10,0.977649553,increase-stagnate,354
+134,1248,"Punctuation marks used as delimiters and separators in programming contexts, including namespace separators, method calls, and documentation formatting.",1,10,0.999268417,increase-stagnate,1248
+135,5035,Whitespace characters (spaces) that appear within quoted strings in code contexts.,1,10,0.992489608,increase-stagnate,5035
+136,4705,Decimal points used in numerical data and statistics across various contexts.,1,10,0.83938435,increase-stagnate,4705
+137,5746,"Contracted forms of auxiliary verbs and the verb ""to be"" in English.",1,10,0.672705812,increase-stagnate,5746
+138,2007,"Prepositions that commonly follow verbs to introduce the object or topic of mental activities like thinking, focusing, or looking.",1,10,0.852984708,increase-stagnate,2007
+139,1853,"Ordinal number suffixes indicating military unit designations (6th, 16th, 17th, 25th, 36th divisions and brigades).",1,10,0.999159745,increase-stagnate,1853
+140,625,"Statistical comparison operator ""vs"" used to contrast numerical values between different groups or conditions in research data",1,10,0.982575414,increase-stagnate,625
+141,4961,References to specific legislative acts or statutes in legal contexts.,1,10,0.970102682,increase-stagnate,4961
+142,2659,"Occurrences of the word ""id"" in programming code contexts, typically referring to identifier variables or parameters.",1,10,0.999926275,increase-stagnate,2659
+143,5964,HTML table cell closing tags and opening tags with various attributes in web markup.,1,10,0.999938967,increase-stagnate,5964
+144,2674,"Instances of the numeral ""1"" appearing in various textual contexts including mathematical expressions, code, legal documents, and academic writing.",1,10,0.985101112,increase-stagnate,2674
+145,4831,Code formatting tokens representing spaces that appear after closing curly braces in programming contexts.,1,10,0.99275787,increase-stagnate,4831
+146,6029,"The word ""or"" used as a conjunction in mathematical comparison questions asking which value is greater or smaller, with one exception that uses ""or"" in a different context.",2,10,0.999240142,increase-stagnate,"1527,6029"
+147,114,Empty parentheses used in function/method calls and declarations across various programming languages.,1,10,0.982199294,increase-stagnate,114
+148,4021,"All instances are the word ""University"" appearing as part of proper names of academic institutions.",1,10,0.965310865,increase-stagnate,4021
+149,2898,Legal citation markers or paragraph symbols (¶) used to separate distinct sections or points in legal text.,1,10,0.887070321,increase-stagnate,2898
+150,5928,"Numbers marking footnotes, citations, or sectional references in legal and academic documents.",1,10,0.99952494,increase-stagnate,5928
+151,4703,Commas separating dates from years in formal written documents.,1,10,0.983972867,increase-stagnate,4703
+152,6054,"Instances of the phrase ""at least"" appearing in technical and scientific texts, typically used to specify minimum quantities or requirements.",1,10,0.998208766,increase-stagnate,6054
+153,3808,"Whitespace tokens or spaces within commented code lines, specifically representing space characters in programming contexts.",1,10,0.896388956,increase-stagnate,3808
+154,5225,HTML table cell tags (td) used in web development for structuring tabular data.,1,10,0.999740608,increase-stagnate,5225
+155,3448,Parenthetical expressions or abbreviations followed by closing parentheses in academic and technical texts.,1,10,0.97013257,increase-stagnate,3448
+156,5956,Question marks appearing at the end of mathematical comparison questions in what appears to be a structured quiz or problem set format.,1,10,0.999822886,increase-stagnate,5956
+157,6010,"Variables and identifiers in mathematical expressions, programming code, and markup contexts, primarily using the letter 'k' but also including related variable names like 'key' and 'K'.",1,10,0.994977106,increase-stagnate,6010
+158,5669,Field name indicators in YAML and configuration contexts,1,10,0.987715064,increase-stagnate,5669
+159,5413,C++ reference parameters and HTML/web content mixed together,1,10,0.994516816,increase-stagnate,5413
+160,550,"Common function words (articles, prepositions, conjunctions) that appear after spaces in text, serving basic grammatical roles in sentence structure.",1,10,0.952323183,increase-stagnate,550
+161,6365,"Prepositions ""of"" and ""with"" used in medical contexts to introduce diagnostic information, causes, or associated conditions.",1,10,0.93544353,increase-stagnate,6365
+162,589,Closing parentheses of function parameters followed by opening braces that start function or conditional block bodies,1,10,0.898067043,increase-stagnate,589
+163,4675,Lambda arrow operators (=>) used primarily in C# property getters and JavaScript/TypeScript arrow functions,1,10,0.994900913,increase-stagnate,4675
+164,3800,"Instances of the word ""example"" used as transitional phrases to introduce illustrative cases or scenarios in explanatory text.",1,10,0.708189655,increase-stagnate,3800
+165,1019,Scientific terms referring to measurable biological activities and physical forces in experimental contexts,1,10,0.765473719,increase-stagnate,1019
+166,6007,HTML closing tag markers that appear at the end of attribute values or tag definitions.,1,10,0.987733929,increase-stagnate,6007
+167,1658,HTML ampersand characters (&) used in web page markup and code formatting.,1,10,0.999338826,increase-stagnate,1658
+168,2542,"Programming and markup language symbols including ampersands (&), double ampersands (&&), and the while keyword used in various coding contexts",1,10,0.997672148,increase-stagnate,2542
+169,6100,Words that appear immediately after a hyphen or space character in compound terms and technical descriptions.,1,10,0.99489037,increase-stagnate,6100
+170,6234,HTML closing tag sequences that appear to be part of documentation or web page markup structure.,1,10,0.999938967,increase-stagnate,6234
+171,1449,"Semicolons used as statement terminators in programming code across various languages including JavaScript, C++, C#, and PHP.",1,10,0.989576586,increase-stagnate,1449
+172,2522,Year references (2012) appearing in timestamps and document dates,1,10,0.997996234,increase-stagnate,2522
+173,4278,"Instances of the ""new"" keyword used for object instantiation in various programming languages.",1,10,0.994126682,increase-stagnate,4278
+174,3950,"Words referring to the Olympics specifically, with most instances being ""Olympics"" and a few instances of ""Olympic Games""",1,10,0.999897252,increase-stagnate,3950
+175,5423,Code comments and whitespace appearing in C preprocessor macro definitions for VT1724 hardware register configurations.,1,10,0.961267523,increase-stagnate,5423
+176,943,"All instances show the word ""respectively"" preceded by a space, used to indicate correspondence between previously mentioned items in their given order.",1,10,0.977721925,increase-stagnate,943
+177,1184,"All instances are the verb ""said"" used in reported speech to attribute quotes to speakers.",1,10,0.819594078,increase-stagnate,1184
+178,4412,"Years appearing in timestamps and date references across various online posts, comments, and reviews.",1,10,0.996264829,increase-stagnate,4412
+179,2509,C++ pointer-to-member and namespace scope resolution operators in template and type declarations,1,10,0.99985703,increase-stagnate,2509
+180,6284,"Quotation marks appearing at the end of quoted string values in configuration files, code, and markup contexts.",1,10,0.989446518,increase-stagnate,6284
+181,2910,"Commas appearing at the end of lines in structured data formats like JSON, package.json files, and configuration files.",1,10,0.997514188,increase-stagnate,2910
+182,5725,"Time duration words (year/years) preceded by a space, typically following numerical expressions indicating periods of time.",1,10,0.94072125,increase-stagnate,5725
+183,5870,"Closing angle brackets (>) appearing at the end of various code constructs including XML/HTML tags, generic type declarations, and conditional expressions.",1,10,0.997288691,increase-stagnate,5870
+184,4200,Java public method declarations in source code.,1,10,0.990481125,increase-stagnate,4200
+185,5585,"Empty parentheses ""()"" used in function definitions, method declarations, and function calls across multiple programming languages.",1,10,0.96662426,increase-stagnate,5585
+186,719,"Military and government organizational terms including armed forces, military branches, and government officials.",1,10,0.987563481,increase-stagnate,719
+187,72,File extensions and programming identifiers in source code,1,10,0.99855915,increase-stagnate,72
+188,4315,HTML table cell transitions and tag boundaries in documentation,1,10,0.999843622,increase-stagnate,4315
+189,2922,"Instances of the letter ""e"" appearing in the common Latin abbreviation ""e.g."" (exempli gratia, meaning ""for example"") and ""i.e."" (id est, meaning ""that is"").",1,10,0.985753425,increase-stagnate,2922
+190,4445,"Single letters that appear to be abbreviations, identifiers, or symbols in scientific and technical contexts.",1,10,0.991877963,increase-stagnate,4445
+191,1258,"All instances are the noun ""time"" used in various temporal contexts and expressions.",1,10,0.984469463,increase-stagnate,1258
+192,47,URL protocol prefixes (http and https) appearing at the beginning of web addresses in various online content.,1,10,0.937607463,increase-stagnate,47
+193,4995,"All instances show the word ""which"" functioning as a relative pronoun introducing relative clauses that modify preceding nouns.",1,10,0.992649645,increase-stagnate,4995
+194,4540,Past tense reporting verbs used to attribute direct speech or statements in written text,1,10,0.663929538,increase-stagnate,4540
+195,3722,"Object-oriented programming syntax elements including class declarations, inheritance keywords, and scope resolution operators.",1,10,0.966878329,increase-stagnate,3722
+196,4375,"Spaces that appear before the ""=>"" symbol in technical documentation, code examples, and API descriptions.",1,10,0.998795417,increase-stagnate,4375
+197,3292,"Arrow operators (=>) used in programming languages to denote function definitions, lambda expressions, or type signatures.",1,10,0.995048908,increase-stagnate,3292
+198,2513,"Method return types in programming language declarations, specifically void functions and function keywords.",1,10,0.980021056,increase-stagnate,2513
+199,3810,XML/HTML opening tag brackets that begin element definitions in markup code.,1,10,0.997287703,increase-stagnate,3810
+200,4057,"Arrow operators (=>) used in programming code to denote key-value pairs in arrays, object mappings, or lambda expressions.",1,10,0.995478603,increase-stagnate,4057
+201,5273,Identifier field names in JSON objects and programming code contexts.,1,10,0.988510252,increase-stagnate,5273
+202,795,Code snippets containing closing parentheses and semicolons marking the end of function calls or statements in programming languages.,1,10,0.996369734,increase-stagnate,795
+203,2514,"Nouns representing key policy domains or sectors of government and public service (transport, health, security, activity, energy, water, education).",1,10,0.949901923,increase-stagnate,2514
+204,823,"Words appearing in temporal and simultaneous expressions, including ""at the same time"" and related phrases",1,10,0.993989143,increase-stagnate,823
+205,3977,Equal signs used as assignment or comparison operators in various programming and configuration contexts.,1,10,0.992740708,increase-stagnate,3977
+206,2629,"Words that appear to be nouns functioning as subjects or objects in legal, technical, and business contexts, often preceded by demonstrative determiners like ""this"" or ""the"".",1,11,0.644562327,increase-stagnate,2629
+207,2585,"Common grammatical function words including articles, prepositions, and pronouns",1,11,0.721398625,increase-stagnate,2585
+208,4977,"String data type declarations in JSON or API schema definitions, all followed by a space and comma.",1,11,0.988269878,increase-stagnate,4977
+209,2986,"The word ""between"" used as a preposition to indicate relationships, comparisons, or distinctions between two or more entities.",1,11,0.635222766,increase-stagnate,2986
+210,5017,"Scientific references to cells in biological/medical research contexts, including various cell types like T cells, NK cells, and experimental cell lines.",1,11,0.8190337,increase-stagnate,5017
+211,3565,Words expressing uncertainty or lack of knowledge in negative constructions.,1,12,0.474608834,increase-stagnate,3565

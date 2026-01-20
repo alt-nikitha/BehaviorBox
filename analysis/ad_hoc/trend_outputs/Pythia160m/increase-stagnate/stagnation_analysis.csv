@@ -1,0 +1,87 @@
+Feature ID,Topic,Acquired At,Stagnates At,Description,step_num
+1281,Data Retrieval and Programming Actions,pythia-160m-step256,pythia-160m-step1000,"The letter ""x"" appearing in hexadecimal notation contexts within what appears to be code or data structures.",1000
+254,Document Formatting and Whitespace,pythia-160m-step128,pythia-160m-step1000,Tab characters serving as delimiters or separators between mathematical questions about prime and composite numbers.,1000
+172,Document Formatting and Whitespace,pythia-160m-step64,pythia-160m-step1000,Tab characters used for code indentation and formatting in programming contexts.,1000
+703,Statistical and Scientific Notation,pythia-160m-step128,pythia-160m-step1000,Decimal points in statistical p-values from scientific research papers.,1000
+1489,Programming Variables and Functions,pythia-160m-step1000,pythia-160m-step1000,"Equals signs used as assignment and comparison operators in programming contexts, including URL parameters, configuration settings, and data binding expressions.",1000
+546,Financial and Monetary Values,pythia-160m-step512,pythia-160m-step1000,"Numerical components (thousands, millions, dollar signs, commas) that are part of monetary amounts in legal and financial contexts.",1000
+1773,Document Formatting and Whitespace,pythia-160m-step256,pythia-160m-step1000,Tab characters used for text formatting and layout spacing in various documents or web content.,1000
+2403,Programming Variables and Identifiers,pythia-160m-step1000,pythia-160m-step1000,Variable names and abbreviations in programming and academic contexts,1000
+1978,HTML and XML Markup,pythia-160m-step256,pythia-160m-step1000,Opening angle brackets used in XML/HTML tag syntax and generic type declarations in programming code.,1000
+1519,Exemplification and Comparison,pythia-160m-step512,pythia-160m-step1000,"All instances show ""as"" functioning as a preposition introducing examples, consistently appearing in the phrase ""such as"" to indicate exemplification.",1000
+535,Mathematical Comparisons and Rankings,pythia-160m-step512,pythia-160m-step1000,Opening curly braces in LaTeX mathematical expressions used for grouping and delimiting mathematical content,1000
+770,Academic Citations and References,pythia-160m-step256,pythia-160m-step1000,Legal citation abbreviations referring to U.S. Circuit Courts of Appeals in various judicial circuits.,1000
+2288,Mathematical Problem Statements,pythia-160m-step512,pythia-160m-step1000,"Mathematical problem statements that begin with variable definitions using ""Let"" followed by mathematical expressions or equations.",1000
+1761,Document Formatting and Whitespace,pythia-160m-step64,pythia-160m-step1000,Tab characters used for code indentation in programming contexts.,1000
+1275,Academic Abbreviations and Examples,pythia-160m-step1000,pythia-160m-step1000,"Academic citation markers indicating references to figures, tables, or bibliography items in scholarly publications.",1000
+322,Contractions and Informal Language,pythia-160m-step512,pythia-160m-step1000,"Contracted forms of ""is"" used in informal speech and writing.",1000
+923,Academic Abbreviations and Examples,pythia-160m-step128,pythia-160m-step1000,Periods appearing within academic citation references in scholarly text.,1000
+1909,HTML and XML Markup,pythia-160m-step128,pythia-160m-step1000,HTML attribute values for reference type specifications in academic document markup.,1000
+1212,Wikipedia and Category Markup,pythia-160m-step128,pythia-160m-step1000,"Colons that appear after ""Category"" in what appears to be Wikipedia category markup syntax.",1000
+1729,Academic Abbreviations and Examples,pythia-160m-step512,pythia-160m-step1000,"Academic reference citations using ""B"" or ""b"" identifiers in scholarly publications.",1000
+1412,Document Formatting and Whitespace,pythia-160m-step256,pythia-160m-step1000,Tab characters used as formatting separators between text segments in what appears to be parsed or structured document content.,1000
+1720,Academic Abbreviations and Examples,pythia-160m-step256,pythia-160m-step1000,"All instances are references to figures in academic or scientific documents, appearing within citation markup syntax.",1000
+1894,C Preprocessor Directives,pythia-160m-step512,pythia-160m-step1000,C preprocessor #define statements used for creating macro definitions in source code.,1000
+2987,Code Comments and Documentation,pythia-160m-step256,pythia-160m-step1000,"Asterisks used in multi-line comment formatting in source code, primarily for visual alignment and structure in license headers and documentation blocks.",1000
+2161,HTML and XML Markup,pythia-160m-step512,pythia-160m-step1000,HTML closing div tags appearing in web markup and code contexts.,1000
+2764,Academic Citations and References,pythia-160m-step128,pythia-160m-step1000,"Periods appearing within legal citations, specifically in United States Code references where they separate parts of the citation format.",1000
+1262,Exemplification and Comparison,pythia-160m-step512,pythia-160m-step1000,"Instances of the abbreviation ""e.g."" (exempli gratia, meaning ""for example"") used to introduce examples or illustrations in academic and technical writing.",1000
+2536,Contractions and Informal Language,pythia-160m-step128,pythia-160m-step1000,"Contracted forms of ""not"" in negative auxiliary verb constructions (didn't, don't, wouldn't, isn't, aren't, couldn't, shouldn't, wasn't).",1000
+2316,HTML and XML Markup,pythia-160m-step128,pythia-160m-step1000,HTML attribute values appearing in class attributes and reference type attributes within web page markup.,1000
+394,Academic Abbreviations and Examples,pythia-160m-step256,pythia-160m-step1000,"Markdown or XML-style reference syntax elements used in academic documents to link to figures, tables, or supplementary materials.",1000
+1833,Attribution and Source References,pythia-160m-step512,pythia-160m-step1000,"Abbreviations for time periods (a.m., p.m.) and Latin phrases (i.e.)",1000
+278,Numbers in Context,pythia-160m-step1000,pythia-160m-step1000,"The number 17 appearing in various contexts including academic citations, percentages, ages, and publication identifiers",1000
+2200,Quantifiers and Determiners,pythia-160m-step1000,pythia-160m-step1000,"All instances are the definite article ""the"" preceded by a space, functioning as a determiner before noun phrases.",1000
+2853,Labels and Reference Markers,pythia-160m-step512,pythia-160m-step1000,"The letter ""B"" or ""b"" used as labels, identifiers, or reference markers in academic and technical contexts.",1000
+293,C Preprocessor Directives,pythia-160m-step512,pythia-160m-step1000,C preprocessor directive symbols (#define and #include statements) used in source code.,1000
+2702,Mathematical Problem Statements,pythia-160m-step128,pythia-160m-step1000,"The word ""is"" functioning as a copula verb in mathematical word problems asking ""What is"" followed by arithmetic expressions.",1000
+2990,Academic Abbreviations and Examples,pythia-160m-step1000,pythia-160m-step1000,Bibliography reference codes in academic citation format.,1000
+2245,Code Comments and Documentation,pythia-160m-step512,pythia-160m-step1000,Javadoc comment beginnings that start method or class documentation sections in code.,1000
+2705,Programming Variables and Identifiers,pythia-160m-step512,pythia-160m-step1000,"Underscores appearing in programming code contexts, likely representing placeholders, separators, or parts of variable/function names in various programming languages.",1000
+144,Contractions and Informal Language,pythia-160m-step70000,pythia-160m-step1000,"Contracted forms of ""it is"" and personal pronouns with ""be"" verbs (I'm, it's, we're, they're, you'll, I've) used in informal speech and writing.",1000
+2103,Mathematical Problem Statements,pythia-160m-step128,pythia-160m-step1000,"Mathematical question words asking ""What is"" or ""Which is"" in problem-solving contexts.",1000
+101,Mathematical Variables and Symbols,pythia-160m-step512,pythia-160m-step1000,"Variables (q and h) in polynomial mathematical expressions, typically appearing as coefficients or in exponential terms.",1000
+1567,Geographic and Location References,pythia-160m-step256,pythia-160m-step1000,"Geographic location names and abbreviations, primarily referring to cities, states, and counties in the United States.",1000
+2713,Organizational Names and Institutions,pythia-160m-step1000,pythia-160m-step1000,"Words that are part of formal organizational names, web domains, and institutional references.",1000
+1660,Abbreviations and Formal Titles,pythia-160m-step512,pythia-160m-step1000,"Periods used as abbreviation markers in formal names, titles, and geographic designations.",1000
+1450,Web URLs and Internet Addresses,pythia-160m-step128,pythia-160m-step1000,URL protocol indicators appearing in web addresses and hyperlinks.,1000
+796,Logical Conjunctions and Comparisons,pythia-160m-step1000,pythia-160m-step1000,"The word ""or"" functioning as a conjunction in mathematical comparison questions asking which value is greater, smaller, or bigger.",1000
+2450,Scientific Units and Measurements,pythia-160m-step1000,pythia-160m-step1000,"Units of measurement (milligrams and milliliters) used in scientific and medical contexts to express concentrations, dosages, and quantities.",1000
+745,Compound Terms and Hyphenation,pythia-160m-step1000,pythia-160m-step1000,"Hyphens used as parts of compound adjectives or technical terms, typically connecting numerical or descriptive elements to dimensional, technical, or qualitative descriptors.",1000
+1467,Thresholds and Requirements,pythia-160m-step1000,pythia-160m-step1000,Words used in phrases indicating minimum thresholds or requirements <SEP> Words used in comparative mathematical expressions,1000
+1850,Programming Syntax and Code Structure,pythia-160m-step256,pythia-160m-step1000,Space characters appearing before @ symbols in citation lists and code comments.,1000
+312,Scientific Units and Measurements,pythia-160m-step256,pythia-160m-step1000,"Words referring to numerical quantities, data assignments, or measurable amounts in programming and mathematical contexts.",1000
+2094,Quantifier Phrases,pythia-160m-step128,pythia-160m-step1000,"The preposition ""of"" appearing after quantifier phrases (variety of, number of, lots of, etc.) to introduce what is being quantified.",1000
+2682,Government and Legal Terminology,pythia-160m-step512,pythia-160m-step1000,"Abbreviations for ""United States"" appearing in formal legal, governmental, and official contexts.",1000
+1570,Grammatical Function Words,pythia-160m-step1000,pythia-160m-step1000,"The preposition ""of"" used to indicate possession, relationship, or association between nouns in various contexts.",1000
+664,Grammatical Function Words,pythia-160m-step128,pythia-160m-step1000,"Prepositions ""to"" appearing after a space in formal or technical writing contexts.",1000
+2209,Programming Syntax and Code Structure,pythia-160m-step512,pythia-160m-step1000,Opening curly braces that begin code blocks in various programming languages.,1000
+764,Grammatical Function Words,pythia-160m-step128,pythia-160m-step1000,"Infinitive marker ""to"" appearing after a space in various sentence contexts",1000
+1620,Dialogue and Speech Attribution,pythia-160m-step64,pythia-160m-step1000,Dialogue formatting markers indicating the start of speech or quotations in conversational text.,1000
+451,Grammatical Function Words,pythia-160m-step128,pythia-160m-step1000,Function words (prepositions and articles) that are preceded by a space in text formatting.,1000
+712,Mathematical Problem Statements,pythia-160m-step512,pythia-160m-step1000,Mathematical contexts involving greatest common factors and least common multiples in algebra problems.,1000
+2268,Programming Syntax and Code Structure,pythia-160m-step1000,pythia-160m-step1000,All instances refer to the hash symbol (#) used in Ruby test descriptions for the String encode and encode! methods.,1000
+2563,Government and Legal Terminology,pythia-160m-step512,pythia-160m-step1000,"All instances refer to ""court"" as a legal institution or judicial body in legal proceedings.",1000
+1079,Wikipedia and Category Markup,pythia-160m-step128,pythia-160m-step1000,"Words that appear as part of Wikipedia category labels, typically following ""Category:"" in article metadata.",1000
+2813,Programming Syntax and Code Structure,pythia-160m-step1000,pythia-160m-step1000,"Colons used as delimiters or separators in various text formats including code, mathematical expressions, and structured data.",1000
+34,Exemplification and Comparison,pythia-160m-step1000,pythia-160m-step1000,"All instances are the word ""example"" preceded by a space, used to introduce illustrative cases or instances in explanatory text.",1000
+2732,Dialogue and Speech Attribution,pythia-160m-step512,pythia-160m-step1000,"All instances show the word ""said"" used as a speech attribution verb following quoted dialogue in journalistic or narrative text.",1000
+292,Programming Variables and Identifiers,pythia-160m-step512,pythia-160m-step1000,Numbers appearing as arguments or parameters in mathematical function calls or variable assignments.,1000
+1497,Programming Syntax and Code Structure,pythia-160m-step1000,pythia-160m-step1000,"Closing punctuation marks and XML/code syntax elements that terminate programming constructs, XML tags, or code blocks.",1000
+1693,Programming Variables and Identifiers,pythia-160m-step1000,pythia-160m-step1000,Variable assignment statements in programming code where variables are being assigned values using the equals operator.,1000
+2800,C Preprocessor Directives,pythia-160m-step512,pythia-160m-step1000,File extensions for C/C++ header files in #include statements.,1000
+2794,Programming Syntax and Code Structure,pythia-160m-step1000,pythia-160m-step1000,Code snippets showing closing parentheses and semicolons at the end of programming statements or function calls.,1000
+2619,Document Formatting and Whitespace,pythia-160m-step512,pythia-160m-step1000,Code indentation patterns using tabs followed by multiple spaces to align nested programming constructs.,1000
+2857,Programming Identifiers and Variables,pythia-160m-step1000,pythia-160m-step1000,"Programming identifiers and field names in code, JSON objects, and database records",1000
+1966,Sentence Starters and Discourse Markers,pythia-160m-step100000,pythia-160m-step1000,"Sentence-initial function words that introduce clauses, including conditional, temporal, spatial, and interrogative markers",1000
+2980,Numerical Formatting and Punctuation,pythia-160m-step1000,pythia-160m-step1000,Punctuation marks (periods and commas) used as decimal separators in numerical values.,1000
+602,Mathematical Comparisons and Rankings,pythia-160m-step1000,pythia-160m-step1000,LaTeX commands and syntax elements used in document formatting and mathematical typesetting.,1000
+2953,Web URLs and Internet Addresses,pythia-160m-step1000,pythia-160m-step1000,Words that are parts of HTTP URLs or web addresses.,1000
+592,Mathematical Questions and Queries,pythia-160m-step512,pythia-160m-step1000,"The word ""Is"" functioning as the opening verb in mathematical questions about whether numbers are prime or composite.",1000
+1944,Statistical and Scientific Notation,pythia-160m-step1000,pythia-160m-step1000,Percentage symbols used to denote numerical proportions or concentrations in scientific and technical contexts.,1000
+1430,Wikipedia and Category Markup,pythia-160m-step256,pythia-160m-step1000,"Wikipedia category labels that classify and organize articles by topic, profession, location, or other descriptive attributes.",1000
+604,Grammatical Function Words,pythia-160m-step1000,pythia-160m-step1000,"Instances of the preposition ""by"" used to indicate agency or means in various contexts.",1000
+942,Programming Syntax and Code Structure,pythia-160m-step1000,pythia-160m-step1000,Semicolons appearing at the end of code statements or declarations in various programming languages.,1000
+1302,Technical Systems and Electronics,pythia-160m-step1000,pythia-160m-step1000,Technical terms referring to electrical signals in electronic systems and circuits.,1000
+2968,Mathematical Comparisons and Rankings,pythia-160m-step256,pythia-160m-step1000,"Mathematical expressions containing polynomial terms with variables raised to powers, appearing in calculus differentiation problems and algebraic manipulation exercises.",1000
+2981,Temporal Relationships and Sequencing,pythia-160m-step10000,pythia-160m-step1000,"Temporal prepositions and adverbs indicating time relationships (before, after, basis as in ""regular basis"").",1000

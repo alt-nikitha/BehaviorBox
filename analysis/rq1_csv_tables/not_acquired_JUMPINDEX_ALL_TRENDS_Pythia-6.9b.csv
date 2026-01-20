@@ -1,0 +1,42 @@
+feature_id,description,trend,max_jump_value,max_jump_checkpoint,max_jump_checkpoint_name,max_probability,final_probability,good_count,bad_count,subset_counts
+2755,"Contractions representing auxiliary verbs and ""to be"" verbs in informal speech and writing.",increase-stagnate,0.1591189507,8,pythia-6_9b-step256,0.471136505,0.467520625,0,0,{'': 50}
+773,"Single digits (2, 7, 8, 9) appearing as numerical values or identifiers in statistical, medical, or scientific data contexts.",increase-stagnate,0.0472703549,8,pythia-6_9b-step256,0.106197649,0.106197649,0,0,{'': 50}
+344,"All instances are the existential word ""there"" used in ""there is/are/were/has been"" constructions to indicate the existence or presence of something.",increase-stagnate,0.0217993635,9,pythia-6_9b-step512,0.056126294,0.0535310121,0,0,{'': 50}
+365,Third-person singular feminine pronouns (she/her) used as subjects and objects in sentences.,increasing,0.169211711,9,pythia-6_9b-step512,0.49063428,0.377697131,0,0,{'': 50}
+725,"First-person singular pronoun ""I"" used as the subject of sentences in conversational and narrative contexts.",increase-stagnate,0.143450766,10,pythia-6_9b-step1000,0.262575489,0.219175393,0,0,{'': 50}
+510,"Verbs describing various forms of engagement, participation, presence, or action in different contexts",increase-stagnate,0.3393697819,10,pythia-6_9b-step1000,0.429916852,0.363535102,0,0,{'': 50}
+1996,Coordinating conjunctions connecting clauses or phrases in compound sentences.,increase-stagnate,0.27971749700000004,10,pythia-6_9b-step1000,0.474316306,0.4710839,0,0,{'': 50}
+2808,Date components (months and days) appearing in formatted dates within various digital content.,increase-stagnate,0.06122617799999999,10,pythia-6_9b-step1000,0.0948909085,0.0948909085,0,0,{'': 50}
+1798,"All instances are the word ""order"" used in the infinitive phrase ""in order to"" expressing purpose or intention.",increase-stagnate,0.21055908160000003,10,pythia-6_9b-step1000,0.313236544,0.2916998,0,0,{'': 50}
+2412,"All instances of the word ""things"" (and one ""stuff"") used as a general noun to refer to objects, activities, or concepts in various contexts.",increase-stagnate,0.40355871816,10,pythia-6_9b-step1000,0.461149025,0.461149025,0,0,{'': 50}
+2288,Conditional and temporal clause introducers and sentence-initial discourse markers,increase-stagnate,0.0848060386,10,pythia-6_9b-step1000,0.150683858,0.141103497,0,0,{'': 50}
+974,"First-person plural pronouns (""we"" and ""us"") used as subjects or objects in various sentence contexts.",increase-stagnate,0.29420672579999996,10,pythia-6_9b-step1000,0.447846263,0.447846263,0,0,{'': 50}
+2631,Mathematical variables and expressions in LaTeX format within academic/scientific text.,increase-stagnate,0.3125756268,10,pythia-6_9b-step1000,0.459874274,0.420307504,0,0,{'': 50}
+464,Words that begin sentences after a period or other sentence-ending punctuation,increase-stagnate,0.0511149292,10,pythia-6_9b-step1000,0.124649299,0.102871826,0,0,{'': 50}
+197,"Programming-related verbs meaning ""to retrieve"" or ""to obtain"" data, values, or objects in software development contexts.",increasing,0.1806674714,10,pythia-6_9b-step1000,0.428586656,0.408182973,0,0,{'': 50}
+309,"Words that are conditional conjunctions (both ""if"" and ""If"") used to introduce hypothetical or conditional clauses in sentences.",increasing,0.14212684509999998,10,pythia-6_9b-step1000,0.290315236,0.266953635,0,0,{'': 50}
+34,Words that introduce examples or specific instances to illustrate or clarify a general statement.,increasing,0.19726650610000002,10,pythia-6_9b-step1000,0.336575406,0.31169868,0,0,{'': 50}
+1901,"Programming and web development terminology including technical concepts like classes, events, declarations, and code elements.",increasing,0.26005779164,10,pythia-6_9b-step1000,0.463738883,0.387643069,0,0,{'': 50}
+602,Comparative adjectives used in quantitative comparisons or degree expressions.,increasing,0.14855195000000002,10,pythia-6_9b-step1000,0.285020193,0.237635241,0,0,{'': 50}
+170,"Incomplete contractions where ""don't"", ""doesn't"", and ""didn't"" are split across formatting boundaries",increasing,0.031720240299999994,10,pythia-6_9b-step1000,0.0612080768,0.0612080768,0,0,{'': 50}
+2057,"Verbs indicating causation or consequence, describing how one action or condition produces or brings about another outcome.",increasing,0.05725012298,10,pythia-6_9b-step1000,0.0644362818,0.0526410921,0,0,{'': 50}
+2555,Present participle verbs functioning as main verbs in various grammatical constructions,increasing,0.262630894,10,pythia-6_9b-step1000,0.423608169,0.423608169,0,0,{'': 50}
+1086,Discourse markers or transitional words used to connect ideas and indicate logical relationships between sentences or clauses.,increasing,0.006108989929999999,10,pythia-6_9b-step1000,0.0159678551,0.0154437092,0,0,{'': 50}
+873,"Mixed descriptive words including positive adjectives, neutral descriptors, and unrelated terms",increasing,0.15898371985999998,10,pythia-6_9b-step1000,0.45492925,0.45492925,0,0,{'': 50}
+2853,"Words indicating small quantities, degrees, or amounts.",increasing,0.2048705959,10,pythia-6_9b-step1000,0.39512884,0.39512884,0,0,{'': 50}
+2784,"Instances of modal constructions with ""have to"" and ""having to"" expressing necessity or obligation, including both positive requirements and negative lack of obligation.",increasing,0.20317678169999998,10,pythia-6_9b-step1000,0.427524349,0.386099576,0,0,{'': 50}
+2700,"Common verbs that frequently appear in instructional, advisory, or explanatory contexts.",increasing,0.19897374810000001,10,pythia-6_9b-step1000,0.455957446,0.455957446,0,0,{'': 50}
+1721,"Nouns referring to specific roles or parties in legal, business, and formal contractual relationships",increasing,0.2325211943,10,pythia-6_9b-step1000,0.470430523,0.470430523,0,0,{'': 50}
+1074,"Past participles in various grammatical constructions including present perfect, passive voice, and participial phrases.",increasing,0.26870722059999996,10,pythia-6_9b-step1000,0.44287191,0.44287191,0,0,{'': 50}
+794,"Words referring to alternative or additional entities, people, or things beyond those already mentioned.",increasing,0.1119296068,10,pythia-6_9b-step1000,0.22751554,0.22751554,0,0,{'': 50}
+2377,Pronouns and nouns referring to people or groups of people.,increasing,0.1759064484,10,pythia-6_9b-step1000,0.371130896,0.364765086,0,0,{'': 50}
+2829,"Words related to requesting, inquiring, or seeking information from someone.",increasing,0.019942874739999998,10,pythia-6_9b-step1000,0.0465961683,0.0392357495,0,0,{'': 50}
+781,"Numbers (7 or 8) that appear after spaces in mathematical expressions, statistical data, and technical text.",increasing,0.0477233158,10,pythia-6_9b-step1000,0.108958207,0.108129372,0,0,{'': 50}
+2228,Possessive pronouns and determiners indicating ownership or relationship.,increasing,0.07451266350000002,10,pythia-6_9b-step1000,0.227793711,0.227793711,0,0,{'': 50}
+22,"Modal verbs and nouns expressing necessity, opportunity, or requirement in instructional and procedural contexts.",increasing,0.2100910143,10,pythia-6_9b-step1000,0.34953564,0.34953564,0,0,{'': 50}
+1965,Pronouns appearing after spaces that serve as anaphoric references to previously mentioned entities or concepts,increasing,0.0530016119,10,pythia-6_9b-step1000,0.0939815488,0.0939815488,0,0,{'': 50}
+75,"Prepositional phrases using ""according to"" to indicate attribution, reference, or compliance with inventions, technologies, methods, or sources",increasing,0.164280647,11,pythia-6_9b-step10000,0.271782356,0.253216995,0,0,{'': 50}
+1297,Ordinal adjectives indicating temporal sequence or position in a series.,increasing,0.1159413536,11,pythia-6_9b-step10000,0.295458085,0.295458085,0,0,{'': 50}
+623,"First-person cognitive verbs expressing thinking, knowing, or uncertainty in conversational contexts.",increasing,0.114753888,11,pythia-6_9b-step10000,0.256052824,0.252694498,0,0,{'': 50}
+1800,Numeric coefficients or values appearing in mathematical expressions and formulas.,increasing,0.002371616,11,pythia-6_9b-step10000,0.00771232856,0.00771232856,0,0,{'': 50}
+2093,Verbs related to problem-solving and understanding through analysis or investigation,increase-decrease,0.0158329044,11,pythia-6_9b-step10000,0.033535264,0.0223710169,0,0,{'': 50}

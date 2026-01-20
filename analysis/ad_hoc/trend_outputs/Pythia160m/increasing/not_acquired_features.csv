@@ -1,0 +1,50 @@
+Feature ID,Topic,Max Prob,Gap to 0.5,Description
+600,Auxiliary Verbs and Grammar,0.493521683,0.006478317000000011,"Auxiliary verbs ""have"" and ""has"" used in various grammatical constructions including perfect tenses, modal auxiliaries, and conditional statements."
+1358,Whitespace and Text Formatting,0.484706707,0.015293292999999986,Words that appear immediately after a space in technical and scientific writing contexts.
+2291,Grammatical Function Words,0.483257866,0.01674213400000002,"All instances are the word ""that"" used as a conjunction, pronoun, or determiner in various grammatical contexts."
+1276,Thresholds and Requirements,0.48009841,0.019901590000000025,"All instances are the word ""need"" (or its plural ""needs"") used as a noun referring to a requirement or necessity in various contexts."
+1892,Descriptive Modifiers and Determiners,0.474328156,0.025671844,"All instances of ""one"" used as a determiner or number word, typically in phrases like ""at least one"" or ""nearest one [unit]""."
+1513,Mathematical Problem Statements,0.459872049,0.040127950999999995,Mathematical addition operators (+) appearing in algebraic expressions and equations.
+1741,Quantifiers and Determiners,0.446891993,0.05310800700000001,"All instances are the indefinite article ""a"" preceded by a space in various sentence contexts."
+97,Compliance and Conformity,0.41103075,0.08896925,"Prepositions that introduce phrases indicating conformity, compliance, or relational positioning in formal or technical writing."
+1407,Personal Names,0.392881954,0.10711804600000002,Last names or surnames of people mentioned in various contexts.
+930,Grammatical Function Words,0.389506678,0.110493322,"All instances show the preposition ""on"" preceded by a space, indicating its consistent grammatical function as a preposition in various contexts."
+1221,Methods and Procedural Context,0.388548569,0.11145143099999999,"Nouns referring to methods, approaches, spatial locations, or procedural contexts in technical and formal discourse"
+2755,Numerical Values and Mathematics,0.368837275,0.13116272499999998,The digit zero appearing in negative decimal numbers within mathematical contexts
+361,Technical Documentation Formatting,0.35253112,0.14746888000000002,Exclamation marks appearing at the end of quoted dialogue or exclamatory statements.
+2417,Mathematical Comparisons and Rankings,0.340067975,0.15993202499999998,Mathematical variables and expressions that appear immediately after a space and dollar sign in LaTeX mathematical notation.
+65,Government and Legal Terminology,0.325404551,0.174595449,"Legal terminology referring to parties in court proceedings, with some non-legal terms included"
+208,Modal Verbs and Auxiliaries,0.31883717,0.18116283,"Instances of the modal verb ""can"" expressing ability, possibility, or permission in various contexts."
+1047,Temporal Relationships and Sequencing,0.30375173,0.19624827,"Temporal ordinal adjectives (first, next, last) used to indicate sequence or order in time."
+686,Technical Systems and Electronics,0.303553849,0.196446151,"Technical terms describing problems, malfunctions, or issues in systems and software."
+2366,Temporal and Sequential Language,0.282001489,0.217998511,"The word ""end"" used as a noun to indicate the conclusion or final point of time periods, events, or durations."
+578,Relative Pronouns and Clauses,0.279005958,0.220994042,"All instances are the relative pronoun ""that"" used to introduce restrictive relative clauses modifying preceding nouns."
+62,Comparative Conjunctions and Relations,0.271537454,0.228462546,"The word ""as"" functioning as a comparative conjunction or adverb in various comparative constructions and phrases."
+2880,General Reference Terms and Entities,0.261636028,0.23836397199999998,"General nouns referring to unspecified objects, entities, or concepts, often used as vague or catch-all terms."
+2412,Professional and Academic Language,0.251987654,0.248012346,Research and legal terminology with broader professional contexts
+1905,Auxiliary and Possessive Verbs,0.240450415,0.259549585,"Forms of the verb ""have"" (including ""have,"" ""has,"" ""had,"" and ""having"") used as auxiliary or main verbs to express possession, experience, or obligation."
+2700,Infinitive Verbs,0.235824339,0.264175661,"Infinitive verbs that follow ""to"" in sentences, representing actions or purposes."
+2982,Pronouns and Possessives,0.22834494,0.27165506,"Third-person pronouns (they, their, them) used as subjects and objects in sentences."
+1727,Pronouns and Possessives,0.223129659,0.27687034099999996,"First-person plural pronouns (""we"" and ""us"") used as sentence subjects."
+2126,Conjunctions and Logical Connectors,0.21714713,0.28285287000000003,"Words appearing after spaces in contexts involving numerical quantities, alternatives, or conditional phrases, typically functioning as conjunctions or determiners in ""one or more"" or ""whether or not"" constructions."
+2541,Verb Forms and Actions,0.193245529,0.306754471,Past participles used in perfect tense constructions (have/had + past participle).
+2719,Verb Forms and Actions,0.189083519,0.310916481,Present participle verbs functioning as main verbs in progressive/continuous tenses
+2377,Names and Personal References,0.181788104,0.318211896,"All instances are the noun ""people"" (and one ""person"") used as a general term referring to groups of individuals in various contexts."
+1721,Government and Legal Terminology,0.16801791,0.33198209,"Legal terms related to court rulings, judicial determinations, and legal decision-making processes."
+1265,Outcomes and Results,0.165590417,0.334409583,"All instances are the noun ""result"" used to describe outcomes, consequences, or products of various processes or actions."
+1598,Descriptive Modifiers and Determiners,0.161416302,0.338583698,"Articles and adjectives that precede nouns in contexts describing developments, innovations, or additions"
+502,Comparative and Relational Terms,0.160545565,0.339454435,"The word ""more"" functioning as an adverb or part of comparative constructions to indicate greater degree, frequency, or intensity."
+2059,Personal Pronouns and Subject References,0.150330178,0.34966982199999996,"The pronoun ""it"" appearing at the beginning of clauses or sentences, typically following a comma or period."
+419,Verb Usage and Utilization,0.141424643,0.358575357,"Verb forms of ""use"" and ""used"" indicating utilization or employment of something."
+433,Foreign Language Elements,0.116508063,0.383491937,"French function words (articles, pronouns, conjunctions) preceded by a space token"
+1798,Purpose and Intention Language,0.111783244,0.388216756,"All instances show ""order"" used in the prepositional phrase ""in order to"" expressing purpose or intention."
+1835,Pronouns and Possessives,0.102452309,0.397547691,Possessive pronouns and determiners indicating ownership or association.
+2814,Existential and Locative Expressions,0.0889242548,0.4110757452,"Conditional statements beginning with ""if"" that introduce hypothetical scenarios or conditions in various contexts."
+2301,Statistical and Scientific Notation,0.0744665702,0.4255334298,"Numbers appearing in statistical or mathematical contexts, primarily representing percentages, measurements, or numerical values in data analysis."
+2490,Discourse Connectors and Transitions,0.0453372123,0.4546627877,"Instances of the contrastive conjunction ""however"" appearing at the beginning of sentences or clauses to introduce contrasting information."
+2364,Intensifiers and Connectors,0.0222119312,0.4777880688,"The word ""so"" functioning as an intensifier, conjunction, or adverb in various grammatical contexts."
+1651,Descriptive Modifiers and Determiners,0.021653855,0.478346145,"Words functioning as indefinite determiners or quantifiers, with one instance of ""part"" that refers to a role or involvement rather than quantity"
+2269,Discourse Connectors and Transitions,0.0173474134,0.4826525866,"Conjunctions and transition words that introduce causal relationships, temporal sequences, or logical connections between clauses."
+2461,Spatial and Portion Language,0.0164719163,0.4835280837,"All instances use ""portion"" as a noun referring to a part or section of something larger."
+2494,Grammatical Function Words,0.00918035725,0.49081964275,Prepositions and adverbs indicating accompaniment or conjunction
+1004,Coordinating Conjunctions and Connections,0.00716360794,0.49283639206,"Subordinating conjunctions and prepositions that introduce dependent clauses, comparisons, or logical relationships between ideas."

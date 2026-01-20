@@ -297,8 +297,12 @@ def train(
                 
                 if freq_dict["dead"] > reset_dead_threshold and \
                     (total_batches - i) > (log_eval_act_freqs_every // 4):
-                    logger.info("Resetting neurons...")    
-                    to_be_reset = (freqs == 0)
+                    logger.info("Resetting neurons...")
+                    # if dict size is large, reset more of the dead features
+                    if cfg["dict_size"]/cfg["input_dim"] > 4:    
+                        to_be_reset = (freqs < 1e-6)
+                    else:
+                        to_be_reset = (freqs == 0)
                     re_init(to_be_reset, encoder)
             if (i+1) % checkpoint_every == 0:
                 # checkpoint model
@@ -438,6 +442,11 @@ def train(
     type=int,
     default=16,
 )
+@click.option(
+    "--only_probs",
+    type=bool,
+    default=False,
+)
 def main(
     args: str,
     cache_dir: str,
@@ -454,6 +463,7 @@ def main(
     spill_dir: str,
     temp_dir: str,
     workers: int,
+    only_probs: bool, 
 ):  
     logger = get_logger()
     continue_from_checkpoint = False
@@ -464,13 +474,14 @@ def main(
             args_dict = json.load(f)
         cache_dir = args_dict.get("cache_dir", cache_dir)
         checkpoint_dir = args_dict.get("checkpoint_dir", checkpoint_dir)
-        data_dirs = args_dict.get("data_dirs", data_dirs)
+        data_dirs = args_dict.get("train_data_dirs", data_dirs)
         model_names = args_dict.get("model_names", model_names)
         num_epochs = args_dict.get("num_epochs", num_epochs)
         output_feature_weight = args_dict.get("output_feature_weight", output_feature_weight)
-        save_dir = args_dict.get("save_dir", save_dir)
+        save_dir = args_dict.get("train_save_dir", save_dir)
         temp_dir = args_dict.get("temp_dir", temp_dir)
         workers = args_dict.get("workers", workers)
+        only_probs = args_dict.get("only_probs", only_probs)
     
     # if data_dirs are provided, sort them in natural order
     if len(data_dirs) > 1:    
@@ -484,7 +495,7 @@ def main(
     save_dir = f"{save_dir}/{sae_model_name}"
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
-    cfg["save_dir"] = save_dir
+    cfg["train_save_dir"] = save_dir
     cfg["data_shuffling_seed"] = data_shuffling_seed
     
     pprint.pprint(cfg)
@@ -500,7 +511,7 @@ def main(
             model_checkpoint_dir = f"{checkpoint_dir}/{cfg['name']}"
         else:
             model_checkpoint_dir = f"{save_dir}/checkpoints"
-        data_dirs = cfg["data_dirs"]
+        data_dirs = cfg["train_data_dirs"]
         checkpoint_data_dirs = [f"{model_checkpoint_dir}/{os.path.basename(data_dir)}" for data_dir in data_dirs]
         checkpoint_data_complete = [check_data_training_complete(chk_dir) for chk_dir in checkpoint_data_dirs]
         # if all data directories have been trained on, then we can skip training and exit
@@ -556,7 +567,7 @@ def main(
     # if no data is cached, cache the data to the cache_dir
     if len(cached_data_filepaths) == 0:
         assert len(data_dirs) > 0, "Must provide data directories to train on"
-        cfg["data_dirs"] = data_dirs
+        cfg["train_data_dirs"] = data_dirs
         logging.info("Loading data...")
         cached_data_filepaths = load_data(
             workers=workers,
@@ -569,7 +580,7 @@ def main(
             model_string=model_string,
         )
     else:
-        cfg["data_dirs"] = cached_data_dirs
+        cfg["train_data_dirs"] = cached_data_dirs
 
     all_cached_data_filepaths = cached_data_filepaths
     cached_data_filepaths = cached_data_filepaths[cached_data_idx:]

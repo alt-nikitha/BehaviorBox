@@ -1,0 +1,33 @@
+{
+    "cache_dir": "/home/nsrikant/.cache",
+    "train_data_dirs": [
+        "/data/user_data/nsrikant/bbox_data/output/output/larger_pile"
+    ],
+
+    "eval_data_dirs": [
+        "/data/user_data/nsrikant/bbox_data/output/output/larger_pile"
+    ],
+    "model_names": [
+        "pythia-6_9b-step1",
+        "pythia-6_9b-step2",
+        "pythia-6_9b-step4",
+        "pythia-6_9b-step8",
+        "pythia-6_9b-step16",
+        "pythia-6_9b-step32",
+        "pythia-6_9b-step64",
+        "pythia-6_9b-step128",
+        "pythia-6_9b-step256",
+        "pythia-6_9b-step512",
+        "pythia-6_9b-step1000",
+        "pythia-6_9b-step10000",
+        "pythia-6_9b-step70000",
+        "pythia-6_9b-step100000",
+        "pythia-6_9b"
+    ],
+    "output_feature_weight": 0.7,
+    "train_save_dir": "/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_larger_pile_6_9b_pythia",
+    "eval_save_dir": "/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_larger_pile_6_9b_pythia",
+    "dict_size": 3000,
+    "only_probs": false,
+    "device": "cuda"
+}

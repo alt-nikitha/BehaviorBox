@@ -1,0 +1,6 @@
+Trend,Acquired (≥0.5),Not Acquired (<0.5),Total,Acquisition Rate,Median Acq Ckpt,Earliest Acq,Latest Acq,Avg Max Prob (not acq)
+increase-decrease,3,1,4,75.0%,7.0,7,13,0.034
+increase-stagnate,161,13,174,92.5%,10.0,3,14,0.296
+increasing,21,27,48,43.8%,12.0,10,14,0.288
+other,2,0,2,100.0%,9.5,9,10,N/A
+TOTAL,187,41,228,,,,,

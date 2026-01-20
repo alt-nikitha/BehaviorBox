@@ -1,0 +1,410 @@
+split,pair_id,correct_sentence,correct_doc_id,correct_input_file,correct_output_file,correct_metric,correct_num_tokens,best_wrong_metric,num_wrong_options,wrong_metrics
+abstract_algebra_test,0,"Question: Find the degree for the given field extension Q(sqrt(2), sqrt(3), sqrt(18)) over Q.
+A. 0
+B. 4
+C. 2
+D. 6
+
+Answer: B",abstract_algebra_test_correct_0_B,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-99.66238403320312,48,-99.29476165771484,3,"[-99.80300903320312, -99.29476165771484, -99.77132415771484]"
+anatomy_test,0,"Question: A lesion causing compression of the facial nerve at the stylomastoid foramen will cause ipsilateral
+A. paralysis of the facial muscles.
+B. paralysis of the facial muscles and loss of taste.
+C. paralysis of the facial muscles, loss of taste and lacrimation.
+D. paralysis of the facial muscles, loss of taste, lacrimation and decreased salivation.
+
+Answer: A",anatomy_test_correct_0_A,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-115.93079376220703,77,-115.33704376220703,3,"[-115.90735626220703, -115.83704376220703, -115.33704376220703]"
+astronomy_test,0,"Question: What is true for a type-Ia (""type one-a"") supernova?
+A. This type occurs in binary systems.
+B. This type occurs in young galaxies.
+C. This type produces gamma-ray bursts.
+D. This type produces high amounts of X-rays.
+
+Answer: A",astronomy_test_correct_0_A,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-142.83950805664062,67,-142.33169555664062,3,"[-142.37857055664062, -142.34732055664062, -142.33169555664062]"
+business_ethics_test,0,"Question: _______ such as bitcoin are becoming increasingly mainstream and have a whole host of associated ethical implications, for example, they are______ and more ______. However, they have also been used to engage in _______.
+A. Cryptocurrencies, Expensive, Secure, Financial Crime
+B. Traditional currency, Cheap, Unsecure, Charitable giving
+C. Cryptocurrencies, Cheap, Secure, Financial crime
+D. Traditional currency, Expensive, Unsecure, Charitable giving
+
+Answer: C",business_ethics_test_correct_0_C,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-282.9805603027344,91,-282.9024353027344,3,"[-282.9024353027344, -283.0118103027344, -282.9180603027344]"
+clinical_knowledge_test,0,"Question: What size of cannula would you use in a patient who needed a rapid blood transfusion (as of 2020 medical knowledge)?
+A. 18 gauge.
+B. 20 gauge.
+C. 22 gauge.
+D. 24 gauge.
+
+Answer: A",clinical_knowledge_test_correct_0_A,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-119.2421875,54,-118.7109375,3,"[-118.8046875, -118.859375, -118.7109375]"
+college_biology_test,0,"Question: Based on the characteristic population curves that result from plotting population growth of a species, the most effective means of controlling the mosquito population is to
+A. maintain the population at a point corresponding to the midpoint of its logistic curve
+B. opt for zero population control once the K value of the curve has been reached
+C. reduce the carrying capacity cif the environment to lower the K value
+D. increase the mortality rate
+
+Answer: C",college_biology_test_correct_0_C,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-263.5950012207031,91,-263.3137512207031,3,"[-263.7668762207031, -263.4309387207031, -263.3137512207031]"
+college_chemistry_test,0,"Question: The rate, r, of a zero-order chemical reaction A → B can be expressed as which of the following?
+A. r = k ln[A]
+B. r = k [A]^2
+C. r = k [A]
+D. r = k
+
+Answer: D",college_chemistry_test_correct_0_D,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-111.1573715209961,66,-111.1417465209961,3,"[-112.3214340209961, -111.3448715209961, -111.1417465209961]"
+college_computer_science_test,0,"Question: The access matrix approach to protection has the difficulty that
+A. the matrix, if stored directly, is large and can be clumsy to manage
+B. it is not capable of expressing complex protection requirements
+C. deciding whether a process has access to a resource is undecidable
+D. there is no way to express who has rights to change the access matrix itself
+
+Answer: A",college_computer_science_test_correct_0_A,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-220.6660919189453,79,-220.1114044189453,3,"[-220.4239044189453, -220.2989044189453, -220.1114044189453]"
+college_mathematics_test,0,"Question: Let k be the number of real solutions of the equation e^x + x - 2 = 0 in the interval [0, 1], and let n be the number of real solutions that are not in [0, 1]. Which of the following is true?
+A. k = 0 and n = 1
+B. k = 1 and n = 0
+C. k = n = 1
+D. k > 1
+
+Answer: B",college_mathematics_test_correct_0_B,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-110.06352996826172,94,-109.40727996826172,3,"[-110.26665496826172, -109.40727996826172, -109.45415496826172]"
+college_medicine_test,0,"Question: A police officer carries out hundreds of traffic stops every year. When his supervisor is reviewing the officer’s records for the past year, he notices that the officer is equally likely to stop people of various genders, ages, and races. However, he is significantly more likely to write tickets for middle-aged white males with dark hair and eyes. When confronted with this fact, the officer truthfully states that he has no idea why that is, and that it must simply be a coincidence. Unbeknownst to the officer, this behavior is tied to the fact that these men look like his father, with whom he had an abusive relationship as a child. What psychological framework would directly address the unconscious bias in his behavior? 
+A. Behaviorist
+B. Psychoanalytic
+C. Cognitive behavioral
+D. Humanistic
+
+Answer: B",college_medicine_test_correct_0_B,longformer-200_299.parquet,pythia-6_9b-step70000-0_999.parquet,-381.8062438964844,166,-381.8296813964844,3,"[-382.1343688964844, -381.8765563964844, -381.8296813964844]"
+college_physics_test,0,"Question: The quantum efficiency of a photon detector is 0.1. If 100 photons are sent into the detector, one after the other, the detector will detect photons
+A. an average of 10 times, with an rms deviation of about 4
+B. an average of 10 times, with an rms deviation of about 3
+C. an average of 10 times, with an rms deviation of about 1
+D. an average of 10 times, with an rms deviation of about 0.1
+
+Answer: B",college_physics_test_correct_0_B,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-156.5464324951172,104,-156.6089324951172,3,"[-156.8979949951172, -156.6089324951172, -156.9127960205078]"
+computer_security_test,0,"Question: Which of the following styles of fuzzer is more likely to explore paths covering every line of code in the following program?
+A. Generational
+B. Blackbox
+C. Whitebox
+D. Mutation-based
+
+Answer: C",computer_security_test_correct_0_C,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-136.3616180419922,48,-136.1116180419922,3,"[-136.9944305419922, -136.5959930419922, -136.1116180419922]"
+conceptual_physics_test,0,"Question: A 10-N force at an angle 45° above the horizontal has a horizontal component of about
+A. 7 N
+B. 5 N
+C. 10 N
+D. 12 N
+
+Answer: A",conceptual_physics_test_correct_0_A,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-98.97451782226562,46,-98.81826782226562,3,"[-98.99795532226562, -98.97451782226562, -98.81826782226562]"
+econometrics_test,0,"Question: Which one of the following is the most appropriate definition of a 99% confidence interval?
+A. 99% of the time in repeated samples, the interval would contain the true value of the parameter
+B. 99% of the time in repeated samples, the interval would contain the estimated value of the parameter
+C. 99% of the time in repeated samples, the null hypothesis will be rejected
+D. 99% of the time in repeated samples, the null hypothesis will not be rejected when it was false
+
+Answer: A",econometrics_test_correct_0_A,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-140.50506591796875,109,-140.19256591796875,3,"[-140.36444091796875, -140.26287841796875, -140.19256591796875]"
+electrical_engineering_test,0,"Question: The Barkhausen criterion for an oscillator
+A. Loop gain should be unity
+B. Loop gain should be less than unity
+C. The phase of a feedback signal with respect to input should be 0° or 360°
+D. Both A and C
+
+Answer: D",electrical_engineering_test_correct_0_D,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-140.11936950683594,58,-139.9318084716797,3,"[-140.00999450683594, -139.9708709716797, -139.9318084716797]"
+elementary_mathematics_test,0,"Question: What is the value of p in 24 = 2p?
+A. p = 4
+B. p = 8
+C. p = 12
+D. p = 24
+
+Answer: C",elementary_mathematics_test_correct_0_C,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-63.03969192504883,43,-63.30531692504883,3,"[-64.23500061035156, -63.38344192504883, -63.30531692504883]"
+formal_logic_test,0,"Question: Identify the conclusion of the following argument. It is hard not to verify in our peers the same weakened intelligence due to emotions that we observe in our everyday patients. The arrogance of our consciousness, which in general, belongs to the strongest defense mechanisms, blocks the unconscious complexes. Because of this, it is difficult to convince people of the unconscious, and in turn to teach them what their conscious knowledge contradicts. (Sigmund Freud, The Origin and Development of Psychoanalysis)
+A. It is hard not to verify in our peers the same weakened intelligence due to emotions that we observe in our everyday patients.
+B. The arrogance of our consciousness, which in general, belongs to the strongest defense mechanisms, blocks the unconscious complexes.
+C. Because of this, it is difficult to convince people of the unconscious, and in turn to teach them what their conscious knowledge contradicts.
+D. It is difficult to convince people of the unconscious, and in turn to teach them what their conscious knowledge contradicts.
+
+Answer: D",formal_logic_test_correct_0_D,longformer-200_299.parquet,pythia-6_9b-step70000-0_999.parquet,-389.5303039550781,204,-389.04791259765625,3,"[-390.1240539550781, -389.04791259765625, -389.6787414550781]"
+global_facts_test,0,"Question: As of 2016, about what percentage of adults aged 18 years or older were overweight?
+A. 10%
+B. 20%
+C. 40%
+D. 80%
+
+Answer: C",global_facts_test_correct_0_C,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-75.35833740234375,44,-75.75123596191406,3,"[-76.04583740234375, -75.75123596191406, -75.78802490234375]"
+high_school_biology_test,0,"Question: In a population of giraffes, an environmental change occurs that favors individuals that are tallest. As a result, more of the taller individuals are able to obtain nutrients and survive to pass along their genetic information. This is an example of
+A. directional selection.
+B. stabilizing selection.
+C. sexual selection.
+D. disruptive selection.
+
+Answer: A",high_school_biology_test_correct_0_A,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-167.74612426757812,76,-167.33206176757812,3,"[-167.37112426757812, -167.77737426757812, -167.33206176757812]"
+high_school_chemistry_test,0,"Question: London dispersion forces are caused by
+A. temporary dipoles created by the position of electrons around the nuclei in a molecule
+B. the three-dimensional intermolecular bonding present in all covalent substances
+C. the uneven electron-to-proton ratio found on individual atoms of a molecule
+D. the electronegativity differences between the different atoms in a molecule
+
+Answer: A",high_school_chemistry_test_correct_0_A,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-207.3534698486328,75,-207.0175323486328,3,"[-207.1190948486328, -207.1269073486328, -207.0175323486328]"
+high_school_computer_science_test,0,"Question: Let x = 1. What is x << 3 in Python 3?
+A. 1
+B. 3
+C. 8
+D. 16
+
+Answer: C",high_school_computer_science_test_correct_0_C,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-73.1976318359375,37,-73.2054443359375,3,"[-73.8773193359375, -73.2054443359375, -73.6429443359375]"
+high_school_european_history_test,0,"Question: This question refers to the following information.
+In order to make the title of this discourse generally intelligible, I have translated the term ""Protoplasm,"" which is the scientific name of the substance of which I am about to speak, by the words ""the physical basis of life."" I suppose that, to many, the idea that there is such a thing as a physical basis, or matter, of life may be novel—so widely spread is the conception of life as something which works through matter. … Thus the matter of life, so far as we know it (and we have no right to speculate on any other), breaks up, in consequence of that continual death which is the condition of its manifesting vitality, into carbonic acid, water, and nitrogenous compounds, which certainly possess no properties but those of ordinary matter.
+Thomas Henry Huxley, ""The Physical Basis of Life,"" 1868
+From the passage, one may infer that Huxley argued that ""life"" was
+A. a force that works through matter
+B. essentially a philosophical notion
+C. merely a property of a certain kind of matter
+D. a supernatural phenomenon
+
+Answer: C",high_school_european_history_test_correct_0_C,longformer-200_299.parquet,pythia-6_9b-step70000-0_999.parquet,-597.9069213867188,233,-597.7506713867188,3,"[-597.7506713867188, -597.9034423828125, -598.0987548828125]"
+high_school_geography_test,0,"Question: The main factor preventing subsistence economies from advancing economically is the lack of
+A. a currency.
+B. a well-connected transportation infrastructure.
+C. government activity.
+D. a banking service.
+
+Answer: B",high_school_geography_test_correct_0_B,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-133.1328887939453,49,-133.3047637939453,3,"[-133.4219512939453, -133.4375762939453, -133.3047637939453]"
+high_school_government_and_politics_test,0,"Question: Which of the following best describes the balance the Supreme Court has struck between the establishment clause and the free-exercise clause?
+A. Freedom of speech is protected except in certain situations, such as yelling ""fire"" in a crowded theater.
+B. Once a church has been recognized by the federal government, its tax-exempt status can never be revoked.
+C. Once Congress has created an administrative agency, that agency can be dissolved only by a constitutional amendment.
+D. State-sponsored prayer during school hours is prohibited, but voluntary prayer by student groups before school is allowed.
+
+Answer: D",high_school_government_and_politics_test_correct_0_D,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-234.65521240234375,125,-235.31927490234375,3,"[-236.00677490234375, -235.41302490234375, -235.31927490234375]"
+high_school_macroeconomics_test,0,"Question: Suppose that an expansionary fiscal policy leads to a large increase in real output and a small increase in the price level. From this it can be inferred that
+A. inflation had already impacted the economy before the fiscal stimulus.
+B. the economy initially had some unemployed resources.
+C. aggregate supply decreased.
+D. aggregate demand is steeply sloped.
+
+Answer: B",high_school_macroeconomics_test_correct_0_B,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-204.22332763671875,78,-204.24676513671875,3,"[-204.24676513671875, -204.62957763671875, -204.43426513671875]"
+high_school_mathematics_test,0,"Question: If a pentagon P with vertices at (– 2, – 4), (– 4, 1), (–1, 4), (2, 4), and (3, 0) is reflected across the line y = x to get a new pentagon, P’, then one of the vertices of P’ is
+A. (0, – 3)
+B. (4, 1)
+C. (2, 2)
+D. (– 4, –2)
+
+Answer: D",high_school_mathematics_test_correct_0_D,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-173.90878295898438,100,-173.64315795898438,3,"[-174.13534545898438, -174.04159545898438, -173.64315795898438]"
+high_school_microeconomics_test,0,"Question: Marginal revenue equals marginal cost at the point where
+A. total revenue is greater than total cost at its greatest distance
+B. total revenue is equal to total cost
+C. marginal product is at its highest point
+D. total product is at its highest point
+
+Answer: A",high_school_microeconomics_test_correct_0_A,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-133.95578002929688,60,-133.86984252929688,3,"[-133.94796752929688, -133.96359252929688, -133.86984252929688]"
+high_school_physics_test,0,"Question: The plates of a capacitor are charged to a potential difference of 5 V. If the capacitance is 2 mF, what is the charge on the positive plate?
+A. 0.005 C
+B. 0.01 C
+C. 0.02 C
+D. 0.5 C
+
+Answer: B",high_school_physics_test_correct_0_B,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-97.83041381835938,66,-97.44760131835938,3,"[-98.89291381835938, -97.44760131835938, -97.87728881835938]"
+high_school_psychology_test,0,"Question: Nearsightedness results from
+A. too much curvature of the cornea and lens
+B. too little curvature of the cornea and lens
+C. too much curvature of the iris and lens
+D. too little curvature of the iris and lens
+
+Answer: A",high_school_psychology_test_correct_0_A,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-78.85155487060547,54,-78.42967987060547,3,"[-78.83890533447266, -78.42967987060547, -78.50296783447266]"
+high_school_statistics_test,0,"Question: The weight of an aspirin tablet is 300 milligrams according to the bottle label. An FDA investigator weighs a simple random sample of seven tablets, obtains weights of 299, 300, 305, 302, 299, 301, and 303, and runs a hypothesis test of the manufacturer's claim. Which of the following gives the P-value of this test?
+A. P(t > 1.54) with df = 6
+B. 2P(t > 1.54) with df = 6
+C. P(t > 1.54) with df = 7
+D. 2P(t > 1.54) with df = 7
+
+Answer: B",high_school_statistics_test_correct_0_B,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-260.1278991699219,138,-259.7997741699219,3,"[-261.5263366699219, -259.7997741699219, -259.8622741699219]"
+high_school_us_history_test,0,"Question: This question refers to the following information.
+""The far-reaching, the boundless future will be the era of American greatness. In its magnificent domain of space and time, the nation of many nations is destined to manifest to mankind the excellence of divine principles; to establish on earth the noblest temple ever dedicated to the worship of the Most High—the Sacred and the True. Its floor shall be a hemisphere—its roof the firmament of the star-studded heavens, and its congregation a Union of many Republics, comprising hundreds of happy millions, calling, owning no man master, but governed by God's natural and moral law of equality, the law of brotherhood—of 'peace and good will amongst men.'""
+John L. O'Sullivan, ""The Great Nation of Futurity,"" 1839
+By what means did the United States take possession of the Oregon Territory?
+A. The United States was granted the territory in a postwar treaty with France.
+B. The United States bought it from the Native Americans who lived there.
+C. U.S. settlers were the first to arrive in the region; they claimed it for their country.
+D. Great Britain ceded it to the United States as part of a negotiated treaty.
+
+Answer: D",high_school_us_history_test_correct_0_D,longformer-200_299.parquet,pythia-6_9b-step70000-0_999.parquet,-696.6627197265625,254,-696.6314697265625,3,"[-697.7642822265625, -696.6314697265625, -696.6939697265625]"
+high_school_world_history_test,0,"Question: This question refers to the following information.
+No task is more urgent than that of preserving peace. Without peace our independence means little. The rehabilitation and upbuilding of our countries will have little meaning. Our revolutions will not be allowed to run their course. What can we do? We can do much! We can inject the voice of reason into world affairs. We can mobilize all the spiritual, all the moral, all the political strength of Asia and Africa on the side of peace. Yes, we! We, the peoples of Asia and Africa, 1.4 billion strong.
+Indonesian leader Sukarno, keynote address to the Bandung Conference, 1955
+The passage above is most associated with which of the following developments?
+A. The formation of the non-aligned movement
+B. Global disarmanent and nuclear non-proliferation
+C. The Green Revolution in agriculture
+D. Mobilization of pan-Asian ideology
+
+Answer: A",high_school_world_history_test_correct_0_A,longformer-200_299.parquet,pythia-6_9b-step70000-0_999.parquet,-535.7476196289062,187,-535.2554321289062,3,"[-535.3101196289062, -535.4585571289062, -535.2554321289062]"
+human_aging_test,0,"Question: The study of older adults and aging is referred to as
+A. Gerontology
+B. Geropsychiatry
+C. Geriatrics
+D. Gero-education
+
+Answer: A",human_aging_test_correct_0_A,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-89.7877426147461,36,-89.7877426147461,3,"[-89.7877426147461, -89.9361801147461, -89.8658676147461]"
+human_sexuality_test,0,"Question: Which of the following methods of detecting breast cancer involves exposure to radiation?
+A. Needle aspiration
+B. Mammography
+C. Mastectomy
+D. Lumpectomy
+
+Answer: B",human_sexuality_test_correct_0_B,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-76.65203094482422,38,-76.21141815185547,3,"[-77.60204315185547, -76.66156768798828, -76.21141815185547]"
+international_law_test,0,"Question: Which State ordinarily exercises jurisdiction in respect of crimes committed on board vessels?
+A. The coastal State
+B. The flag State
+C. All States enjoy such jurisdiction
+D. The International Tribunal for the Law of the Sea
+
+Answer: B",international_law_test_correct_0_B,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-128.0814208984375,53,-127.9954833984375,3,"[-127.9954833984375, -128.1673583984375, -128.1126708984375]"
+jurisprudence_test,0,"Question: Which statement best explains the purpose of Hart's distinction between 'being obliged' and 'having an obligation'?
+A. It demonstrates the difference between the internal and the external aspect of a rule.
+B. It refutes the natural lawyer' view of the role of morality in law.
+C. It explains the nature of power-conferring rules.
+D. It illuminates the concept of a rule.
+
+Answer: D",jurisprudence_test_correct_0_D,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-206.26052856445312,88,-206.20584106445312,3,"[-206.72927856445312, -206.20584106445312, -206.37771606445312]"
+logical_fallacies_test,0,"Question: A valid disjunctive syllogism has a major premise that:
+A. includes two or more alternatives
+B. classifies subjects
+C. affirms the antecedent or denies the consequent
+D. leads to a valid conclusion
+
+Answer: A",logical_fallacies_test_correct_0_A,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-129.03912353515625,48,-129.48443603515625,3,"[-129.61724853515625, -130.05474853515625, -129.48443603515625]"
+machine_learning_test,0,"Question: Statement 1| Linear regression estimator has the smallest variance among all unbiased estimators. Statement 2| The coefficients α assigned to the classifiers assembled by AdaBoost are always non-negative.
+A. True, True
+B. False, False
+C. True, False
+D. False, True
+
+Answer: D",machine_learning_test_correct_0_D,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-178.76976013183594,65,-178.70726013183594,3,"[-178.84007263183594, -178.98069763183594, -178.70726013183594]"
+management_test,0,"Question: What is the term for a sub-optimal but acceptable outcome of negotiations between parties?
+A. Bargaining
+B. Satisficing
+C. Accepting
+D. Compromising
+
+Answer: B",management_test_correct_0_B,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-96.7542953491211,40,-96.9808578491211,3,"[-97.2933578491211, -96.9808578491211, -97.0511703491211]"
+marketing_test,0,"Question: This is a hierarchy of effects or sequential model used to explain how advertising works:
+A. ADD.
+B. AIDA.
+C. PESTLE.
+D. SWOT.
+
+Answer: B",marketing_test_correct_0_B,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-137.68319702148438,43,-137.51913452148438,3,"[-138.13632202148438, -137.69882202148438, -137.51913452148438]"
+medical_genetics_test,0,"Question: In a Robertsonian translocation fusion occurs at the:
+A. telomeres.
+B. centromeres.
+C. histones.
+D. ends of the long arms.
+
+Answer: B",medical_genetics_test_correct_0_B,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-110.04237365722656,40,-109.98768615722656,3,"[-109.98768615722656, -110.03456115722656, -110.09706115722656]"
+miscellaneous_test,0,"Question: An important source of information on the credit rating of retail businesses is
+A. the Retail Merchants Association
+B. the local chamber of commerce
+C. Dun & Bradstreet, Inc.
+D. the United States Retail Credit Association
+
+Answer: C",miscellaneous_test_correct_0_C,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-122.99876403808594,53,-122.75657653808594,3,"[-123.38157653808594, -123.28782653808594, -122.75657653808594]"
+moral_disputes_test,0,"Question:  Just war theory's principle of military necessity belongs to
+A. jus in bello.
+B. jus ad bellum.
+C. moral nihilism.
+D. all of the above
+
+Answer: A",moral_disputes_test_correct_0_A,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-121.11202239990234,45,-121.25264739990234,3,"[-121.25264739990234, -121.33077239990234, -121.69014739990234]"
+moral_scenarios_test,0,"Question: For which of these two scenarios does the main character (who uses I/me/my) do something clearly morally wrong, according to ordinary moral standards in the US as of 2020? Scenario 1 | I slammed on my breaks to miss the ball as it came in to the road. Scenario 2 | I taught my children to play the xylophone.
+A. Wrong, Wrong
+B. Wrong, Not wrong
+C. Not wrong, Wrong
+D. Not wrong, Not wrong
+
+Answer: D",moral_scenarios_test_correct_0_D,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-301.46722412109375,104,-301.36566162109375,3,"[-301.51409912109375, -301.56097412109375, -301.36566162109375]"
+nutrition_test,0,"Question: Which foods tend to be consumed in lower quantities in Wales and Scotland (as of 2020)?
+
+A. Meat
+B. Confectionary
+C. Fruits and vegetables
+D. Potatoes
+
+Answer: C",nutrition_test_correct_0_C,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-115.03166961669922,44,-114.95354461669922,3,"[-114.95354461669922, -115.14104461669922, -115.33087921142578]"
+philosophy_test,0,"Question: Aesthetics deals with objects that are_____.
+A. essential to our existence
+B. unimportant to most people
+C. not essential to our existence
+D. rarely viewed
+
+Answer: C",philosophy_test_correct_0_C,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-113.44551849365234,41,-113.24239349365234,3,"[-113.35958099365234, -113.39083099365234, -113.24239349365234]"
+prehistory_test,0,"Question: Unlike most other early civilizations, Minoan culture shows little evidence of:
+A. trade.
+B. warfare.
+C. the development of a common religion.
+D. conspicuous consumption by elites.
+
+Answer: D",prehistory_test_correct_0_D,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-121.73359680175781,48,-121.23359680175781,3,"[-121.24922180175781, -121.23359680175781, -121.51484680175781]"
+professional_accounting_test,0,"Question: You bought a limousine for $98,000 and are planning to rent it for weddings, ceremonies and parties at $245 per hour. If you estimate the car will be hired for 2 hours a day on average, with daily costs at about $50, what is the estimated yearly yield on your investment if you work all year round, i.e. every day of the year, including any festivities and weekends?
+A. 164%
+B. 1.64%
+C. 0.45%
+D. 183%
+
+Answer: A",professional_accounting_test_correct_0_A,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-297.06689453125,114,-296.2164306640625,3,"[-296.2164306640625, -296.27001953125, -296.9820556640625]"
+professional_law_test,0,"Question: One afternoon, a pilot was flying a small airplane when it suddenly ran out of gas. As he was coming in for an emergency landing, the plane crossed into a neighboring state at a very low altitude. At this time, a 9-year-old boy was walking to school when he was struck and injured by an object, which may have fallen from the plane. In federal court, a negligence suit was brought against the pilot by the father of the boy for his son. Accompanied by his father, the boy had visited an attorney for preliminary discussions regarding the case. However, the father did not retain the attorney to represent his son in the lawsuit. Instead, the father hired another lawyer to handle the case. At trial, the pilot's attorney calls the consulting attorney to testify what the boy had said to him regarding his physical condition during the consultation that the attorney had had with the boy and his father. The attorney's testimony is
+A. admissible, because the attorney-client privilege was waived by the filing of the lawsuit.
+B. admissible, because there is no privilege of confidentiality when a person other than the client is present at the attorney-client consultation.
+C. inadmissible, because the attorney-client privilege prevents such a breach of confidential communications.
+D. inadmissible, because it was a statement of physical condition not made for the purpose of obtaining medical treatment.
+
+Answer: C",professional_law_test_correct_0_C,longformer-200_299.parquet,pythia-6_9b-step70000-0_999.parquet,-582.7835693359375,284,-582.3382568359375,3,"[-582.4241943359375, -582.9632568359375, -582.3382568359375]"
+professional_medicine_test,0,"Question: A 67-year-old woman comes to the physician for a follow-up examination. She had a pulmonary embolism and required treatment in the hospital for 3 weeks. She had a retroperitoneal hemorrhage; anticoagulant therapy was temporarily discontinued, and she underwent placement of an inferior vena cava (IVC) filter. She had a hematoma that was resolving on discharge from the hospital 2 weeks ago. Today, she says she has had a persistent sensation of tingling and numbness of her left thigh that she did not report in the hospital because she thought it would go away; the sensation has improved somewhat during the past week. Her only medication is warfarin. Vital signs are within normal limits. Examination of the skin shows no abnormalities. Muscle strength is normal. Sensation to light touch is decreased over a 5 x 5-cm area on the lateral aspect of the left anterior thigh. Which of the following is the most likely cause of this patient's decreased sensation?
+A. Cerebral infarction during the hospitalization
+B. Complication of the IVC filter placement
+C. Compression of the lateral femoral cutaneous nerve
+D. Hematoma of the left thigh
+
+Answer: C",professional_medicine_test_correct_0_C,longformer-200_299.parquet,pythia-6_9b-step70000-0_999.parquet,-462.06219482421875,227,-461.53875732421875,3,"[-462.89813232421875, -462.54656982421875, -461.53875732421875]"
+professional_psychology_test,0,"Question: Which of the following statements expresses a relationship between aging and sexual functioning
+A. Aging is related to an increase in vaginal lubrication
+B. Aging is associated with an increase in the frequency and number of orgasmic contractions in both sexes
+C. There is no significant relationship between aging and sexual responses in either sex
+D. Aging is related to some loss of erectile rigidity in the male
+
+Answer: D",professional_psychology_test_correct_0_D,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-165.08396911621094,83,-165.75584411621094,3,"[-165.95896911621094, -165.75584411621094, -165.81834411621094]"
+public_relations_test,0,"Question: Which common public relations tactic involves sending journalists on visits to appropriate locations?
+A. Media release
+B. Media tour
+C. Press room
+D. Promotional days/weeks
+
+Answer: B",public_relations_test_correct_0_B,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-130.3855743408203,43,-130.3230743408203,3,"[-130.9715118408203, -130.3230743408203, -130.4715118408203]"
+security_studies_test,0,"Question: Which of these principles is not an element of the responsibility to protect?
+A. The responsibility to prevent.
+B. The responsibility to react.
+C. The responsibility to remain sovereign.
+D. The responsibility to rebuild.
+
+Answer: C",security_studies_test_correct_0_C,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-101.11366271972656,54,-100.84022521972656,3,"[-101.36366271972656, -101.09022521972656, -100.84022521972656]"
+sociology_test,0,"Question: Mass-society theory suggests that:
+A. the content of the media is determined by market forces
+B. the subordinate classes are dominated by the ideology of the ruling class
+C. the media manipulate 'the masses' as vulnerable, passive consumers
+D. audiences make selective interpretations of media messages
+
+Answer: C",sociology_test_correct_0_C,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-196.4377899169922,67,-196.06204223632812,3,"[-196.06204223632812, -196.1331024169922, -196.09329223632812]"
+us_foreign_policy_test,0,"Question: What is the structure of the United Nations Security Council?
+A. 5 permanent members with veto power, 10 rotating members with no veto power
+B. 5 permanent members and 10 rotating members, all with veto power
+C. 10 permanent members with veto power, and 5 rotating members without veto power
+D. 15 permanent members with veto power
+
+Answer: A",us_foreign_policy_test_correct_0_A,longformer-100_199.parquet,pythia-6_9b-step70000-0_999.parquet,-104.77832794189453,76,-104.25932312011719,3,"[-104.45020294189453, -104.25932312011719, -104.37207794189453]"
+virology_test,0,"Question: How many human polyomaviruses are known at present?
+A. 100
+B. 1
+C. 10
+D. unknown
+
+Answer: A",virology_test_correct_0_A,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-70.66006469726562,32,-70.32412719726562,3,"[-70.51943969726562, -70.32412719726562, -70.48037719726562]"
+world_religions_test,0,"Question:  What can murtis be translated as?
+A. Offerings
+B. Prayers
+C. Apparitions
+D. Idols
+
+Answer: D",world_religions_test_correct_0_D,longformer-0_99.parquet,pythia-6_9b-step70000-0_999.parquet,-88.9186782836914,31,-88.2702407836914,3,"[-88.3014907836914, -88.5593032836914, -88.2702407836914]"

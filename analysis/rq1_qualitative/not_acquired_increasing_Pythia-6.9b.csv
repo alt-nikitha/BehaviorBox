@@ -1,0 +1,36 @@
+feature_group_id,representative_feature_id,description,n_members,max_prob,final_prob,gap_to_threshold,all_feature_ids
+1,1996,Coordinating conjunctions connecting clauses or phrases in compound sentences.,1,0.474316306,0.4710839,0.02568369399999998,1996
+2,1721,"Nouns referring to specific roles or parties in legal, business, and formal contractual relationships",1,0.470430523,0.470430523,0.02956947700000001,1721
+3,1901,"Programming and web development terminology including technical concepts like classes, events, declarations, and code elements.",1,0.463738883,0.387643069,0.03626111700000001,1901
+4,2412,"All instances of the word ""things"" (and one ""stuff"") used as a general noun to refer to objects, activities, or concepts in various contexts.",1,0.461149025,0.461149025,0.03885097500000001,2412
+5,2631,Mathematical variables and expressions in LaTeX format within academic/scientific text.,1,0.459874274,0.420307504,0.04012572599999997,2631
+6,2700,"Common verbs that frequently appear in instructional, advisory, or explanatory contexts.",1,0.455957446,0.455957446,0.04404255400000001,2700
+7,873,"Mixed descriptive words including positive adjectives, neutral descriptors, and unrelated terms",1,0.45492925,0.45492925,0.04507074999999999,873
+8,974,"First-person plural pronouns (""we"" and ""us"") used as subjects or objects in various sentence contexts.",1,0.447846263,0.447846263,0.05215373699999998,974
+9,1074,"Past participles in various grammatical constructions including present perfect, passive voice, and participial phrases.",1,0.44287191,0.44287191,0.05712809000000002,1074
+10,510,"Verbs describing various forms of engagement, participation, presence, or action in different contexts",1,0.429916852,0.363535102,0.07008314799999998,510
+11,197,"Programming-related verbs meaning ""to retrieve"" or ""to obtain"" data, values, or objects in software development contexts.",1,0.428586656,0.408182973,0.07141334399999999,197
+12,2784,"Instances of modal constructions with ""have to"" and ""having to"" expressing necessity or obligation, including both positive requirements and negative lack of obligation.",1,0.427524349,0.386099576,0.07247565099999997,2784
+13,2555,Present participle verbs functioning as main verbs in various grammatical constructions,1,0.423608169,0.423608169,0.07639183100000002,2555
+14,2853,"Words indicating small quantities, degrees, or amounts.",1,0.39512884,0.39512884,0.10487116000000002,2853
+15,2377,Pronouns and nouns referring to people or groups of people.,1,0.371130896,0.364765086,0.128869104,2377
+16,22,"Modal verbs and nouns expressing necessity, opportunity, or requirement in instructional and procedural contexts.",1,0.34953564,0.34953564,0.15046436000000002,22
+17,34,Words that introduce examples or specific instances to illustrate or clarify a general statement.,1,0.336575406,0.31169868,0.16342459399999998,34
+18,1798,"All instances are the word ""order"" used in the infinitive phrase ""in order to"" expressing purpose or intention.",1,0.313236544,0.2916998,0.186763456,1798
+19,1297,Ordinal adjectives indicating temporal sequence or position in a series.,1,0.295458085,0.295458085,0.20454191500000002,1297
+20,309,"Words that are conditional conjunctions (both ""if"" and ""If"") used to introduce hypothetical or conditional clauses in sentences.",1,0.290315236,0.266953635,0.20968476400000002,309
+21,602,Comparative adjectives used in quantitative comparisons or degree expressions.,1,0.285020193,0.237635241,0.21497980700000002,602
+22,75,"Prepositional phrases using ""according to"" to indicate attribution, reference, or compliance with inventions, technologies, methods, or sources",1,0.271782356,0.253216995,0.228217644,75
+23,623,"First-person cognitive verbs expressing thinking, knowing, or uncertainty in conversational contexts.",1,0.256052824,0.252694498,0.243947176,623
+24,2228,Possessive pronouns and determiners indicating ownership or relationship.,1,0.227793711,0.227793711,0.272206289,2228
+25,794,"Words referring to alternative or additional entities, people, or things beyond those already mentioned.",1,0.22751554,0.22751554,0.27248446000000004,794
+26,2288,Conditional and temporal clause introducers and sentence-initial discourse markers,1,0.150683858,0.141103497,0.349316142,2288
+27,781,"Numbers (7 or 8) that appear after spaces in mathematical expressions, statistical data, and technical text.",1,0.108958207,0.108129372,0.39104179299999997,781
+28,2808,Date components (months and days) appearing in formatted dates within various digital content.,1,0.0948909085,0.0948909085,0.4051090915,2808
+29,1965,Pronouns appearing after spaces that serve as anaphoric references to previously mentioned entities or concepts,1,0.0939815488,0.0939815488,0.4060184512,1965
+30,2057,"Verbs indicating causation or consequence, describing how one action or condition produces or brings about another outcome.",1,0.0644362818,0.0526410921,0.4355637182,2057
+31,170,"Incomplete contractions where ""don't"", ""doesn't"", and ""didn't"" are split across formatting boundaries",1,0.0612080768,0.0612080768,0.4387919232,170
+32,2829,"Words related to requesting, inquiring, or seeking information from someone.",1,0.0465961683,0.0392357495,0.4534038317,2829
+33,2093,Verbs related to problem-solving and understanding through analysis or investigation,1,0.033535264,0.0223710169,0.466464736,2093
+34,1086,Discourse markers or transitional words used to connect ideas and indicate logical relationships between sentences or clauses.,1,0.0159678551,0.0154437092,0.4840321449,1086
+35,1800,Numeric coefficients or values appearing in mathematical expressions and formulas.,1,0.00771232856,0.00771232856,0.49228767144,1800

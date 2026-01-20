@@ -1,0 +1,57 @@
+feature_group_id,representative_feature_id,description,n_members,acq_checkpoint,final_prob,trend,all_feature_ids
+1,2293,Tab characters and whitespace formatting used in code and text documents for indentation and alignment purposes.,1,6,0.651241841,increasing,2293
+2,800,Punctuation marks and symbols commonly used in programming code and text formatting.,1,8,0.660271006,increasing,800
+3,6396,"Instances of the word ""another"" (and one instance of ""each"") used in reciprocal or mutual relationship expressions, typically in the phrase ""one another"" or similar constructions indicating interaction between multiple parties.",1,11,0.784173391,increasing,6396
+4,1986,"Programming keywords ""function"" and ""expression"" used in code contexts across different programming languages.",1,11,0.889328587,increasing,1986
+5,3479,"All instances show ""year"" being used as part of age descriptions in the format ""number-year-old"" to specify someone's age.",1,11,0.979975197,increasing,3479
+6,5217,"Footnote and reference numbers in various document types including legal cases, academic texts, and administrative records",1,11,0.969583241,increasing,5217
+7,5763,"All instances represent the number ""12"" appearing in various contexts including dates, citations, footnotes, and reference numbers.",1,11,0.855274747,increasing,5763
+8,4082,Mathematical operators and delimiters in stack traces and mathematical expressions,1,11,0.929420661,increasing,4082
+9,2021,"Years appearing in legal citations and case documents, typically indicating dates of court decisions, filings, or legal events.",1,11,0.892068003,increasing,2021
+10,6343,"Reference numbers or footnote markers appearing in legal, academic, and technical documents.",1,11,0.877860467,increasing,6343
+11,3612,"All instances show ""well"" functioning as part of the conjunction ""as well as"" used to connect additional or similar elements in a sentence.",1,11,0.608784089,increasing,3612
+12,1311,Scientific terminology referring to various types of biological cells in biomedical research contexts.,1,11,0.654320617,increasing,1311
+13,823,"All instances are the noun ""time"" preceded by a space, typically used in prepositional phrases to indicate when something occurred or a specific temporal reference point.",1,11,0.666069061,increasing,823
+14,4831,"Numbers used as section markers, footnote references, or enumeration markers in formal legal and academic documents.",1,11,0.97485163,increasing,4831
+15,2555,"All instances show the word ""as"" functioning as a comparative conjunction or adverb in phrases expressing degree, similarity, or extent.",1,11,0.793374386,increasing,2555
+16,2473,Code comment delimiters marking the start of single-line comments in programming languages.,1,11,0.596887769,increasing,2473
+17,3422,Legal terminology used in court proceedings and judicial contexts,1,11,0.883316933,increasing,3422
+18,5743,"The letter ""v"" used as an abbreviation in legal case citations (meaning ""versus"") and in technical contexts like version numbers and variable names.",1,11,0.922433878,increasing,5743
+19,3952,"All instances show the preposition ""with"" preceded by a space, indicating consistent formatting of this common preposition in various contexts.",1,11,0.748520714,increasing,3952
+20,6169,"Plural nouns representing abstract concepts, quantities, or categories that can be measured, analyzed, or varied in technical and scientific contexts.",1,11,0.74095499,increasing,6169
+21,2315,Programming variables and identifiers used in code contexts across different languages and frameworks.,1,11,0.709611672,increasing,2315
+22,2928,"Instances of the number ""8"" appearing in various contexts including version numbers, dates, patent numbers, and technical documentation.",1,11,0.89608326,increasing,2928
+23,1258,"Words referring to temporal concepts or instances, including the noun ""time"" in various contexts and related temporal expressions like ""times"" and ""case"" when referring to specific instances or situations.",1,11,0.781030207,increasing,1258
+24,3004,Commas separating function or method parameters in programming code.,1,11,0.63786139,increasing,3004
+25,4021,"Prepositions indicating spatial relationships or locations, typically followed by place names or geographical references.",1,11,0.557679744,increasing,4021
+26,2507,"All instances show the word ""which"" functioning as a relative pronoun introducing dependent clauses that describe or specify a preceding noun.",1,11,0.936451042,increasing,2507
+27,3480,Self-closing XML tags indicated by the space followed by the closing bracket sequence in configuration files.,1,11,0.951334449,increasing,3480
+28,1687,Words used in mathematical comparison questions asking which value is closest or nearest to a target number.,1,11,0.618093566,increasing,1687
+29,1692,"Instances of the word ""respectively"" used to indicate correspondence between previously mentioned items in the same order.",1,11,0.957900374,increasing,1692
+30,1492,"Roman numerals and Arabic numerals used as chapter, section, or item identifiers in formatted text.",1,11,0.935120215,increasing,1492
+31,2016,"Mathematical expressions containing division operations, typically appearing in arithmetic evaluation problems or spreadsheet formulas.",1,11,0.618975105,increasing,2016
+32,1278,"Variable names, identifiers, and scientific/technical abbreviations used in programming code and academic literature.",1,11,0.52120702,increasing,1278
+33,4897,"Single letter ""c"" used as a variable, parameter, or identifier in various technical contexts including legal citations, mathematical expressions, programming code, and figure references.",1,11,0.941225669,increasing,4897
+34,4953,Decimal numbers beginning with zero in scientific and technical contexts.,1,11,0.69937689,increasing,4953
+35,3292,"Modal verbs expressing desire, preference, or intention, typically used in conditional or polite constructions.",1,11,0.623317044,increasing,3292
+36,3156,"The word ""possible"" appearing in constructions expressing maximization, optimization, or degree intensification (including superlative, comparative, and quantifying phrases).",1,11,0.683992755,increasing,3156
+37,2376,"Words related to software licensing, distribution, and code documentation terminology",1,11,0.998613138,increasing,2376
+38,2873,Words related to email newsletter subscription and digital content delivery services.,1,11,0.99085571,increasing,2873
+39,3559,Programming language keywords for function and void return types in code.,1,11,0.858667873,increasing,3559
+40,735,"Past tense forms of ""to be"" and modal verbs functioning as auxiliary verbs, linking verbs, or main verbs in sentence constructions.",1,11,0.632456437,increasing,735
+41,3346,"Closing parentheses marking the end of statistical results, citations, or technical specifications in academic/scientific text.",1,11,0.618934058,increasing,3346
+42,893,"The number ""10"" appearing in various technical, scientific, and business contexts as a numerical value or identifier.",1,12,0.719499074,increasing,893
+43,5669,"All instances of ""new"" function as an adjective modifying nouns to describe something recently created, acquired, or established.",1,12,0.565917845,increasing,5669
+44,2490,"Forms of the auxiliary verb ""do"" functioning as main verbs in infinitive constructions and direct questions",1,12,0.54664283,increasing,2490
+45,5410,"Words referring to iterations, editions, or successive developments of technology, software, or products.",1,12,0.569492382,increasing,5410
+46,354,"Infinitive marker ""to"" used to introduce purpose clauses or infinitive phrases indicating intention, direction, or objective.",1,12,0.420049229,increasing,354
+47,22,"Demonstrative pronoun ""this"" used to introduce or reference video content in descriptive contexts.",1,12,0.577030946,increasing,22
+48,3937,Contractions using apostrophe-s ('s) and apostrophe-re ('re) functioning as auxiliary verbs or pronouns in English sentences.,1,12,0.633968023,increasing,3937
+49,3019,"Instances of the word ""following"" used to introduce lists, examples, or subsequent information in technical and legal contexts.",1,12,0.584409898,increasing,3019
+50,4853,"All instances show the word ""into"" used in the phrasal verb ""take into account/consideration"" meaning to consider or include something in one's thinking or decision-making.",1,12,0.598408523,increasing,4853
+51,5271,"All instances refer to ""jury"" as a legal term in court proceedings, appearing in various judicial contexts such as verdicts, deliberations, and trial procedures.",1,12,0.642410171,increasing,5271
+52,3914,Programming comparison operators (== and !=) used in conditional statements and expressions across various programming languages.,1,12,0.589857255,increasing,3914
+53,1736,"Instances of the word ""follows"" used to introduce explanations, descriptions, or lists that come after the current statement.",1,13,0.374476662,increasing,1736
+54,2395,"Common English function words, pronouns, and other words that appear after spaces at clause or sentence boundaries",1,13,0.972610717,increasing,2395
+55,388,"All instances are the word ""any"" (or ""ANY"") used as a determiner or quantifier in negative or restrictive contexts.",1,14,0.519731016,increasing,388
+56,2535,"All instances show ""or"" functioning as a coordinating conjunction connecting alternatives or choices between two options.",1,14,0.566989957,increasing,2535

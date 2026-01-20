@@ -1,0 +1,2 @@
+160m_feature_id,160m_description,160m_trend,160m_acquired,160m_acq_checkpoint,160m_max_prob,6.9b_feature_id,6.9b_description,6.9b_trend,6.9b_acquired,6.9b_acq_checkpoint,6.9b_max_prob,sample_overlap,n_shared_samples,category,trend_match,acq_diff
+2541,Past participles used in perfect tense constructions (have/had + past participle).,increasing,False,-1,0.193245529,1074,"Past participles in various grammatical constructions including present perfect, passive voice, and participial phrases.",increasing,False,-1,0.44287191,0.639344262295082,39,Both Not Acquired,True,

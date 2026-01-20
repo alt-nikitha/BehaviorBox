@@ -1,0 +1,4 @@
+feature_id,description,acquisition_checkpoint,acquisition_checkpoint_name,final_probability,max_probability,good_count,bad_count,subset_counts
+1863,"Negative contractions with ""n't"" suffix",7,pythia-6_9b-step128,0.0351172213,0.81651014,0,0,{'': 11}
+294,"Tab characters followed by multiple spaces, representing consistent code indentation patterns in programming contexts.",7,pythia-6_9b-step128,0.108182025,0.792955412,0,0,{'': 50}
+2166,"Spaces that appear before comment delimiters (//) in code, representing consistent formatting in programming contexts.",13,pythia-6_9b-step100000,0.335237515,0.58820679,0,0,{'': 50}

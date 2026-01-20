@@ -1,0 +1,7 @@
+feature_id,description,acquisition_checkpoint,acquisition_checkpoint_name,final_probability,max_probability,good_count,bad_count,subset_counts
+1233,"References to the United States, either as ""United States"" or abbreviated as ""U.S."" in legal, governmental, and official contexts.",11,pythia-160m-step10000,0.522909768,0.646253836,0,0,{'': 50}
+2887,"Words appearing at the end of comparative phrases expressing degree or extent (e.g., ""as much as possible"", ""as far as practicable"").",11,pythia-160m-step10000,0.77276659,0.77276659,0,0,{'': 50}
+1041,"Words appearing in the common phrase ""take/taking into account"" or ""take/taking into consideration"" used to express the inclusion or consideration of various factors in decision-making or analysis.",12,pythia-160m-step70000,0.521311606,0.694794536,0,0,{'': 50}
+584,"Words referring to temporal duration, periods, or moments in various technical and scientific contexts.",12,pythia-160m-step70000,0.466442024,0.559044544,0,0,{'': 50}
+2967,"Modal verbs expressing ability, possibility, or capacity to perform actions.",12,pythia-160m-step70000,0.713723383,0.713723383,0,0,{'': 50}
+1824,"Third-person singular present tense verbs in technical documentation, with ""Gets"" and ""Sets"" being JavaDoc accessor method documentation",13,pythia-160m-step100000,0.494968288,0.548378074,0,0,{'': 50}

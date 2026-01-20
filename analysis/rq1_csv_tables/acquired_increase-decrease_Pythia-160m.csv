@@ -1,0 +1,12 @@
+feature_id,description,acquisition_checkpoint,acquisition_checkpoint_name,final_probability,max_probability,good_count,bad_count,subset_counts
+2973,Tab characters used for text formatting and indentation in various document types.,5,pythia-160m-step32,0.232852069,0.771120212,0,0,{'': 15}
+2295,Tab characters used for formatting and indentation in various types of documents and web content.,6,pythia-160m-step64,0.232852069,0.771120212,0,0,{'': 50}
+1847,"Tab characters and whitespace formatting used for code indentation, data alignment, and structured text layout",6,pythia-160m-step64,0.144720966,0.69098895,0,0,{'': 32}
+1279,"Infinitive marker ""to"" and preposition ""of"" and ""with"" in various grammatical contexts",7,pythia-160m-step128,0.148493008,0.676197477,0,0,{'': 50}
+1091,HTML line break tags appearing in code documentation or web content.,7,pythia-160m-step128,0.395804403,0.802584465,0,0,{'': 50}
+853,Tab characters used as formatting delimiters in structured text or data tables.,8,pythia-160m-step256,0.67555031,0.918037257,0,0,{'': 50}
+2177,"Biochemical and molecular biology terms referring to proteins, receptors, enzymes, and other biological molecules.",11,pythia-160m-step10000,0.30543836,0.627682212,0,0,{'': 50}
+1074,"Words related to size, quantity, degree, and repetition/frequency",11,pythia-160m-step10000,0.375428467,0.580059029,0,0,{'': 50}
+1183,"All instances of ""well"" function as part of the conjunctive phrase ""as well as"" used to connect and add additional elements or ideas.",11,pythia-160m-step10000,0.476925531,0.659463441,0,0,{'': 50}
+1958,Clinical and biological variables measured in medical research studies and technical specifications,11,pythia-160m-step10000,0.424307828,0.587957586,0,0,{'': 50}
+1808,Words functioning as pronouns or determiners that refer to previously mentioned entities or concepts in discourse.,12,pythia-160m-step70000,0.443669942,0.620436459,0,0,{'': 50}

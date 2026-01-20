@@ -298,3 +298,74 @@ sbatch scripts/sae/sae_pipeline.sh \
 
 sbatch scripts/analysis/label_features.sh --sae_dir=/home/nsrikant/bbox_outputs/sae_outputs_blimp/n_moreearly_blimp_full_olmo_seed=42_ofw=0.7_N=3000_k=50_lp=None --labeling_model="neulab/claude-sonnet-4-20250514"
 
+
+sbatch scripts/data_generation/get_input_features.sh \
+    --data=/home/nsrikant/BehaviorBoxNew/data/larger_pile.jsonl \
+    --output_dir=/home/nsrikant/bbox_outputs/output/larger_pile \
+    --batch_size=100
+
+sbatch scripts/sae/sae_pipeline.sh \
+    --exp_cfg=/home/nsrikant/BehaviorBoxNew/scripts/sae/experiment_configs/config_n_moreearly_larger_pile.json \
+    --hp_cfg=/home/nsrikant/BehaviorBoxNew/sae/hyperparam_configs/N=3000_k=50.json
+
+
+sbatch scripts/analysis/label_features.sh --sae_dir=/home/nsrikant/bbox_outputs/sae_outputs_blimp_trained_on_pile --labeling_model="neulab/claude-sonnet-4-20250514"
+
+
+sbatch scripts/sae/sae_pipeline.sh \
+    --exp_cfg=/home/nsrikant/BehaviorBoxNew/scripts/sae/experiment_configs/config_eval_blimp.json \
+    --hp_cfg=/home/nsrikant/BehaviorBoxNew/sae/hyperparam_configs/N=3000_k=50.json
+
+
+sbatch scripts/analysis/label_features.sh --sae_dir=/home/nsrikant/bbox_outputs/sae_outputs_blimp_trained_on_pile_ablation/eval_blimp_train_pile_seed=42_ofw=0.9_N=3000_k=50_lp=None --labeling_model="neulab/claude-sonnet-4-20250514"
+
+
+sbatch scripts/data_generation/get_input_features.sh \
+    --data=/data/user_data/nsrikant/bbox_data/data/mmlu.jsonl \
+    --output_dir=/data/user_data/nsrikant/bbox_data/output/mmlu \
+    --batch_size=100
+
+
+sbatch scripts/data_generation/get_input_features.sh \
+    --data=/data/user_data/nsrikant/bbox_data/data/mmlu_sample.jsonl \
+    --output_dir=/data/user_data/nsrikant/bbox_data/output/mmlu_sample \
+    --batch_size=100
+
+sbatch scripts/data_generation/get_input_features.sh \
+    --data=/data/user_data/nsrikant/bbox_data/data/mmlu.jsonl \
+    --output_dir=/data/user_data/nsrikant/bbox_data/output/mmlu \
+    --batch_size=500
+
+sbatch scripts/analysis/label_features.sh --sae_dir=/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_blimp_ablation/eval_blimp_seed=42_ofw=0.7_N=6400_k=50_lp=None --labeling_model="neulab/claude-sonnet-4-20250514"
+
+
+sbatch scripts/sae/sae_pipeline.sh \
+    --exp_cfg=/home/nsrikant/BehaviorBoxNew/scripts/sae/experiment_configs/config_eval_blimp.json \
+    --hp_cfg=/home/nsrikant/BehaviorBoxNew/sae/hyperparam_configs/N=6400_k=50.json
+
+
+sbatch scripts/sae/sae_pipeline.sh \
+    --exp_cfg=/home/nsrikant/BehaviorBoxNew/scripts/sae/experiment_configs/config_n_moreearly_larger_pile.json \
+    --hp_cfg=/home/nsrikant/BehaviorBoxNew/sae/hyperparam_configs/N=6400_k=50.json
+
+
+
+sbatch scripts/analysis/label_features.sh --sae_dir=/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_larger_pile/n_moreearly_larger_pile_seed=42_ofw=0.7_N=3000_k=50_lp=None --labeling_model="neulab/claude-sonnet-4-20250514"
+sbatch scripts/analysis/label_features.sh --sae_dir=/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_larger_pile/n_moreearly_larger_pile_seed=42_ofw=0.7_N=6400_k=50_lp=None --labeling_model="neulab/claude-sonnet-4-20250514"
+
+
+
+sbatch scripts/sae/sae_pipeline.sh \
+    --exp_cfg=/home/nsrikant/BehaviorBoxNew/scripts/sae/experiment_configs/config_n_moreearly_larger_pile_6_9b_pythia_3000.json \
+    --hp_cfg=/home/nsrikant/BehaviorBoxNew/sae/hyperparam_configs/N=3000_k=50.json
+
+sbatch scripts/analysis/label_features.sh --sae_dir=/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_larger_pile_6_9b_pythia/n_moreearly_larger_pile_6_9b_pythia_3000_seed=42_ofw=0.7_N=3000_k=50_lp=None --labeling_model="neulab/claude-sonnet-4-20250514"
+sbatch scripts/analysis/label_features.sh --sae_dir=/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_larger_pile_6_9b_pythia/n_moreearly_larger_pile_6_9b_pythia_seed=42_ofw=0.7_N=6400_k=50_lp=None --labeling_model="neulab/claude-sonnet-4-20250514"
+
+
+sbatch scripts/sae/sae_pipeline.sh \
+    --exp_cfg=/home/nsrikant/BehaviorBoxNew/scripts/sae/experiment_configs/config_n_moreearly_larger_pile_6_9b_pythia.json \
+    --hp_cfg=/home/nsrikant/BehaviorBoxNew/sae/hyperparam_configs/N=6400_k=50.json
+
+
+

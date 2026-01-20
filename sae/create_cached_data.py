@@ -21,16 +21,21 @@ def cache_data_per_dir(
     data_dir: str,
     model_names: list[str] = None,
     output_feature_weight: float = None,
+    only_probs: bool = False
 ) -> str:
     # model_string = "_".join(model_names)
     # model_string = "n_moreearly_models"
+    print(data_dir)
     cache_dir = os.path.join(cache_dir, f"{model_string}/{os.path.basename(data_dir)}")
     cache_data_dir = os.path.join(cache_dir, f"ofw={output_feature_weight}")
     if not os.path.exists(cache_data_dir):
         os.makedirs(cache_data_dir)
     
     dataframes = []
-    input_feature_dir = f"{data_dir}/input_features"
+    if not only_probs:
+        input_feature_dir = f"{data_dir}/input_features"
+    else:
+        input_feature_dir = None
     if model_names is not None:
         output_feature_dirs = [f"{data_dir}/output_features/{model_name}" for model_name in model_names]
     else:
@@ -75,6 +80,7 @@ def cache_data_per_dir(
         data_df=dataframe,
         output_feature_dim=len(model_names),
         output_feature_weight=output_feature_weight,
+        only_probs=only_probs
     )
     
     print("caching data...", flush=True)

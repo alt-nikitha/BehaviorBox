@@ -1,0 +1,42 @@
+Category,Trend,Rank,Feature ID,Description,Acquisition Ckpt,Final Prob
+Acquired,increase-decrease,Earliest #1,1863,"Negative contractions with ""n't"" suffix",7,0.035
+Acquired,increase-decrease,Earliest #2,294,"Tab characters followed by multiple spaces, representing consistent code indenta",7,0.108
+Acquired,increase-decrease,Earliest #3,2166,"Spaces that appear before comment delimiters (//) in code, representing consiste",13,0.335
+Acquired,increase-decrease,Latest #1,1863,"Negative contractions with ""n't"" suffix",7,0.035
+Acquired,increase-decrease,Latest #2,294,"Tab characters followed by multiple spaces, representing consistent code indenta",7,0.108
+Acquired,increase-decrease,Latest #3,2166,"Spaces that appear before comment delimiters (//) in code, representing consiste",13,0.335
+Acquired,increase-stagnate,Earliest #1,2189,Tab characters used for formatting and indentation in text documents or code.,3,1.000
+Acquired,increase-stagnate,Earliest #2,2295,All instances represent dialogue formatting where a space appears immediately af,6,0.963
+Acquired,increase-stagnate,Earliest #3,447,All instances represent a space character token that appears between quoted dial,6,0.912
+Acquired,increase-stagnate,Earliest #4,283,Quotation marks or similar punctuation that begin direct speech or dialogue in w,6,0.969
+Acquired,increase-stagnate,Earliest #5,846,HTML attribute values for reference links in academic figure citations.,6,1.000
+Acquired,increase-stagnate,Latest #1,1513,"Nouns representing forms of judgment, conclusion, or response that follow delibe",12,0.512
+Acquired,increase-stagnate,Latest #2,903,"Forms of the verb ""to be"" (are/were) used as linking verbs or auxiliary verbs in",12,0.638
+Acquired,increase-stagnate,Latest #3,756,"All instances are the preposition ""into"" indicating movement, direction, or tran",12,0.555
+Acquired,increase-stagnate,Latest #4,415,Mathematical minus signs or subtraction operators appearing in algebraic express,13,0.494
+Acquired,increase-stagnate,Latest #5,2986,"All instances are the modal verb ""may"" expressing possibility or uncertainty.",14,0.534
+Acquired,other,Earliest #1,454,Adjectives used in mathematical comparison questions to find the value most simi,9,0.498
+Acquired,other,Earliest #2,942,"Spaces that appear before ""p"" in time notations, specifically in sports schedule",10,0.855
+Acquired,other,Latest #1,454,Adjectives used in mathematical comparison questions to find the value most simi,9,0.498
+Acquired,other,Latest #2,942,"Spaces that appear before ""p"" in time notations, specifically in sports schedule",10,0.855
+Acquired,increasing,Earliest #1,2990,"Programming variables and identifiers used in software development, including ne",10,0.877
+Acquired,increasing,Earliest #2,678,"Instances of the word ""as"" preceded by a space, functioning as a conjunction, pr",11,0.786
+Acquired,increasing,Earliest #3,144,Whitespace sequences (combinations of tabs and spaces) used for code indentation,11,0.781
+Acquired,increasing,Earliest #4,752,"Words describing capability, feasibility, or potential that are preceded by a sp",11,0.712
+Acquired,increasing,Earliest #5,2208,"Technical notation, abbreviations, and references used in formal documents inclu",11,0.800
+Acquired,increasing,Latest #1,2719,Code comment markers indicating the start of single-line comments in programming,12,0.687
+Acquired,increasing,Latest #2,203,"Past participles and other terms used to introduce or reference visual elements,",13,0.611
+Acquired,increasing,Latest #3,2297,Single-digit numbers appearing within base64-encoded strings and cryptographic d,13,0.975
+Acquired,increasing,Latest #4,347,"Programming syntax elements including CSS properties, HTML attributes, XML tags,",13,0.904
+Acquired,increasing,Latest #5,1407,Medical terminology and anatomical structures used in clinical and research cont,14,0.523
+Not Acquired,increase-stagnate,Highest max prob #1,1996,Coordinating conjunctions connecting clauses or phrases in compound sentences.,Never,0.474
+Not Acquired,increase-stagnate,Highest max prob #2,2755,"Contractions representing auxiliary verbs and ""to be"" verbs in informal speech a",Never,0.471
+Not Acquired,increase-stagnate,Highest max prob #3,2412,"All instances of the word ""things"" (and one ""stuff"") used as a general noun to r",Never,0.461
+Not Acquired,increase-stagnate,Highest max prob #4,2631,Mathematical variables and expressions in LaTeX format within academic/scientifi,Never,0.460
+Not Acquired,increase-stagnate,Highest max prob #5,974,"First-person plural pronouns (""we"" and ""us"") used as subjects or objects in vari",Never,0.448
+Not Acquired,increasing,Highest max prob #1,365,Third-person singular feminine pronouns (she/her) used as subjects and objects i,Never,0.491
+Not Acquired,increasing,Highest max prob #2,1721,"Nouns referring to specific roles or parties in legal, business, and formal cont",Never,0.470
+Not Acquired,increasing,Highest max prob #3,1901,Programming and web development terminology including technical concepts like cl,Never,0.464
+Not Acquired,increasing,Highest max prob #4,2700,"Common verbs that frequently appear in instructional, advisory, or explanatory c",Never,0.456
+Not Acquired,increasing,Highest max prob #5,873,"Mixed descriptive words including positive adjectives, neutral descriptors, and ",Never,0.455
+Not Acquired,increase-decrease,Highest max prob #1,2093,Verbs related to problem-solving and understanding through analysis or investiga,Never,0.034

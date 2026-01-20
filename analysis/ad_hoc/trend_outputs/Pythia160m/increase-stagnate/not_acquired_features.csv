@@ -1,0 +1,13 @@
+Feature ID,Topic,Max Prob,Gap to 0.5,Description
+445,Ordinal Numbers and Sequencing,0.438707473,0.061292526999999986,"Ordinal numbers and position indicators (first, 1) used to denote sequence, order, or enumeration in technical and academic contexts."
+2789,Direct Address and Instructions,0.435585009,0.06441499099999998,"Second-person pronouns (""you"" and ""your"") used to directly address the reader or user in instructional and promotional contexts."
+316,Relative Pronouns and Clauses,0.426900646,0.073099354,"Instances of the relative pronoun ""which"" (and its capitalized form ""Which"") used to introduce relative clauses or questions."
+725,Pronouns and Possessives,0.366010072,0.13398992799999998,"Personal pronouns (""I"" and ""we"") that appear after a space in sentence contexts."
+1910,Verb Forms and Actions,0.363598401,0.13640159899999998,"Forms of the verb ""to be"" in present tense (are, am, 're, re, m) used in conditional and declarative statements."
+938,Mathematical Problem Statements,0.353580197,0.14641980300000002,Mathematical minus signs or subtraction operators appearing in algebraic expressions and equations.
+564,Spatial and Relational Prepositions,0.33970506,0.16029494,"All instances show the preposition ""between"" used to express spatial, temporal, or abstract relationships connecting two entities or groups."
+607,Conjunctions and Logical Connectors,0.311681449,0.188318551,"All instances are the conjunction ""but"" used to introduce contrasting or qualifying statements in sentences."
+2906,Pronouns and Possessives,0.244554604,0.255445396,First-person plural pronouns and possessive adjectives used in political and organizational discourse.
+583,Discourse Connectors and Transitions,0.19097858,0.30902142,"All instances are the word ""also"" preceded by a space, functioning as an additive adverb to introduce additional information or examples."
+1574,Statistical and Scientific Notation,0.0984175883,0.4015824117,"Single-digit numbers (0-9) appearing in statistical or numerical data contexts, typically representing percentages, measurements, or other quantitative values."
+1086,Discourse Connectors and Transitions,0.00839583254,0.49160416746,Transitional adverbs and conjunctive adverbs used to connect ideas and add information in formal or academic writing.

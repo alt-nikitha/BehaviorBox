@@ -1,0 +1,14 @@
+feature_id,description,max_probability,max_prob_checkpoint,max_prob_checkpoint_name,max_jump_value,final_probability,good_count,bad_count,subset_counts
+1996,Coordinating conjunctions connecting clauses or phrases in compound sentences.,0.474316306,13,pythia-6_9b-step100000,0.27971749700000004,0.4710839,0,0,{'': 50}
+2755,"Contractions representing auxiliary verbs and ""to be"" verbs in informal speech and writing.",0.471136505,13,pythia-6_9b-step100000,0.1591189507,0.467520625,0,0,{'': 50}
+2412,"All instances of the word ""things"" (and one ""stuff"") used as a general noun to refer to objects, activities, or concepts in various contexts.",0.461149025,14,pythia-6_9b,0.40355871816,0.461149025,0,0,{'': 50}
+2631,Mathematical variables and expressions in LaTeX format within academic/scientific text.,0.459874274,13,pythia-6_9b-step100000,0.3125756268,0.420307504,0,0,{'': 50}
+974,"First-person plural pronouns (""we"" and ""us"") used as subjects or objects in various sentence contexts.",0.447846263,14,pythia-6_9b,0.29420672579999996,0.447846263,0,0,{'': 50}
+510,"Verbs describing various forms of engagement, participation, presence, or action in different contexts",0.429916852,12,pythia-6_9b-step70000,0.3393697819,0.363535102,0,0,{'': 50}
+1798,"All instances are the word ""order"" used in the infinitive phrase ""in order to"" expressing purpose or intention.",0.313236544,12,pythia-6_9b-step70000,0.21055908160000003,0.2916998,0,0,{'': 50}
+725,"First-person singular pronoun ""I"" used as the subject of sentences in conversational and narrative contexts.",0.262575489,11,pythia-6_9b-step10000,0.143450766,0.219175393,0,0,{'': 50}
+2288,Conditional and temporal clause introducers and sentence-initial discourse markers,0.150683858,12,pythia-6_9b-step70000,0.0848060386,0.141103497,0,0,{'': 50}
+464,Words that begin sentences after a period or other sentence-ending punctuation,0.124649299,12,pythia-6_9b-step70000,0.0511149292,0.102871826,0,0,{'': 50}
+773,"Single digits (2, 7, 8, 9) appearing as numerical values or identifiers in statistical, medical, or scientific data contexts.",0.106197649,14,pythia-6_9b,0.0472703549,0.106197649,0,0,{'': 50}
+2808,Date components (months and days) appearing in formatted dates within various digital content.,0.0948909085,14,pythia-6_9b,0.06122617799999999,0.0948909085,0,0,{'': 50}
+344,"All instances are the existential word ""there"" used in ""there is/are/were/has been"" constructions to indicate the existence or presence of something.",0.056126294,13,pythia-6_9b-step100000,0.0217993635,0.0535310121,0,0,{'': 50}

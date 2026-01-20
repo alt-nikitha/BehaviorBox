@@ -1,0 +1,150 @@
+_wandb:
+    value:
+        cli_version: 0.21.4
+        e:
+            y2wutgl097cv5hd867396ejgndsgjrcf:
+                args:
+                    - --args
+                    - /home/nsrikant/BehaviorBoxNew/scripts/sae/experiment_configs/config_10000_final.json
+                    - --config_path
+                    - /home/nsrikant/BehaviorBoxNew/sae/hyperparam_configs/N=3000_k=50.json
+                    - --data_shuffling_seed
+                    - "0"
+                    - --seed
+                    - "42"
+                    - --sae_name_prefix
+                    - _seed=42_ofw=
+                    - --spill_dir
+                    - /scratch/nsrikant/tmp
+                    - --temp_dir
+                    - /scratch/nsrikant/tmp
+                    - --workers
+                    - "20"
+                codePath: sae/train_sae.py
+                codePathLocal: train_sae.py
+                cpu_count: 32
+                cpu_count_logical: 64
+                cudaVersion: "12.9"
+                disk:
+                    /:
+                        total: "236663791616"
+                        used: "83436568576"
+                email: nsrikant@andrew.cmu.edu
+                executable: /home/nsrikant/miniconda3/envs/bbox_env/bin/python
+                git:
+                    commit: 5fcf8a285d76e6d4eb7fad467231d5a8dfd01b7e
+                    remote: https://github.com/lindiatjuatja/BehaviorBox.git
+                gpu: NVIDIA L40S
+                gpu_count: 1
+                gpu_nvidia:
+                    - architecture: Ada
+                      cudaCores: 18176
+                      memoryTotal: "48305799168"
+                      name: NVIDIA L40S
+                      uuid: GPU-87c0df96-c71e-581f-8a05-3d0273ea9ea2
+                host: babel-2-17
+                memory:
+                    total: "1081292316672"
+                os: Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34
+                program: /home/nsrikant/BehaviorBoxNew/sae/train_sae.py
+                python: CPython 3.13.7
+                root: /home/nsrikant/BehaviorBoxNew/sae
+                slurm:
+                    cluster_name: babel
+                    conf: /var/spool/slurmd/conf-cache/slurm.conf
+                    cpus_on_node: "20"
+                    cpus_per_task: "20"
+                    gpus_on_node: "1"
+                    gtids: "0"
+                    job_account: gneubig
+                    job_cpus_per_node: "20"
+                    job_end_time: "1758854819"
+                    job_gid: "6000576"
+                    job_gpus: "5"
+                    job_id: "5573121"
+                    job_name: sae
+                    job_nodelist: babel-2-17
+                    job_num_nodes: "1"
+                    job_partition: general
+                    job_qos: normal
+                    job_start_time: "1758682019"
+                    job_uid: "6000576"
+                    job_user: nsrikant
+                    jobid: "5573121"
+                    localid: "0"
+                    mem_per_node: "204800"
+                    nnodes: "1"
+                    nodeid: "0"
+                    nodelist: babel-2-17
+                    prio_process: "0"
+                    procid: "0"
+                    script_context: prolog_task
+                    submit_dir: /home/nsrikant/BehaviorBoxNew
+                    submit_host: babel-10-17
+                    task_pid: "3583552"
+                    tasks_per_node: "1"
+                    topology_addr: babel-2-17
+                    topology_addr_pattern: node
+                    tres_per_task: cpu=20
+                startedAt: "2025-09-24T02:49:53.352979Z"
+                writerId: y2wutgl097cv5hd867396ejgndsgjrcf
+        m: []
+        python_version: 3.13.7
+        t:
+            "1":
+                - 1
+                - 54
+            "2":
+                - 1
+                - 54
+            "3":
+                - 13
+                - 15
+                - 16
+            "4": 3.13.7
+            "5": 0.21.4
+            "12": 0.21.4
+            "13": linux-x86_64
+batch_size:
+    value: 128
+beta1:
+    value: 0.9
+beta2:
+    value: 0.99
+data_dirs:
+    value:
+        - /home/nsrikant/BehaviorBoxNew/output/validation_split_1000
+data_shuffling_seed:
+    value: 0
+dec_penalty_coeff:
+    value: null
+device:
+    value: cuda
+dict_size:
+    value: 3000
+enc_dtype:
+    value: fp32
+input_dim:
+    value: 770
+l1_coeff:
+    value: null
+lr:
+    value: 0.0001
+model_checkpoint_dir:
+    value: /home/nsrikant/BehaviorBoxNew/sae_outputs/10000_final/_seed=42_ofw=_N=3000_k=50_lp=None/checkpoints
+model_names:
+    value:
+        - pythia-160m
+        - pythia-160m-step10000
+name:
+    value: _seed=42_ofw=_N=3000_k=50_lp=None
+output_feature_weight:
+    value: 0.7
+save_dir:
+    value: /home/nsrikant/BehaviorBoxNew/sae_outputs/10000_final/_seed=42_ofw=_N=3000_k=50_lp=None
+seed:
+    value: 42
+topk:
+    value: 50
+type:
+    value: BatchTopKAutoEncoder

@@ -91,9 +91,9 @@ echo "Output directory: $output_dir"
 echo "Batch size: $batch_size"
 echo "Async limiter: $async_limiter"
 
-GPU_ID=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits | \
-         awk '{print NR-1 ":" $1}' | sort -t: -k2 -nr | head -n1 | cut -d: -f1)
-export CUDA_VISIBLE_DEVICES=$GPU_ID
+# GPU_ID=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits | \
+#          awk '{print NR-1 ":" $1}' | sort -t: -k2 -nr | head -n1 | cut -d: -f1)
+# export CUDA_VISIBLE_DEVICES=$GPU_ID
 
 
 echo $model_name $model_addr

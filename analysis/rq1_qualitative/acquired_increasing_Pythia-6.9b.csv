@@ -1,0 +1,70 @@
+feature_group_id,representative_feature_id,description,n_members,acq_checkpoint,final_prob,trend,all_feature_ids
+1,414,Whitespace or asterisks appearing between mathematical terms in algebraic expressions and calculus problems,1,7,0.998208094,increasing,414
+2,2990,"Programming variables and identifiers used in software development, including network communication, data processing, and application state management.",1,10,0.876663948,increasing,2990
+3,179,"Legal citation abbreviation ""v."" (versus) used to separate opposing parties in court cases.",1,11,0.961836999,increasing,179
+4,1579,"All instances are the word ""And"" appearing in the title ""Writing A Thesis Substance And Style"" within repeated promotional or descriptive text about a book.",1,11,0.991056569,increasing,1579
+5,172,Commas used as thousands separators in numerical values.,1,11,0.988341324,increasing,172
+6,1908,"All instances are the same word ""And"" appearing as part of the repeated book title ""Writing A Thesis Substance And Style"" in what appears to be promotional or descriptive text about this book.",1,11,0.983098918,increasing,1908
+7,2497,"XML/HTML closing tag syntax patterns, specifically the ""</"" token that begins closing tags in markup languages.",1,11,0.99769944,increasing,2497
+8,1468,"All instances are the word ""not"" used as a negation adverb in various sentence contexts.",1,11,0.948708904,increasing,1468
+9,2276,Mathematical variables and symbols in LaTeX notation within mathematical text.,1,11,0.749241312,increasing,2276
+10,678,"Instances of the word ""as"" preceded by a space, functioning as a conjunction, preposition, or part of comparative constructions in various contexts.",1,11,0.785750842,increasing,678
+11,2972,HTML/XML code snippets where a space precedes an opening angle bracket starting a new tag or element.,1,11,0.927513232,increasing,2972
+12,2285,Legal document footnote or reference numbers appearing in judicial opinions and legal texts.,1,11,0.958069065,increasing,2285
+13,1833,"Mathematical variables (typically single letters like 'i' and 'j') used in algebraic equations, programming loops, and mathematical expressions.",1,11,0.703704452,increasing,1833
+14,1440,"Time duration expressions using ""year"" or ""years"" as units of measurement.",1,11,0.94249186,increasing,1440
+15,2667,"Words referring to measurable attributes or characteristics of objects, systems, or phenomena.",1,11,0.719411559,increasing,2667
+16,278,"Numbers appearing in academic citation references, typically indicating specific numbered sources in bibliographies or reference lists.",1,11,0.893854815,increasing,278
+17,2054,"Numbers appearing in sequential or tabular contexts, often as identifiers or indices in ordered lists or data structures.",1,11,0.987348931,increasing,2054
+18,2541,"All instances are the noun ""time"" preceded by a space, used in various contexts including frequency expressions, temporal references, and ordinal uses.",1,11,0.927488722,increasing,2541
+19,2417,"The number ""10"" appearing in various contexts including percentages, measurements, dates, and technical specifications.",1,11,0.878680742,increasing,2417
+20,1240,"The word ""from"" used as a preposition indicating separation, distinction, or differentiation between two entities or concepts.",1,11,0.759437958,increasing,1240
+21,1881,"Instances of the preposition ""from"" indicating source, origin, or starting point in various contexts.",1,11,0.599798738,increasing,1881
+22,65,"Technical terms referring to components, parts, or substances in scientific and engineering contexts.",1,11,0.677086267,increasing,65
+23,2544,"Words appearing in technical code contexts including import statements, package names, API references, and programming identifiers",1,11,0.997786938,increasing,2544
+24,1334,"All instances are the ""http"" protocol identifier appearing at the beginning of web URLs.",1,11,0.933956566,increasing,1334
+25,2959,"String data types and type declarations in programming code across multiple languages (Java, C++, Swift, XML).",1,11,0.97082409,increasing,2959
+26,1733,"Surnames and place names appearing in various contexts including credits, locations, and references",1,11,0.9878767,increasing,1733
+27,886,Version specifiers in Go module dependency declarations,1,11,0.996289719,increasing,886
+28,144,Whitespace sequences (combinations of tabs and spaces) used for code indentation and formatting in programming contexts.,1,11,0.781007268,increasing,144
+29,1808,Legal terminology related to criminal justice proceedings and administrative actions,1,11,0.808581328,increasing,1808
+30,988,Version numbers and variable identifiers in software development and mathematical contexts,1,11,0.95532523,increasing,988
+31,1326,"Numbers used as footnote, endnote, or reference markers in academic and legal documents.",1,11,0.988923607,increasing,1326
+32,1700,"The number ""4"" appearing in various numerical contexts including times, measurements, percentages, list items, and reference citations.",1,11,0.896142173,increasing,1700
+33,2494,Plural nouns that appear after a space in technical and academic contexts.,1,11,0.841220877,increasing,2494
+34,2301,"Numbers appearing in various contexts including biblical references, citations, legal codes, and sequential numbering.",1,11,0.908808418,increasing,2301
+35,712,"Instances of the word ""use"" (and its variant ""used"") appearing in legal and technical contexts, particularly in terms of service, license agreements, and usage policies.",1,11,0.969862884,increasing,712
+36,101,"Instances of the number ""3"" appearing in various contexts including lists, citations, mathematical expressions, and sequential numbering.",1,11,0.901556126,increasing,101
+37,2758,"Words related to health conditions, mortality, and life circumstances in legal and medical contexts.",1,11,0.892372055,increasing,2758
+38,1894,"Programming language symbols and identifiers including scope resolution operators, variable names, and method identifiers",1,11,0.992147506,increasing,1894
+39,752,"Words describing capability, feasibility, or potential that are preceded by a space in the text formatting.",1,11,0.712342513,increasing,752
+40,2208,"Technical notation, abbreviations, and references used in formal documents including legal sections, scientific formulas, time measurements, and document citations",1,11,0.800269881,increasing,2208
+41,1612,"Demonstrative pronouns and adjectives used for reference and comparison (""other"", ""next"", ""same"").",1,11,0.897452742,increasing,1612
+42,1512,"Words related to data, details, or knowledge that can be collected, stored, or communicated.",1,11,0.69065967,increasing,1512
+43,584,"Numeric identifiers (07, 7, 14, 13) appearing in various text contexts including code, financial data, academic citations, and technical documentation.",1,11,0.971949994,increasing,584
+44,2967,"All instances are the modal verb ""can"" expressing ability, possibility, or permission in various contexts.",1,11,0.659789953,increasing,2967
+45,2096,"Modal verbs expressing future intention, prediction, or hypothetical scenarios.",1,11,0.818984303,increasing,2096
+46,938,"Words functioning as quantifiers or determiners expressing indefinite amounts, typically used in conditional or negative contexts to mean ""some"" or ""none at all.""",1,11,0.732044691,increasing,938
+47,1928,Punctuation marks (periods and quotation marks) that appear at the end of dialogue or sentences in what appears to be a script or transcript format.,1,11,0.628350245,increasing,1928
+48,1690,"Demonstrative pronoun ""this"" used to introduce or reference specific content, particularly in video descriptions and code examples.",1,11,0.743588905,increasing,1690
+49,2789,Words related to employment and automotive contexts,1,12,0.618379942,increasing,2789
+50,1765,"Adjectives describing novelty, freshness, or recent creation/acquisition",1,12,0.527820803,increasing,1765
+51,1727,"All instances of the coordinating conjunction ""but"" used to contrast or introduce opposing information in sentences.",1,12,0.476230179,increasing,1727
+52,2684,Words that appear after a space in technical programming and documentation contexts.,1,12,0.760026911,increasing,2684
+53,276,Words that are surnames or last names of people mentioned in various contexts.,1,12,0.986291183,increasing,276
+54,2713,"Third-person plural pronouns (""they"" and ""their"") that all appear with a space before them in the text.",1,12,0.894620749,increasing,2713
+55,1258,Two-digit numbers functioning as minutes in time expressions and calculations,1,12,0.999885632,increasing,1258
+56,2821,"Common nouns that function as prepositional objects following ""the"" in formal or technical writing contexts.",1,12,0.670633044,increasing,2821
+57,2558,"Programming language literals and data types including boolean values, numeric constants, type keywords, and special values like NULL.",1,12,0.762595841,increasing,2558
+58,899,"Integer data type declarations in programming code, typically appearing at the beginning of variable declarations with specific spacing formatting.",1,12,0.751185874,increasing,899
+59,1513,"Nouns representing forms of judgment, conclusion, or response that follow deliberation or consideration.",1,12,0.51201555,increasing,1513
+60,903,"Forms of the verb ""to be"" (are/were) used as linking verbs or auxiliary verbs in various sentence structures.",1,12,0.638272821,increasing,903
+61,2924,Words related to time duration or temporal expressions.,1,12,0.553770688,increasing,2924
+62,2719,Code comment markers indicating the start of single-line comments in programming languages.,1,12,0.686934512,increasing,2719
+63,756,"All instances are the preposition ""into"" indicating movement, direction, or transition from one state/location to another.",1,12,0.555017443,increasing,756
+64,203,"Past participles and other terms used to introduce or reference visual elements, data, and findings in technical and scientific writing.",1,13,0.610743321,increasing,203
+65,2166,"Spaces that appear before comment delimiters (//) in code, representing consistent formatting in programming contexts.",1,13,0.335237515,increasing,2166
+66,2297,Single-digit numbers appearing within base64-encoded strings and cryptographic data,1,13,0.974572025,increasing,2297
+67,347,"Programming syntax elements including CSS properties, HTML attributes, XML tags, and code variables",1,13,0.903814795,increasing,347
+68,2986,"All instances are the modal verb ""may"" expressing possibility or uncertainty.",1,14,0.533889695,increasing,2986
+69,1407,Medical terminology and anatomical structures used in clinical and research contexts.,1,14,0.522802283,increasing,1407

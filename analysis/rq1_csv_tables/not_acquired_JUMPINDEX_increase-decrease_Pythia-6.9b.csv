@@ -1,0 +1,2 @@
+feature_id,description,max_jump_value,max_jump_checkpoint,max_jump_checkpoint_name,max_probability,final_probability,good_count,bad_count,subset_counts
+2093,Verbs related to problem-solving and understanding through analysis or investigation,0.0158329044,11,pythia-6_9b-step10000,0.033535264,0.0223710169,0,0,{'': 50}

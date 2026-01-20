@@ -1,0 +1,2 @@
+feature_group_id,representative_feature_id,description,n_members,acq_checkpoint,final_prob,trend,all_feature_ids
+1,412,Whitespace sequences used for formatting alignment in legal document headers.,1,0,1.0,other,412

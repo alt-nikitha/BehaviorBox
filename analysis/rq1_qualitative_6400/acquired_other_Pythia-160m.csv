@@ -1,0 +1,3 @@
+feature_group_id,representative_feature_id,description,n_members,acq_checkpoint,final_prob,trend,all_feature_ids
+1,3822,Sequences of spaces used for formatting alignment in legal document headers and court case formatting.,1,0,1.0,other,3822
+2,2019,HTML opening angle brackets used to start HTML tags and elements in web documentation or code examples.,1,7,0.713651527,other,2019

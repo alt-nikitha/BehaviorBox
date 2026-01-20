@@ -1,0 +1,3 @@
+Topic,Num Features,First Acquired Checkpoint,Checkpoint Name,Avg |Pearson|,High Corr Count (>0.7)
+Contractions and Informal Language,1,7,pythia-6_9b-step128,0.193110860570027,0
+Technical Documentation Formatting,1,7,pythia-6_9b-step128,0.34893953823157936,0

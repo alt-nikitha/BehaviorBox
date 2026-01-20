@@ -1,0 +1,110 @@
+feature_group_id,representative_feature_id,description,n_members,acq_checkpoint,final_prob,trend,all_feature_ids
+1,5510,"Hash symbols (#) appearing at the beginning of C/C++ preprocessor directives like #include, #define, and #pragma.",1,8,0.839289943,increasing,5510
+2,436,"Hexadecimal byte values (all ""00"") appearing in what appears to be memory dumps or binary data representations.",1,9,0.999300328,increasing,436
+3,2315,"Programming terms for software components and file extensions, including event handlers, device drivers, and C/C++ header files.",1,10,0.979603502,increasing,2315
+4,86,"All instances show ""English"" appearing in what appears to be a language identification or labeling context within structured data or tables.",1,11,0.544006311,increasing,86
+5,4866,"Legal citation abbreviation ""v."" (versus) used to separate parties in court cases.",1,11,0.956606136,increasing,4866
+6,2373,"Adverbs, quantifiers, and intensifiers that modify or emphasize the degree, quantity, or manner of adjectives, verbs, or other elements",1,11,0.963620634,increasing,2373
+7,2036,Two-digit numbers appearing in sequential numerical contexts or data structures.,1,11,0.98562062,increasing,2036
+8,4687,"All instances show the phrase ""as well"" used as a coordinating conjunction to connect similar or additional elements in a sentence.",1,11,0.838469131,increasing,4687
+9,2661,"The word ""same"" used as a pronoun or noun referring back to a previously mentioned item or concept.",1,11,0.99368934,increasing,2661
+10,4617,"All instances are the noun ""case"" used to refer to specific situations, scenarios, or conditions in academic, technical, or explanatory contexts.",1,11,0.63699747,increasing,4617
+11,2963,Periods marking the end of sentences in quoted speech or reported statements.,1,11,0.73058496,increasing,2963
+12,2458,"These are all surnames or last names of people, primarily athletes, politicians, and other public figures.",1,11,0.995958285,increasing,2458
+13,1758,"Directory name ""effects"" appearing in file paths for shader files (.sdr) in a graphics/game engine project.",1,11,0.998608977,increasing,1758
+14,5849,"Time designation ""AM"" appearing in time calculation and conversion problems.",1,11,0.981339845,increasing,5849
+15,4684,Words related to email newsletter subscription processes and website interface elements.,1,11,0.999589016,increasing,4684
+16,2873,"Words related to newsletter signup, subscription, and privacy policy interfaces on websites",1,11,0.999341685,increasing,2873
+17,3982,"Numbers or numerical references appearing in legal citations, footnotes, or document formatting contexts.",1,11,0.992847237,increasing,3982
+18,26,Whitespace characters in structured text markup,1,11,0.977833942,increasing,26
+19,3830,"Numerical references and identifiers used in technical and scientific contexts, including patent numbers, page numbers, dates, and placeholder values.",1,11,0.995521522,increasing,3830
+20,5968,Version identifiers in Go module dependencies and package management contexts,1,11,0.996284631,increasing,5968
+21,4227,Citation reference numbers appearing in academic text citations.,1,11,0.902307529,increasing,4227
+22,3852,Legal term referring to court proceedings where cases are heard and decided.,1,11,0.983376295,increasing,3852
+23,200,"Percentage symbols appearing in numerical contexts expressing proportions, ratios, or statistical measurements.",1,11,0.875050455,increasing,200
+24,1157,"The number ""3"" appearing in various contexts including citations, chemical nomenclature, numbered lists, and reference markers.",1,11,0.901556126,increasing,1157
+25,3786,"Adverbs used in formal or technical writing to provide specification, temporal updates, or degree of comparison in transitional phrases following ""more"" or ""most""",1,11,0.865163668,increasing,3786
+26,5482,"Words that introduce clauses, statements, or serve as pronouns and basic sentence starters",1,11,0.997472017,increasing,5482
+27,48,"The number ""7"" appearing in various academic and legal citation formats, including footnotes, reference citations, and numbered lists.",1,11,0.934176117,increasing,48
+28,613,"All instances show the preposition ""after"" indicating temporal sequence or consequence following an event or action.",1,11,0.718462847,increasing,613
+29,5436,"Spaces that precede opening square brackets in academic references, citations, and figure/table links.",1,11,0.89733601,increasing,5436
+30,2049,"Abbreviations and codes from diverse fields including scientific, technical, programming, and general contexts",1,11,0.989280559,increasing,2049
+31,5217,"All instances are the number ""10"" appearing in various textual contexts including references, footnotes, measurements, and formatting.",1,11,0.887294403,increasing,5217
+32,4382,"Programming and software development terms including class names, data types, and technical concepts from various programming languages and frameworks.",1,11,0.693985291,increasing,4382
+33,6008,"Nouns referring to degrees, stages, or positions within hierarchies, measurements, or scales.",1,11,0.811571501,increasing,6008
+34,4429,Present participles functioning as objects of prepositions or as part of continuous verb constructions,1,11,0.772899586,increasing,4429
+35,2354,"Legal citation abbreviation ""v."" (versus) used in case names to separate plaintiff and defendant parties.",1,11,0.961836999,increasing,2354
+36,1037,"All instances are the word ""up"" used as an adverb or particle in phrasal verbs and idiomatic expressions.",1,11,0.915519731,increasing,1037
+37,2115,"All instances refer to the noun ""world"" used in global or international contexts, often preceded by ""the"" and modified by descriptive phrases about leading, affecting, or encompassing the entire world.",1,11,0.801386449,increasing,2115
+38,3609,"Prepositions indicating relationships, connections, or spatial/conceptual positioning between entities.",1,11,0.648017902,increasing,3609
+39,4076,"All instances of the word ""same"" used as an adjective to indicate identity, equality, or lack of difference between things being compared.",1,11,0.886945788,increasing,4076
+40,5763,"All instances are the preposition ""from"" indicating source, origin, or starting point in various contexts.",1,11,0.882097837,increasing,5763
+41,1425,First-person pronouns appearing as sentence subjects in narrative and conversational contexts.,1,11,0.645742155,increasing,1425
+42,5719,"The word ""as"" appearing in various grammatical contexts including comparisons, classifications, designations, and SQL alias declarations.",1,11,0.769369444,increasing,5719
+43,6162,"Definite articles (""the"") and indefinite articles (""a"") functioning as grammatical determiners in recipe instructions",1,11,0.834374713,increasing,6162
+44,2326,"XML/HTML closing tags that end various elements like modules, profiles, selects, divs, and other markup structures.",1,11,0.997514614,increasing,2326
+45,391,"All instances represent the number ""18"" appearing in various contexts including chapter numbers, reference citations, isotope labels, and numbered lists.",1,11,0.987810791,increasing,391
+46,3914,Comparison operators (== and !=) used in conditional statements and expressions in programming code.,1,11,0.937348753,increasing,3914
+47,3445,Variable names and identifiers used in programming code across different languages and contexts.,1,11,0.940621119,increasing,3445
+48,2488,"Instances of the verb ""look"" in the phrase ""take a look"" used to introduce examination or review of something.",1,11,0.830505676,increasing,2488
+49,3019,"Words that function as anaphoric references, pointing back to previously mentioned content in formal or technical texts.",1,11,0.99666828,increasing,3019
+50,3619,"Roman numerals and Arabic numerals used as chapter, section, episode, or group identifiers in formatted text.",1,11,0.997085813,increasing,3619
+51,4055,Numerical tokens representing zero values that appear at the beginning of decimal numbers in tabular or scientific data.,1,11,0.997058728,increasing,4055
+52,2021,Geographic place names in the United States,1,11,0.985141627,increasing,2021
+53,3785,"All instances are the word ""other"" used as a pronoun or adjective to refer to additional, alternative, or reciprocal entities in various contexts.",1,11,0.829323895,increasing,3785
+54,997,Surnames of people being referenced or quoted in various contexts.,1,11,0.996903152,increasing,997
+55,2519,"Words appearing in idiomatic expressions or fixed phrases, particularly ""have/has to offer,"" ""have in common,"" ""have in mind,"" and ""have at heart.""",1,11,0.990039358,increasing,2519
+56,5742,"The letter ""i"" in various contexts including programming variables, scientific notation, and text processing",1,11,0.982412497,increasing,5742
+57,3021,"Past tense forms of the verbs ""to be"" (was/were) and modal verbs (could) used as auxiliary or linking verbs in formal and informal writing contexts.",1,11,0.767814775,increasing,3021
+58,1217,Code comments in various programming languages that begin with double slashes followed by a space.,1,11,0.843999506,increasing,1217
+59,274,"Words related to utilization or employment of something, appearing in contexts about usage of websites, software, materials, or services.",1,11,0.599818674,increasing,274
+60,4459,"Words describing something that is recently created, established, or acquired.",1,11,0.701568819,increasing,4459
+61,6016,Dollar sign symbols used as variable prefixes in programming code contexts.,1,11,0.845609345,increasing,6016
+62,1078,Programming control flow keywords (conditional statements and exception handling) in code contexts.,1,11,0.786753648,increasing,1078
+63,22,"All instances show the preposition ""with"" preceded by a space, indicating a consistent grammatical pattern of the word ""with"" following other words or phrases.",1,11,0.884270614,increasing,22
+64,3103,"Instances of the word ""any"" (and its capitalized variant ""ANY"") used as a determiner or pronoun in negative or conditional contexts to indicate absence or lack of something.",1,11,0.614855949,increasing,3103
+65,2482,Time-related nouns referring to periods of days or specific days used in temporal contexts.,1,11,0.796379344,increasing,2482
+66,5006,"Technical and electronic devices, equipment, and apparatus used in various professional and commercial applications.",1,11,0.845123463,increasing,5006
+67,5358,"Programming data type keywords (int, String, string) used in variable declarations and function parameters.",1,11,0.792570961,increasing,5358
+68,286,"Forms of the verb ""to be"" used as linking verbs or auxiliary verbs in past tense (were) and present tense (are).",1,11,0.742282181,increasing,286
+69,5988,"Alphanumeric characters used as list markers, section identifiers, or reference labels in structured text",1,11,0.994767178,increasing,5988
+70,4497,Common nouns referring to people or objects that appear after a space in the text,1,11,0.609357263,increasing,4497
+71,3067,Equality comparison operators (==) with spaces in programming code contexts.,1,11,0.899391875,increasing,3067
+72,3728,"Programming variables, numeric literals, and identifiers used in code contexts",1,11,0.95557707,increasing,3728
+73,6149,"The numeral zero appearing in programming contexts, including loop initializations, conditional comparisons, and variable assignments.",1,11,0.946705349,increasing,6149
+74,2608,"Programming code snippets with bracket notation, but many examples are citations or references rather than array indexing",1,11,0.954721188,increasing,2608
+75,4502,"Instances of the number ""4"" appearing in various contexts including lists, measurements, times, and numerical sequences.",1,11,0.887403735,increasing,4502
+76,1993,"Words related to addresses and location identifiers in digital, physical, and legal contexts",1,11,0.704329513,increasing,1993
+77,2478,Computing and data management terms referring to digital information storage and file handling.,1,11,0.604824904,increasing,2478
+78,568,Words representing getter methods or accessor functions in programming code documentation.,1,11,0.687093182,increasing,568
+79,4037,"Technical nouns describing components, methods, or structured approaches within various specialized domains (engineering, computing, research, etc.).",1,11,0.780211631,increasing,4037
+80,6370,Web-related terms including URL components and website references used in online contexts.,1,11,0.701968142,increasing,6370
+81,5475,"All instances are the comparative conjunction ""than"" used to introduce the second element in comparative constructions.",1,11,0.892538843,increasing,5475
+82,2190,Spaces that appear within LaTeX mathematical expressions and formulas.,1,11,0.70830081,increasing,2190
+83,4647,"Abstract nouns expressing motivation, justification, or intended use in explanatory contexts.",1,11,0.855654717,increasing,4647
+84,4260,"Third-person singular pronouns (he, she, him) used to refer to specific individuals in narrative or descriptive contexts.",1,12,0.549639977,increasing,4260
+85,1492,"All instances refer to ""user"" as a noun representing a person who interacts with software, systems, or digital interfaces.",1,12,0.682434154,increasing,1492
+86,4416,"Words referring to people who have ownership, usage, or partnership relationships with entities or objects",1,12,0.52944038,increasing,4416
+87,604,Punctuation marks (periods) appearing at the end of sentences.,1,12,0.4853045,increasing,604
+88,311,Last names or surnames of people mentioned in various contexts.,1,12,0.953653819,increasing,311
+89,6041,"Prepositions used to introduce relationships between entities, typically indicating accordance, reference, respect, or comparison.",1,12,0.466901876,increasing,6041
+90,757,Dollar signs preceding monetary amounts in financial and legal contexts.,1,12,0.579054247,increasing,757
+91,2589,"Formal titles and abbreviations used in legal, business, and professional documents (Mr., Inc., Jr., Cir., etc.).",1,12,0.655467377,increasing,2589
+92,6224,"Brand names, company names, and technology acronyms that are proper nouns or trademarked entities.",1,12,0.501024529,increasing,6224
+93,2201,Ordinal numbers and numerical determiners indicating quantity or sequence position.,1,12,0.500710732,increasing,2201
+94,1191,Definite articles and pronouns appearing in religious/Christian texts and contexts.,1,12,0.492788865,increasing,1191
+95,4207,"Numbers appearing in mathematical contexts including calculations, assembly references, and data tables.",1,12,0.992521784,increasing,4207
+96,2264,"Adjectives describing something that is recently created, additional, or different from what existed before.",1,12,0.720991533,increasing,2264
+97,3454,"Prepositions and verbs indicating temporal, spatial, or necessity relationships in text",1,12,0.587344117,increasing,3454
+98,5129,"All instances of ""when"" are temporal or conditional conjunctions introducing subordinate clauses that specify circumstances, conditions, or timing.",1,12,0.525402641,increasing,5129
+99,1609,"Spaces preceding comment delimiters in source code, indicating formatting patterns in programming contexts.",1,12,0.612444939,increasing,1609
+100,1985,"Adjectives describing states, characteristics, or qualities of people, objects, or phenomena.",1,12,0.606894036,increasing,1985
+101,3344,"All instances of the coordinating conjunction ""but"" used to introduce contrasting or qualifying statements.",1,12,0.496619938,increasing,3344
+102,1580,"Forms of the verb ""have"" used as auxiliary or main verbs in various grammatical contexts.",1,12,0.556793044,increasing,1580
+103,2473,"The preposition ""by"" used to indicate the agent, means, or method of an action in passive constructions and procedural descriptions.",1,12,0.572027609,increasing,2473
+104,5159,Past participles used to indicate that something is displayed or depicted in a figure or diagram.,1,13,0.493021612,increasing,5159
+105,5302,"Instances of the relative pronoun ""who"" (and one ""which"") used to introduce relative clauses that provide additional information about people or things mentioned in the main clause.",1,13,0.558602665,increasing,5302
+106,2355,"Quantifier words expressing amount, frequency, or degree (superlatives and large numbers).",1,13,0.460649054,increasing,2355
+107,6150,Modal and auxiliary verbs expressing future tense or intention,1,13,0.54565273,increasing,6150
+108,3242,"Words indicating position, degree, opportunity, or outcome in various contexts",1,13,0.657407576,increasing,3242
+109,3143,"All instances of ""right"" function as an adjective meaning ""correct,"" ""appropriate,"" or ""suitable"" in contexts involving finding, choosing, or identifying the proper option.",1,13,0.507785753,increasing,3143

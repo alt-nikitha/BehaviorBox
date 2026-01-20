@@ -2,28 +2,47 @@
 
 
 # Configuration
-DATA_PATH="/home/nsrikant/BehaviorBoxNew/data/blimp_full.jsonl"
-FEATURES_DIR="/home/nsrikant/bbox_outputs/output/blimp_full"
+DATA_PATH="/data/user_data/nsrikant/bbox_data/data/blimp_full.jsonl"
+FEATURES_DIR="/data/user_data/nsrikant/bbox_data/output/output/blimp_full"
 SAVE_DIR="results"
 METRIC="seq_logprob"
 
 # List of models to evaluate
+# MODEL_NAMES=(
+#     "pythia-160m-step1"
+#     "pythia-160m-step2"
+#     "pythia-160m-step4"
+#     "pythia-160m-step8"
+#     "pythia-160m-step16"
+#     "pythia-160m-step32"
+#     "pythia-160m-step64"
+#     "pythia-160m-step128"
+#     "pythia-160m-step256"
+#     "pythia-160m-step512"
+#     "pythia-160m-step1000"
+#     "pythia-160m-step10000"
+#     "pythia-160m-step70000"
+#     "pythia-160m-step100000"
+#     "pythia-160m"
+# )
+
+
 MODEL_NAMES=(
-    "pythia-160m-step1"
-    "pythia-160m-step2"
-    "pythia-160m-step4"
-    "pythia-160m-step8"
-    "pythia-160m-step16"
-    "pythia-160m-step32"
-    "pythia-160m-step64"
-    "pythia-160m-step128"
-    "pythia-160m-step256"
-    "pythia-160m-step512"
-    "pythia-160m-step1000"
-    "pythia-160m-step10000"
-    "pythia-160m-step70000"
-    "pythia-160m-step100000"
-    "pythia-160m"
+    "pythia-6_9b-step1"
+    "pythia-6_9b-step2"
+    "pythia-6_9b-step4"
+    "pythia-6_9b-step8"
+    "pythia-6_9b-step16"
+    "pythia-6_9b-step32"
+    "pythia-6_9b-step64"
+    "pythia-6_9b-step128"
+    "pythia-6_9b-step256"
+    "pythia-6_9b-step512"
+    "pythia-6_9b-step1000"
+    "pythia-6_9b-step10000"
+    "pythia-6_9b-step70000"
+    "pythia-6_9b-step100000"
+    "pythia-6_9b"
 )
 
 # Color codes for output

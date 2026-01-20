@@ -1,0 +1,10 @@
+feature_group_id,representative_feature_id,description,n_members,acq_checkpoint,final_prob,trend,all_feature_ids
+1,841,Tab characters used for indentation in source code files across different programming languages.,1,3,0.119976863,increase-decrease,841
+2,4915,Tab characters used for formatting and alignment in various types of documents and text layouts.,1,3,0.566982354,increase-decrease,4915
+3,1939,Tab characters used for formatting and spacing in various document types and text layouts.,1,3,0.107559607,increase-decrease,1939
+4,915,Tab characters used for spacing and alignment in text formatting,1,3,0.170012531,increase-decrease,915
+5,1209,Tab characters used for formatting and alignment in various types of documents and code.,1,3,0.0797369497,increase-decrease,1209
+6,1269,Tab characters and other whitespace characters used in code formatting and text layout,1,3,0.0290734095,increase-decrease,1269
+7,4261,"Contractions using ""don't"" and ""isn't"" expressing negation in informal speech and writing.",1,6,0.0356692165,increase-decrease,4261
+8,175,Whitespace characters (tabs and spaces) used for formatting and indentation in code and text.,1,6,0.483727243,increase-decrease,175
+9,2714,"Contracted forms and abbreviations, with some unrelated punctuation and formatting elements",1,7,0.0259527471,increase-decrease,2714
