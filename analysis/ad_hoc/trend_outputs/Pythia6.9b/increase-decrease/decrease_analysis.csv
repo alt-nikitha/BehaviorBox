@@ -1,3 +1,0 @@
-Feature ID,Topic,Peaks At,Decreases At,Description
-1863,Contractions and Informal Language,pythia-6_9b-step128,pythia-6_9b-step256,"Negative contractions with ""n't"" suffix"
-294,Technical Documentation Formatting,pythia-6_9b-step128,pythia-6_9b-step256,"Tab characters followed by multiple spaces, representing consistent code indentation patterns in programming contexts."

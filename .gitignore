@@ -93,3 +93,7 @@ docs/_build/
 Thumbs.db
 
 **.env
+
+**old_bash_scripts
+**old_eval
+**slurm_logs

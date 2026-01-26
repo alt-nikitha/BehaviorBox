@@ -1,6 +1,0 @@
-feature_group_id,representative_feature_id,description,n_members,acq_checkpoint,final_prob,trend,all_feature_ids
-1,2973,Tab characters used for text formatting and indentation in various document types.,1,5,0.232852069,increase-decrease,2973
-2,2295,Tab characters used for formatting and indentation in various types of documents and web content.,1,6,0.232852069,increase-decrease,2295
-3,1847,"Tab characters and whitespace formatting used for code indentation, data alignment, and structured text layout",1,6,0.144720966,increase-decrease,1847
-4,1279,"Infinitive marker ""to"" and preposition ""of"" and ""with"" in various grammatical contexts",1,7,0.148493008,increase-decrease,1279
-5,1091,HTML line break tags appearing in code documentation or web content.,1,7,0.395804403,increase-decrease,1091

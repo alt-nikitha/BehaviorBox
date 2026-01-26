@@ -1,4 +1,0 @@
-Topic,Num Features,First Acquired Checkpoint,Checkpoint Name,Avg |Pearson|,High Corr Count (>0.7)
-Document Formatting and Whitespace,3,5,pythia-160m-step32,0.16410235498149328,0
-Prepositions and Function Words,1,7,pythia-160m-step128,0.014924675695614453,0
-HTML and XML Markup,1,7,pythia-160m-step128,0.3976067894275625,0

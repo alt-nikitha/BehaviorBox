@@ -1,6 +1,0 @@
-Feature ID,Topic,Peaks At,Decreases At,Description
-1279,Prepositions and Function Words,pythia-160m-step128,pythia-160m-step256,"Infinitive marker ""to"" and preposition ""of"" and ""with"" in various grammatical contexts"
-2973,Document Formatting and Whitespace,pythia-160m-step128,pythia-160m-step256,Tab characters used for text formatting and indentation in various document types.
-2295,Document Formatting and Whitespace,pythia-160m-step128,pythia-160m-step256,Tab characters used for formatting and indentation in various types of documents and web content.
-1091,HTML and XML Markup,pythia-160m-step512,pythia-160m-step1000,HTML line break tags appearing in code documentation or web content.
-1847,Document Formatting and Whitespace,pythia-160m-step70000,pythia-160m-step100000,"Tab characters and whitespace formatting used for code indentation, data alignment, and structured text layout"

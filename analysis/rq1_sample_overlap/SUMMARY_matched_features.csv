@@ -1,5 +1,0 @@
-Category,N Pairs,Avg Overlap,Avg 160m Max Prob,Avg 6.9b Max Prob,Most Common 160m Trend,Most Common 6.9b Trend
-Both Acquired,42,0.515,0.912,0.940,increase-stagnate,increase-stagnate
-Both Not Acquired,8,0.510,0.166,0.289,increase-decrease,increasing
-160m Only,1,0.316,0.506,0.471,increase-stagnate,increase-stagnate
-6.9b Only,3,0.414,0.323,0.593,increase-stagnate,increase-stagnate

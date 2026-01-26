@@ -1,3 +1,0 @@
-feature_id,description,acquisition_checkpoint,acquisition_checkpoint_name,final_probability,max_probability,good_count,bad_count,subset_counts
-454,Adjectives used in mathematical comparison questions to find the value most similar to a given target number.,9,pythia-6_9b-step512,0.497517015,0.543291531,0,0,{'': 50}
-942,"Spaces that appear before ""p"" in time notations, specifically in sports schedule listings where ""p"" indicates ""p.m.""",10,pythia-6_9b-step1000,0.854656124,0.938049554,0,0,{'': 50}

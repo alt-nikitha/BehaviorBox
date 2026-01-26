@@ -1,7 +1,0 @@
-Feature ID,Topic,Max Prob,Gap to 0.5,Description
-365,Personal Pronouns and Subject References,0.49063428,0.009365720000000022,Third-person singular feminine pronouns (she/her) used as subjects and objects in sentences.
-2755,Contractions and Informal Language,0.471136505,0.028863495000000017,"Contractions representing auxiliary verbs and ""to be"" verbs in informal speech and writing."
-725,Personal Pronouns and Subject References,0.262575489,0.237424511,"First-person singular pronoun ""I"" used as the subject of sentences in conversational and narrative contexts."
-464,Sentence Structure and Punctuation,0.124649299,0.375350701,Words that begin sentences after a period or other sentence-ending punctuation
-773,Numerical Formatting and Punctuation,0.106197649,0.393802351,"Single digits (2, 7, 8, 9) appearing as numerical values or identifiers in statistical, medical, or scientific data contexts."
-344,Existential and Locative Expressions,0.056126294,0.443873706,"All instances are the existential word ""there"" used in ""there is/are/were/has been"" constructions to indicate the existence or presence of something."

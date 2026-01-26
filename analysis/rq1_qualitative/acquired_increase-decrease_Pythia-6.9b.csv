@@ -1,3 +1,0 @@
-feature_group_id,representative_feature_id,description,n_members,acq_checkpoint,final_prob,trend,all_feature_ids
-1,1863,"Negative contractions with ""n't"" suffix",1,7,0.0351172213,increase-decrease,1863
-2,294,"Tab characters followed by multiple spaces, representing consistent code indentation patterns in programming contexts.",1,7,0.108182025,increase-decrease,294
