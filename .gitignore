@@ -49,7 +49,6 @@ venv.bak/
 
 # IPython / Jupyter
 .ipynb_checkpoints
-*.ipynb
 profile_default/
 ipython_config.py
 
