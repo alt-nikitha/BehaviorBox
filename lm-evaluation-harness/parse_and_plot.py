@@ -26,10 +26,12 @@ CHECKPOINTS = {
 
 model_key = "olmo2_7b"
 
-results_folder = (
-    f"/home/nsrikant/BehaviorBoxNew/"
-    f"lm-evaluation-harness/eval_results/{model_key}"
-)
+# results_folder = (
+#     f"/home/nsrikant/BehaviorBoxNew/"
+#     f"lm-evaluation-harness/eval_results/{model_key}"
+# )
+
+results_folder = "/home/nsrikant/BehaviorBoxNew/lm-evaluation-harness/results/olmo/fast"
 
 out_dir = f"plots/{model_key}"
 os.makedirs(out_dir, exist_ok=True)
@@ -41,8 +43,12 @@ revisions = CHECKPOINTS[model_key]["revisions"]
 dfs = []
 
 for idx, revision in enumerate(revisions):
-    csv_path = os.path.join(results_folder, f"{revision}.csv")
+    # csv_path = os.path.join(results_folder, f"{revision}.csv")
+    
+    checkpoint_folder = os.path.join(results_folder, revision, "allenai__OLMo-2-1124-7B")
 
+    csv_path = os.path.join(checkpoint_folder, "results.csv")
+    
     if not os.path.exists(csv_path):
         print(f"[WARN] Missing: {csv_path}")
         continue

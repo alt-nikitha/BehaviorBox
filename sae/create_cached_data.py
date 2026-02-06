@@ -156,7 +156,7 @@ def main(
 
     dask_cfg.set({'distributed.scheduler.worker-ttl': None})
     client = Client(
-        n_workers=workers, memory_limit='24GB', processes=True, timeout='60s', local_directory=spill_dir
+        n_workers=workers, memory_limit='48GB', processes=True, timeout='60s', local_directory=spill_dir
     )
     print(client)
 

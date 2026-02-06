@@ -1,33 +1,24 @@
 #!/bin/bash
 
-DATADIR="/data/user_data/nsrikant/bbox_data/data/larger_pile.jsonl"
-OUTPUTDIR="/data/user_data/nsrikant/bbox_data/output/output/larger_pile"
-MODEL_ID="EleutherAI/pythia-6.9b"
-prefix="pythia-6_9b"
+DATADIR="/data/user_data/nsrikant/bbox_data/data/olmo_validation_texts.jsonl"
+OUTPUTDIR="/data/user_data/nsrikant/bbox_data/output/olmo_validation_texts"
+MODEL_ID="allenai/Olmo-3-1025-7B"
+prefix="olmo-3-7b"
 MAX_JOBS=2  # Process sequentially to avoid GPU resource deadlock
 running_jobs=0
 
-# REVISIONS=(
-# "step1"
-# "step2"
-# "step4"
-# "step8"
-# "step16"
-# "step32"
-# "step64"
-# "step128"
-# "step256"
-# "step512"
-# "step1000"
-# "step10000"
-# "step70000"
-# "step100000"
-# ""
-# )
-
 REVISIONS=(
-"step256"
-"step512"
+stage1-step1000
+stage1-step15000
+stage1-step73000
+stage1-step146000
+stage1-step365000
+stage1-step731000
+stage1-step1096000
+stage1-step1169000
+stage1-step1315000
+stage2-step18000
+main
 )
 
 

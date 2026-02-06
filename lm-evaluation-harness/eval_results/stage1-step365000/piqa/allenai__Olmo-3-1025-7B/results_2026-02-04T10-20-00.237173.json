@@ -1,0 +1,121 @@
+{
+  "results": {
+    "piqa": {
+      "alias": "piqa",
+      "acc,none": 0.7823721436343852,
+      "acc_stderr,none": 0.009627407474840807,
+      "acc_norm,none": 0.7883569096844396,
+      "acc_norm_stderr,none": 0.009530351270479286
+    }
+  },
+  "group_subtasks": {
+    "piqa": []
+  },
+  "configs": {
+    "piqa": {
+      "task": "piqa",
+      "dataset_path": "baber/piqa",
+      "training_split": "train",
+      "validation_split": "validation",
+      "doc_to_text": "Question: {{goal}}\nAnswer:",
+      "doc_to_target": "label",
+      "unsafe_code": false,
+      "doc_to_choice": "{{[sol1, sol2]}}",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": true,
+      "doc_to_decontamination_query": "goal",
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/Olmo-3-1025-7B",
+        "revision": "stage1-step365000",
+        "gpu_memory_utilization": 0.9,
+        "dtype": "auto",
+        "trust_remote_code": true
+      }
+    }
+  },
+  "versions": {
+    "piqa": 1.0
+  },
+  "n-shot": {
+    "piqa": 5
+  },
+  "higher_is_better": {
+    "piqa": {
+      "acc": true,
+      "acc_norm": true
+    }
+  },
+  "n-samples": {
+    "piqa": {
+      "original": 1838,
+      "effective": 1838
+    }
+  },
+  "config": {
+    "model": "vllm",
+    "model_args": "pretrained=allenai/Olmo-3-1025-7B,revision=stage1-step365000,gpu_memory_utilization=0.9,dtype=auto,trust_remote_code=True",
+    "batch_size": "auto",
+    "batch_sizes": [],
+    "device": null,
+    "use_cache": null,
+    "limit": null,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": null,
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234
+  },
+  "git_hash": "f42f9c70",
+  "date": 1770218207.9482677,
+  "pretty_env_info": "PyTorch version: 2.9.1+cu128\nIs debug build: False\nCUDA used to build PyTorch: 12.8\nROCM used to build PyTorch: N/A\n\nOS: AlmaLinux 9.5 (Teal Serval) (x86_64)\nGCC version: (GCC) 11.5.0 20240719 (Red Hat 11.5.0-5)\nClang version: Could not collect\nCMake version: version 3.26.5\nLibc version: glibc-2.34\n\nPython version: 3.13.7 | packaged by Anaconda, Inc. | (main, Sep  9 2025, 19:59:03) [GCC 11.2.0] (64-bit runtime)\nPython platform: Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34\nIs CUDA available: True\nCUDA runtime version: Could not collect\nCUDA_MODULE_LOADING set to: \nGPU models and configuration: GPU 0: NVIDIA RTX A6000\nNvidia driver version: 575.51.03\ncuDNN version: Probably one of the following:\n/usr/lib64/libcudnn.so.8.9.7\n/usr/lib64/libcudnn.so.9.10.0\n/usr/lib64/libcudnn_adv.so.9.10.0\n/usr/lib64/libcudnn_adv_infer.so.8.9.7\n/usr/lib64/libcudnn_adv_train.so.8.9.7\n/usr/lib64/libcudnn_cnn.so.9.10.0\n/usr/lib64/libcudnn_cnn_infer.so.8.9.7\n/usr/lib64/libcudnn_cnn_train.so.8.9.7\n/usr/lib64/libcudnn_engines_precompiled.so.9.10.0\n/usr/lib64/libcudnn_engines_runtime_compiled.so.9.10.0\n/usr/lib64/libcudnn_graph.so.9.10.0\n/usr/lib64/libcudnn_heuristic.so.9.10.0\n/usr/lib64/libcudnn_ops.so.9.10.0\n/usr/lib64/libcudnn_ops_infer.so.8.9.7\n/usr/lib64/libcudnn_ops_train.so.8.9.7\nIs XPU available: False\nHIP runtime version: N/A\nMIOpen runtime version: N/A\nIs XNNPACK available: True\n\nCPU:\nArchitecture:                         x86_64\nCPU op-mode(s):                       32-bit, 64-bit\nAddress sizes:                        43 bits physical, 48 bits virtual\nByte Order:                           Little Endian\nCPU(s):                               64\nOn-line CPU(s) list:                  0-63\nVendor ID:                            AuthenticAMD\nModel name:                           AMD EPYC 7302 16-Core Processor\nCPU family:                           23\nModel:                                49\nThread(s) per core:                   2\nCore(s) per socket:                   16\nSocket(s):                            2\nStepping:                             0\nFrequency boost:                      enabled\nCPU(s) scaling MHz:                   99%\nCPU max MHz:                          3000.0000\nCPU min MHz:                          1500.0000\nBogoMIPS:                             6000.17\nFlags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl nonstop_tsc cpuid extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpb cat_l3 cdp_l3 hw_pstate ssbd mba ibrs ibpb stibp vmmcall fsgsbase bmi1 avx2 smep bmi2 cqm rdt_a rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local clzero irperf xsaveerptr rdpru wbnoinvd amd_ppin arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold avic v_vmsave_vmload vgif v_spec_ctrl umip rdpid overflow_recov succor smca sev sev_es\nVirtualization:                       AMD-V\nL1d cache:                            1 MiB (32 instances)\nL1i cache:                            1 MiB (32 instances)\nL2 cache:                             16 MiB (32 instances)\nL3 cache:                             256 MiB (16 instances)\nNUMA node(s):                         2\nNUMA node0 CPU(s):                    0-15,32-47\nNUMA node1 CPU(s):                    16-31,48-63\nVulnerability Gather data sampling:   Not affected\nVulnerability Itlb multihit:          Not affected\nVulnerability L1tf:                   Not affected\nVulnerability Mds:                    Not affected\nVulnerability Meltdown:               Not affected\nVulnerability Mmio stale data:        Not affected\nVulnerability Reg file data sampling: Not affected\nVulnerability Retbleed:               Mitigation; untrained return thunk; SMT enabled with STIBP protection\nVulnerability Spec rstack overflow:   Mitigation; Safe RET\nVulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:             Mitigation; Retpolines; IBPB conditional; STIBP always-on; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected\nVulnerability Srbds:                  Not affected\nVulnerability Tsx async abort:        Not affected\n\nVersions of relevant libraries:\n[pip3] asyncclick==8.2.2.2\n[pip3] numpy==2.2.6\n[pip3] nvidia-cublas-cu12==12.8.4.1\n[pip3] nvidia-cuda-cupti-cu12==12.8.90\n[pip3] nvidia-cuda-nvrtc-cu12==12.8.93\n[pip3] nvidia-cuda-runtime-cu12==12.8.90\n[pip3] nvidia-cudnn-cu12==9.10.2.21\n[pip3] nvidia-cudnn-frontend==1.18.0\n[pip3] nvidia-cufft-cu12==11.3.3.83\n[pip3] nvidia-curand-cu12==10.3.9.90\n[pip3] nvidia-cusolver-cu12==11.7.3.90\n[pip3] nvidia-cusparse-cu12==12.5.8.93\n[pip3] nvidia-cusparselt-cu12==0.7.1\n[pip3] nvidia-nccl-cu12==2.27.5\n[pip3] nvidia-nvjitlink-cu12==12.8.93\n[pip3] nvidia-nvtx-cu12==12.8.90\n[pip3] torch==2.9.1\n[pip3] torchaudio==2.9.1\n[pip3] torchvision==0.24.1\n[pip3] triton==3.5.1\n[conda] asyncclick                           8.2.2.2          pypi_0              pypi\n[conda] numpy                                2.2.6            pypi_0              pypi\n[conda] nvidia-cublas-cu12                   12.8.4.1         pypi_0              pypi\n[conda] nvidia-cuda-cupti-cu12               12.8.90          pypi_0              pypi\n[conda] nvidia-cuda-nvrtc-cu12               12.8.93          pypi_0              pypi\n[conda] nvidia-cuda-runtime-cu12             12.8.90          pypi_0              pypi\n[conda] nvidia-cudnn-cu12                    9.10.2.21        pypi_0              pypi\n[conda] nvidia-cudnn-frontend                1.18.0           pypi_0              pypi\n[conda] nvidia-cufft-cu12                    11.3.3.83        pypi_0              pypi\n[conda] nvidia-curand-cu12                   10.3.9.90        pypi_0              pypi\n[conda] nvidia-cusolver-cu12                 11.7.3.90        pypi_0              pypi\n[conda] nvidia-cusparse-cu12                 12.5.8.93        pypi_0              pypi\n[conda] nvidia-cusparselt-cu12               0.7.1            pypi_0              pypi\n[conda] nvidia-nccl-cu12                     2.27.5           pypi_0              pypi\n[conda] nvidia-nvjitlink-cu12                12.8.93          pypi_0              pypi\n[conda] nvidia-nvtx-cu12                     12.8.90          pypi_0              pypi\n[conda] torch                                2.9.1            pypi_0              pypi\n[conda] torchaudio                           2.9.1            pypi_0              pypi\n[conda] torchvision                          0.24.1           pypi_0              pypi\n[conda] triton                               3.5.1            pypi_0              pypi",
+  "transformers_version": "4.57.6",
+  "lm_eval_version": "0.4.9.2",
+  "upper_git_hash": null,
+  "tokenizer_pad_token": [
+    "<|pad|>",
+    "100277"
+  ],
+  "tokenizer_eos_token": [
+    "<|endoftext|>",
+    "100257"
+  ],
+  "tokenizer_bos_token": [
+    null,
+    "None"
+  ],
+  "eot_token_id": 100257,
+  "max_length": 8192,
+  "task_hashes": {
+    "piqa": "0bb92b602ed549741bdcd7813729263f1209f88fb7b584b1496e2474cd0ae568"
+  },
+  "model_source": "vllm",
+  "model_name": "allenai/Olmo-3-1025-7B",
+  "model_name_sanitized": "allenai__Olmo-3-1025-7B",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": false,
+  "chat_template": null,
+  "chat_template_sha": null,
+  "start_time": 2596642.695696532,
+  "end_time": 2596842.200195618,
+  "total_evaluation_time_seconds": "199.50449908617884"
+}

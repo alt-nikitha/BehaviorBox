@@ -101,7 +101,7 @@ def load_data(
         "distributed.worker.memory.terminate": 0.98,
     })
     client = Client(
-        n_workers=workers, memory_limit='12GB', processes=True, timeout='30s', local_directory=spill_dir
+        n_workers=workers, memory_limit='48GB', processes=True, timeout='30s', local_directory=spill_dir
     )
     print(client, flush=True)
     cache_data_filepaths = []

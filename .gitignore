@@ -97,3 +97,6 @@ Thumbs.db
 **old_bash_scripts
 **old_eval
 **slurm_logs
+
+**wandb
+**slurm-out

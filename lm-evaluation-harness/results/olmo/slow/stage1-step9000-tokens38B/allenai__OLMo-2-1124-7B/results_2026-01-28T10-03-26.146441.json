@@ -1,0 +1,2675 @@
+{
+  "results": {
+    "agieval": {
+      "acc,none": 0.2565312046444122,
+      "acc_stderr,none": 0.004605197085743625,
+      "alias": "agieval"
+    },
+    "agieval_aqua_rat": {
+      "alias": " - agieval_aqua_rat",
+      "acc,none": 0.21653543307086615,
+      "acc_stderr,none": 0.025894880176407616,
+      "acc_norm,none": 0.19291338582677164,
+      "acc_norm_stderr,none": 0.024807385375179288
+    },
+    "agieval_gaokao_biology": {
+      "alias": " - agieval_gaokao_biology",
+      "acc,none": 0.19523809523809524,
+      "acc_stderr,none": 0.027418446398346914,
+      "acc_norm,none": 0.23809523809523808,
+      "acc_norm_stderr,none": 0.029461344042368852
+    },
+    "agieval_gaokao_chemistry": {
+      "alias": " - agieval_gaokao_chemistry",
+      "acc,none": 0.2753623188405797,
+      "acc_stderr,none": 0.0311228315190582,
+      "acc_norm,none": 0.2753623188405797,
+      "acc_norm_stderr,none": 0.0311228315190582
+    },
+    "agieval_gaokao_chinese": {
+      "alias": " - agieval_gaokao_chinese",
+      "acc,none": 0.2073170731707317,
+      "acc_stderr,none": 0.02589907447268032,
+      "acc_norm,none": 0.2073170731707317,
+      "acc_norm_stderr,none": 0.02589907447268032
+    },
+    "agieval_gaokao_english": {
+      "alias": " - agieval_gaokao_english",
+      "acc,none": 0.24509803921568626,
+      "acc_stderr,none": 0.024630048979824716,
+      "acc_norm,none": 0.24836601307189543,
+      "acc_norm_stderr,none": 0.02473998135511354
+    },
+    "agieval_gaokao_geography": {
+      "alias": " - agieval_gaokao_geography",
+      "acc,none": 0.20603015075376885,
+      "acc_stderr,none": 0.028743179053327714,
+      "acc_norm,none": 0.21608040201005024,
+      "acc_norm_stderr,none": 0.029248988748575042
+    },
+    "agieval_gaokao_history": {
+      "alias": " - agieval_gaokao_history",
+      "acc,none": 0.22127659574468084,
+      "acc_stderr,none": 0.027136349602424097,
+      "acc_norm,none": 0.225531914893617,
+      "acc_norm_stderr,none": 0.02732107841738755
+    },
+    "agieval_gaokao_mathcloze": {
+      "alias": " - agieval_gaokao_mathcloze",
+      "acc,none": 0.00847457627118644,
+      "acc_stderr,none": 0.00847457627118644
+    },
+    "agieval_gaokao_mathqa": {
+      "alias": " - agieval_gaokao_mathqa",
+      "acc,none": 0.245014245014245,
+      "acc_stderr,none": 0.02298957930108736,
+      "acc_norm,none": 0.27635327635327633,
+      "acc_norm_stderr,none": 0.023903505003127296
+    },
+    "agieval_gaokao_physics": {
+      "alias": " - agieval_gaokao_physics",
+      "acc,none": 0.27,
+      "acc_stderr,none": 0.03147145152843339,
+      "acc_norm,none": 0.245,
+      "acc_norm_stderr,none": 0.03048807329211419
+    },
+    "agieval_jec_qa_ca": {
+      "alias": " - agieval_jec_qa_ca",
+      "acc,none": 0.4264264264264264,
+      "acc_stderr,none": 0.015654937988969837,
+      "acc_norm,none": 0.44244244244244246,
+      "acc_norm_stderr,none": 0.01572200656879098
+    },
+    "agieval_jec_qa_kd": {
+      "alias": " - agieval_jec_qa_kd",
+      "acc,none": 0.468,
+      "acc_stderr,none": 0.015786868759359002,
+      "acc_norm,none": 0.503,
+      "acc_norm_stderr,none": 0.01581901517924682
+    },
+    "agieval_logiqa_en": {
+      "alias": " - agieval_logiqa_en",
+      "acc,none": 0.27035330261136714,
+      "acc_stderr,none": 0.017420694783393233,
+      "acc_norm,none": 0.30414746543778803,
+      "acc_norm_stderr,none": 0.018044465791506765
+    },
+    "agieval_logiqa_zh": {
+      "alias": " - agieval_logiqa_zh",
+      "acc,none": 0.1889400921658986,
+      "acc_stderr,none": 0.015354364638220845,
+      "acc_norm,none": 0.25499231950844853,
+      "acc_norm_stderr,none": 0.01709571410527976
+    },
+    "agieval_lsat_ar": {
+      "alias": " - agieval_lsat_ar",
+      "acc,none": 0.23043478260869565,
+      "acc_stderr,none": 0.02782780752227618,
+      "acc_norm,none": 0.2217391304347826,
+      "acc_norm_stderr,none": 0.02745149660405894
+    },
+    "agieval_lsat_lr": {
+      "alias": " - agieval_lsat_lr",
+      "acc,none": 0.18627450980392157,
+      "acc_stderr,none": 0.01725666163908293,
+      "acc_norm,none": 0.2019607843137255,
+      "acc_norm_stderr,none": 0.017794539344350095
+    },
+    "agieval_lsat_rc": {
+      "alias": " - agieval_lsat_rc",
+      "acc,none": 0.16728624535315986,
+      "acc_stderr,none": 0.022798726518245264,
+      "acc_norm,none": 0.16356877323420074,
+      "acc_norm_stderr,none": 0.022594249504241624
+    },
+    "agieval_math": {
+      "alias": " - agieval_math",
+      "acc,none": 0.059,
+      "acc_stderr,none": 0.007454835650406693
+    },
+    "agieval_sat_en": {
+      "alias": " - agieval_sat_en",
+      "acc,none": 0.22815533980582525,
+      "acc_stderr,none": 0.029309157873241655,
+      "acc_norm,none": 0.2087378640776699,
+      "acc_norm_stderr,none": 0.02838467193518551
+    },
+    "agieval_sat_en_without_passage": {
+      "alias": " - agieval_sat_en_without_passage",
+      "acc,none": 0.2766990291262136,
+      "acc_stderr,none": 0.031245423189279933,
+      "acc_norm,none": 0.21359223300970873,
+      "acc_norm_stderr,none": 0.0286246176677106
+    },
+    "agieval_sat_math": {
+      "alias": " - agieval_sat_math",
+      "acc,none": 0.2681818181818182,
+      "acc_stderr,none": 0.029936030014892888,
+      "acc_norm,none": 0.23636363636363636,
+      "acc_norm_stderr,none": 0.02870857092586562
+    },
+    "drop": {
+      "alias": "drop",
+      "em,none": 0.016568791946308725,
+      "em_stderr,none": 0.0013072452323527658,
+      "f1,none": 0.05966652684563745,
+      "f1_stderr,none": 0.0018538563500204233
+    },
+    "gsm8k": {
+      "alias": "gsm8k",
+      "exact_match,strict-match": 0.0,
+      "exact_match_stderr,strict-match": 0.0,
+      "exact_match,flexible-extract": 0.019711902956785442,
+      "exact_match_stderr,flexible-extract": 0.0038289829787357117
+    },
+    "mmlu_pro": {
+      "exact_match,custom-extract": 8.311170212765957e-05,
+      "exact_match_stderr,custom-extract": 8.310208531609485e-05,
+      "alias": "mmlu_pro"
+    },
+    "mmlu_pro_biology": {
+      "alias": " - biology",
+      "exact_match,custom-extract": 0.001394700139470014,
+      "exact_match_stderr,custom-extract": 0.001394700139470026
+    },
+    "mmlu_pro_business": {
+      "alias": " - business",
+      "exact_match,custom-extract": 0.0,
+      "exact_match_stderr,custom-extract": 0.0
+    },
+    "mmlu_pro_chemistry": {
+      "alias": " - chemistry",
+      "exact_match,custom-extract": 0.0,
+      "exact_match_stderr,custom-extract": 0.0
+    },
+    "mmlu_pro_computer_science": {
+      "alias": " - computer_science",
+      "exact_match,custom-extract": 0.0,
+      "exact_match_stderr,custom-extract": 0.0
+    },
+    "mmlu_pro_economics": {
+      "alias": " - economics",
+      "exact_match,custom-extract": 0.0,
+      "exact_match_stderr,custom-extract": 0.0
+    },
+    "mmlu_pro_engineering": {
+      "alias": " - engineering",
+      "exact_match,custom-extract": 0.0,
+      "exact_match_stderr,custom-extract": 0.0
+    },
+    "mmlu_pro_health": {
+      "alias": " - health",
+      "exact_match,custom-extract": 0.0,
+      "exact_match_stderr,custom-extract": 0.0
+    },
+    "mmlu_pro_history": {
+      "alias": " - history",
+      "exact_match,custom-extract": 0.0,
+      "exact_match_stderr,custom-extract": 0.0
+    },
+    "mmlu_pro_law": {
+      "alias": " - law",
+      "exact_match,custom-extract": 0.0,
+      "exact_match_stderr,custom-extract": 0.0
+    },
+    "mmlu_pro_math": {
+      "alias": " - math",
+      "exact_match,custom-extract": 0.0,
+      "exact_match_stderr,custom-extract": 0.0
+    },
+    "mmlu_pro_other": {
+      "alias": " - other",
+      "exact_match,custom-extract": 0.0,
+      "exact_match_stderr,custom-extract": 0.0
+    },
+    "mmlu_pro_philosophy": {
+      "alias": " - philosophy",
+      "exact_match,custom-extract": 0.0,
+      "exact_match_stderr,custom-extract": 0.0
+    },
+    "mmlu_pro_physics": {
+      "alias": " - physics",
+      "exact_match,custom-extract": 0.0,
+      "exact_match_stderr,custom-extract": 0.0
+    },
+    "mmlu_pro_psychology": {
+      "alias": " - psychology",
+      "exact_match,custom-extract": 0.0,
+      "exact_match_stderr,custom-extract": 0.0
+    },
+    "nq_open": {
+      "alias": "nq_open",
+      "exact_match,remove_whitespace": 0.05235457063711911,
+      "exact_match_stderr,remove_whitespace": 0.0037077188613802953
+    },
+    "triviaqa": {
+      "alias": "triviaqa",
+      "exact_match,remove_whitespace": 0.13525412394115024,
+      "exact_match_stderr,remove_whitespace": 0.0025531244172864887
+    }
+  },
+  "groups": {
+    "agieval": {
+      "acc,none": 0.2565312046444122,
+      "acc_stderr,none": 0.004605197085743625,
+      "alias": "agieval"
+    },
+    "mmlu_pro": {
+      "exact_match,custom-extract": 8.311170212765957e-05,
+      "exact_match_stderr,custom-extract": 8.310208531609485e-05,
+      "alias": "mmlu_pro"
+    }
+  },
+  "group_subtasks": {
+    "drop": [],
+    "nq_open": [],
+    "agieval": [
+      "agieval_gaokao_biology",
+      "agieval_gaokao_chemistry",
+      "agieval_gaokao_chinese",
+      "agieval_gaokao_geography",
+      "agieval_gaokao_history",
+      "agieval_gaokao_mathcloze",
+      "agieval_gaokao_mathqa",
+      "agieval_gaokao_physics",
+      "agieval_jec_qa_ca",
+      "agieval_jec_qa_kd",
+      "agieval_logiqa_zh",
+      "agieval_aqua_rat",
+      "agieval_gaokao_english",
+      "agieval_logiqa_en",
+      "agieval_lsat_ar",
+      "agieval_lsat_lr",
+      "agieval_lsat_rc",
+      "agieval_math",
+      "agieval_sat_en_without_passage",
+      "agieval_sat_en",
+      "agieval_sat_math"
+    ],
+    "gsm8k": [],
+    "mmlu_pro": [
+      "mmlu_pro_biology",
+      "mmlu_pro_business",
+      "mmlu_pro_chemistry",
+      "mmlu_pro_computer_science",
+      "mmlu_pro_economics",
+      "mmlu_pro_engineering",
+      "mmlu_pro_health",
+      "mmlu_pro_history",
+      "mmlu_pro_law",
+      "mmlu_pro_math",
+      "mmlu_pro_other",
+      "mmlu_pro_philosophy",
+      "mmlu_pro_physics",
+      "mmlu_pro_psychology"
+    ],
+    "triviaqa": []
+  },
+  "configs": {
+    "agieval_aqua_rat": {
+      "task": "agieval_aqua_rat",
+      "dataset_path": "hails/agieval-aqua-rat",
+      "test_split": "test",
+      "doc_to_text": "{{query}}",
+      "doc_to_target": "{{gold}}",
+      "unsafe_code": false,
+      "doc_to_choice": "{{choices}}",
+      "process_results": "def process_results_mcqa(doc, results):\n    results = [result[0] for result in results]\n\n    gold = doc[\"gold\"]\n\n    acc = 1.0 if int(np.argmax(results)) in gold else 0.0\n    completion_len = np.array([float(len(i)) for i in doc[\"choices\"]])\n    acc_norm = 1.0 if int(np.argmax(results / completion_len)) in gold else 0.0\n\n    return {\n        \"acc\": acc,\n        \"acc_norm\": acc_norm,\n    }\n",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "agieval_gaokao_biology": {
+      "task": "agieval_gaokao_biology",
+      "dataset_path": "hails/agieval-gaokao-biology",
+      "test_split": "test",
+      "doc_to_text": "{{query}}",
+      "doc_to_target": "{{gold}}",
+      "unsafe_code": false,
+      "doc_to_choice": "{{choices}}",
+      "process_results": "def process_results_mcqa(doc, results):\n    results = [result[0] for result in results]\n\n    gold = doc[\"gold\"]\n\n    acc = 1.0 if int(np.argmax(results)) in gold else 0.0\n    completion_len = np.array([float(len(i)) for i in doc[\"choices\"]])\n    acc_norm = 1.0 if int(np.argmax(results / completion_len)) in gold else 0.0\n\n    return {\n        \"acc\": acc,\n        \"acc_norm\": acc_norm,\n    }\n",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "agieval_gaokao_chemistry": {
+      "task": "agieval_gaokao_chemistry",
+      "dataset_path": "hails/agieval-gaokao-chemistry",
+      "test_split": "test",
+      "doc_to_text": "{{query}}",
+      "doc_to_target": "{{gold}}",
+      "unsafe_code": false,
+      "doc_to_choice": "{{choices}}",
+      "process_results": "def process_results_mcqa(doc, results):\n    results = [result[0] for result in results]\n\n    gold = doc[\"gold\"]\n\n    acc = 1.0 if int(np.argmax(results)) in gold else 0.0\n    completion_len = np.array([float(len(i)) for i in doc[\"choices\"]])\n    acc_norm = 1.0 if int(np.argmax(results / completion_len)) in gold else 0.0\n\n    return {\n        \"acc\": acc,\n        \"acc_norm\": acc_norm,\n    }\n",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "agieval_gaokao_chinese": {
+      "task": "agieval_gaokao_chinese",
+      "dataset_path": "hails/agieval-gaokao-chinese",
+      "test_split": "test",
+      "doc_to_text": "{{query}}",
+      "doc_to_target": "{{gold}}",
+      "unsafe_code": false,
+      "doc_to_choice": "{{choices}}",
+      "process_results": "def process_results_mcqa(doc, results):\n    results = [result[0] for result in results]\n\n    gold = doc[\"gold\"]\n\n    acc = 1.0 if int(np.argmax(results)) in gold else 0.0\n    completion_len = np.array([float(len(i)) for i in doc[\"choices\"]])\n    acc_norm = 1.0 if int(np.argmax(results / completion_len)) in gold else 0.0\n\n    return {\n        \"acc\": acc,\n        \"acc_norm\": acc_norm,\n    }\n",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "agieval_gaokao_english": {
+      "task": "agieval_gaokao_english",
+      "dataset_path": "hails/agieval-gaokao-english",
+      "test_split": "test",
+      "doc_to_text": "{{query}}",
+      "doc_to_target": "{{gold}}",
+      "unsafe_code": false,
+      "doc_to_choice": "{{choices}}",
+      "process_results": "def process_results_mcqa(doc, results):\n    results = [result[0] for result in results]\n\n    gold = doc[\"gold\"]\n\n    acc = 1.0 if int(np.argmax(results)) in gold else 0.0\n    completion_len = np.array([float(len(i)) for i in doc[\"choices\"]])\n    acc_norm = 1.0 if int(np.argmax(results / completion_len)) in gold else 0.0\n\n    return {\n        \"acc\": acc,\n        \"acc_norm\": acc_norm,\n    }\n",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "agieval_gaokao_geography": {
+      "task": "agieval_gaokao_geography",
+      "dataset_path": "hails/agieval-gaokao-geography",
+      "test_split": "test",
+      "doc_to_text": "{{query}}",
+      "doc_to_target": "{{gold}}",
+      "unsafe_code": false,
+      "doc_to_choice": "{{choices}}",
+      "process_results": "def process_results_mcqa(doc, results):\n    results = [result[0] for result in results]\n\n    gold = doc[\"gold\"]\n\n    acc = 1.0 if int(np.argmax(results)) in gold else 0.0\n    completion_len = np.array([float(len(i)) for i in doc[\"choices\"]])\n    acc_norm = 1.0 if int(np.argmax(results / completion_len)) in gold else 0.0\n\n    return {\n        \"acc\": acc,\n        \"acc_norm\": acc_norm,\n    }\n",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "agieval_gaokao_history": {
+      "task": "agieval_gaokao_history",
+      "dataset_path": "hails/agieval-gaokao-history",
+      "test_split": "test",
+      "doc_to_text": "{{query}}",
+      "doc_to_target": "{{gold}}",
+      "unsafe_code": false,
+      "doc_to_choice": "{{choices}}",
+      "process_results": "def process_results_mcqa(doc, results):\n    results = [result[0] for result in results]\n\n    gold = doc[\"gold\"]\n\n    acc = 1.0 if int(np.argmax(results)) in gold else 0.0\n    completion_len = np.array([float(len(i)) for i in doc[\"choices\"]])\n    acc_norm = 1.0 if int(np.argmax(results / completion_len)) in gold else 0.0\n\n    return {\n        \"acc\": acc,\n        \"acc_norm\": acc_norm,\n    }\n",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "agieval_gaokao_mathcloze": {
+      "task": "agieval_gaokao_mathcloze",
+      "dataset_path": "hails/agieval-gaokao-mathcloze",
+      "test_split": "test",
+      "doc_to_text": "{{query}}",
+      "doc_to_target": "{{answer}}",
+      "unsafe_code": false,
+      "process_results": "def process_results(doc: dict, results: List[str]) -> Dict[str, int]:\n    candidate = results[0]\n\n    gold = doc[\"answer\"]\n\n    if not gold:\n        print(doc, candidate, gold)\n    if is_equiv(candidate, gold):\n        retval = 1\n    else:\n        retval = 0\n\n    results = {\n        \"acc\": retval,\n    }\n    return results\n",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "max_gen_toks": 32,
+        "do_sample": false,
+        "temperature": 0.0,
+        "until": [
+          "Q:"
+        ]
+      },
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "agieval_gaokao_mathqa": {
+      "task": "agieval_gaokao_mathqa",
+      "dataset_path": "hails/agieval-gaokao-mathqa",
+      "test_split": "test",
+      "doc_to_text": "{{query}}",
+      "doc_to_target": "{{gold}}",
+      "unsafe_code": false,
+      "doc_to_choice": "{{choices}}",
+      "process_results": "def process_results_mcqa(doc, results):\n    results = [result[0] for result in results]\n\n    gold = doc[\"gold\"]\n\n    acc = 1.0 if int(np.argmax(results)) in gold else 0.0\n    completion_len = np.array([float(len(i)) for i in doc[\"choices\"]])\n    acc_norm = 1.0 if int(np.argmax(results / completion_len)) in gold else 0.0\n\n    return {\n        \"acc\": acc,\n        \"acc_norm\": acc_norm,\n    }\n",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "agieval_gaokao_physics": {
+      "task": "agieval_gaokao_physics",
+      "dataset_path": "hails/agieval-gaokao-physics",
+      "test_split": "test",
+      "doc_to_text": "{{query}}",
+      "doc_to_target": "{{gold}}",
+      "unsafe_code": false,
+      "doc_to_choice": "{{choices}}",
+      "process_results": "def process_results_mcqa(doc, results):\n    results = [result[0] for result in results]\n\n    gold = doc[\"gold\"]\n\n    acc = 1.0 if int(np.argmax(results)) in gold else 0.0\n    completion_len = np.array([float(len(i)) for i in doc[\"choices\"]])\n    acc_norm = 1.0 if int(np.argmax(results / completion_len)) in gold else 0.0\n\n    return {\n        \"acc\": acc,\n        \"acc_norm\": acc_norm,\n    }\n",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "agieval_jec_qa_ca": {
+      "task": "agieval_jec_qa_ca",
+      "dataset_path": "hails/agieval-jec-qa-ca",
+      "test_split": "test",
+      "doc_to_text": "{{query}}",
+      "doc_to_target": "{{gold}}",
+      "unsafe_code": false,
+      "doc_to_choice": "{{choices}}",
+      "process_results": "def process_results_mcqa(doc, results):\n    results = [result[0] for result in results]\n\n    gold = doc[\"gold\"]\n\n    acc = 1.0 if int(np.argmax(results)) in gold else 0.0\n    completion_len = np.array([float(len(i)) for i in doc[\"choices\"]])\n    acc_norm = 1.0 if int(np.argmax(results / completion_len)) in gold else 0.0\n\n    return {\n        \"acc\": acc,\n        \"acc_norm\": acc_norm,\n    }\n",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "agieval_jec_qa_kd": {
+      "task": "agieval_jec_qa_kd",
+      "dataset_path": "hails/agieval-jec-qa-kd",
+      "test_split": "test",
+      "doc_to_text": "{{query}}",
+      "doc_to_target": "{{gold}}",
+      "unsafe_code": false,
+      "doc_to_choice": "{{choices}}",
+      "process_results": "def process_results_mcqa(doc, results):\n    results = [result[0] for result in results]\n\n    gold = doc[\"gold\"]\n\n    acc = 1.0 if int(np.argmax(results)) in gold else 0.0\n    completion_len = np.array([float(len(i)) for i in doc[\"choices\"]])\n    acc_norm = 1.0 if int(np.argmax(results / completion_len)) in gold else 0.0\n\n    return {\n        \"acc\": acc,\n        \"acc_norm\": acc_norm,\n    }\n",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "agieval_logiqa_en": {
+      "task": "agieval_logiqa_en",
+      "dataset_path": "hails/agieval-logiqa-en",
+      "test_split": "test",
+      "doc_to_text": "{{query}}",
+      "doc_to_target": "{{gold}}",
+      "unsafe_code": false,
+      "doc_to_choice": "{{choices}}",
+      "process_results": "def process_results_mcqa(doc, results):\n    results = [result[0] for result in results]\n\n    gold = doc[\"gold\"]\n\n    acc = 1.0 if int(np.argmax(results)) in gold else 0.0\n    completion_len = np.array([float(len(i)) for i in doc[\"choices\"]])\n    acc_norm = 1.0 if int(np.argmax(results / completion_len)) in gold else 0.0\n\n    return {\n        \"acc\": acc,\n        \"acc_norm\": acc_norm,\n    }\n",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "agieval_logiqa_zh": {
+      "task": "agieval_logiqa_zh",
+      "dataset_path": "hails/agieval-logiqa-zh",
+      "test_split": "test",
+      "doc_to_text": "{{query}}",
+      "doc_to_target": "{{gold}}",
+      "unsafe_code": false,
+      "doc_to_choice": "{{choices}}",
+      "process_results": "def process_results_mcqa(doc, results):\n    results = [result[0] for result in results]\n\n    gold = doc[\"gold\"]\n\n    acc = 1.0 if int(np.argmax(results)) in gold else 0.0\n    completion_len = np.array([float(len(i)) for i in doc[\"choices\"]])\n    acc_norm = 1.0 if int(np.argmax(results / completion_len)) in gold else 0.0\n\n    return {\n        \"acc\": acc,\n        \"acc_norm\": acc_norm,\n    }\n",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "agieval_lsat_ar": {
+      "task": "agieval_lsat_ar",
+      "dataset_path": "hails/agieval-lsat-ar",
+      "test_split": "test",
+      "doc_to_text": "{{query}}",
+      "doc_to_target": "{{gold}}",
+      "unsafe_code": false,
+      "doc_to_choice": "{{choices}}",
+      "process_results": "def process_results_mcqa(doc, results):\n    results = [result[0] for result in results]\n\n    gold = doc[\"gold\"]\n\n    acc = 1.0 if int(np.argmax(results)) in gold else 0.0\n    completion_len = np.array([float(len(i)) for i in doc[\"choices\"]])\n    acc_norm = 1.0 if int(np.argmax(results / completion_len)) in gold else 0.0\n\n    return {\n        \"acc\": acc,\n        \"acc_norm\": acc_norm,\n    }\n",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "agieval_lsat_lr": {
+      "task": "agieval_lsat_lr",
+      "dataset_path": "hails/agieval-lsat-lr",
+      "test_split": "test",
+      "doc_to_text": "{{query}}",
+      "doc_to_target": "{{gold}}",
+      "unsafe_code": false,
+      "doc_to_choice": "{{choices}}",
+      "process_results": "def process_results_mcqa(doc, results):\n    results = [result[0] for result in results]\n\n    gold = doc[\"gold\"]\n\n    acc = 1.0 if int(np.argmax(results)) in gold else 0.0\n    completion_len = np.array([float(len(i)) for i in doc[\"choices\"]])\n    acc_norm = 1.0 if int(np.argmax(results / completion_len)) in gold else 0.0\n\n    return {\n        \"acc\": acc,\n        \"acc_norm\": acc_norm,\n    }\n",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "agieval_lsat_rc": {
+      "task": "agieval_lsat_rc",
+      "dataset_path": "hails/agieval-lsat-rc",
+      "test_split": "test",
+      "doc_to_text": "{{query}}",
+      "doc_to_target": "{{gold}}",
+      "unsafe_code": false,
+      "doc_to_choice": "{{choices}}",
+      "process_results": "def process_results_mcqa(doc, results):\n    results = [result[0] for result in results]\n\n    gold = doc[\"gold\"]\n\n    acc = 1.0 if int(np.argmax(results)) in gold else 0.0\n    completion_len = np.array([float(len(i)) for i in doc[\"choices\"]])\n    acc_norm = 1.0 if int(np.argmax(results / completion_len)) in gold else 0.0\n\n    return {\n        \"acc\": acc,\n        \"acc_norm\": acc_norm,\n    }\n",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "agieval_math": {
+      "task": "agieval_math",
+      "dataset_path": "hails/agieval-math",
+      "test_split": "test",
+      "doc_to_text": "{{query}}",
+      "doc_to_target": "{{answer}}",
+      "unsafe_code": false,
+      "process_results": "def process_results(doc: dict, results: List[str]) -> Dict[str, int]:\n    candidate = results[0]\n\n    gold = doc[\"answer\"]\n\n    if not gold:\n        print(doc, candidate, gold)\n    if is_equiv(candidate, gold):\n        retval = 1\n    else:\n        retval = 0\n\n    results = {\n        \"acc\": retval,\n    }\n    return results\n",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "max_gen_toks": 32,
+        "do_sample": false,
+        "temperature": 0.0,
+        "until": [
+          "Q:"
+        ]
+      },
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "agieval_sat_en": {
+      "task": "agieval_sat_en",
+      "dataset_path": "hails/agieval-sat-en",
+      "test_split": "test",
+      "doc_to_text": "{{query}}",
+      "doc_to_target": "{{gold}}",
+      "unsafe_code": false,
+      "doc_to_choice": "{{choices}}",
+      "process_results": "def process_results_mcqa(doc, results):\n    results = [result[0] for result in results]\n\n    gold = doc[\"gold\"]\n\n    acc = 1.0 if int(np.argmax(results)) in gold else 0.0\n    completion_len = np.array([float(len(i)) for i in doc[\"choices\"]])\n    acc_norm = 1.0 if int(np.argmax(results / completion_len)) in gold else 0.0\n\n    return {\n        \"acc\": acc,\n        \"acc_norm\": acc_norm,\n    }\n",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "agieval_sat_en_without_passage": {
+      "task": "agieval_sat_en_without_passage",
+      "dataset_path": "hails/agieval-sat-en-without-passage",
+      "test_split": "test",
+      "doc_to_text": "{{query}}",
+      "doc_to_target": "{{gold}}",
+      "unsafe_code": false,
+      "doc_to_choice": "{{choices}}",
+      "process_results": "def process_results_mcqa(doc, results):\n    results = [result[0] for result in results]\n\n    gold = doc[\"gold\"]\n\n    acc = 1.0 if int(np.argmax(results)) in gold else 0.0\n    completion_len = np.array([float(len(i)) for i in doc[\"choices\"]])\n    acc_norm = 1.0 if int(np.argmax(results / completion_len)) in gold else 0.0\n\n    return {\n        \"acc\": acc,\n        \"acc_norm\": acc_norm,\n    }\n",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "agieval_sat_math": {
+      "task": "agieval_sat_math",
+      "dataset_path": "hails/agieval-sat-math",
+      "test_split": "test",
+      "doc_to_text": "{{query}}",
+      "doc_to_target": "{{gold}}",
+      "unsafe_code": false,
+      "doc_to_choice": "{{choices}}",
+      "process_results": "def process_results_mcqa(doc, results):\n    results = [result[0] for result in results]\n\n    gold = doc[\"gold\"]\n\n    acc = 1.0 if int(np.argmax(results)) in gold else 0.0\n    completion_len = np.array([float(len(i)) for i in doc[\"choices\"]])\n    acc_norm = 1.0 if int(np.argmax(results / completion_len)) in gold else 0.0\n\n    return {\n        \"acc\": acc,\n        \"acc_norm\": acc_norm,\n    }\n",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "acc_norm",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "drop": {
+      "task": "drop",
+      "dataset_path": "EleutherAI/drop",
+      "training_split": "train",
+      "validation_split": "validation",
+      "process_docs": "def process_docs(dataset):\n    def _process(doc):\n        return {\n            \"id\": doc[\"query_id\"],\n            \"passage\": doc[\"passage\"],\n            \"question\": doc[\"question\"],\n            \"answers\": get_answers(doc),\n        }\n\n    return dataset.map(_process)\n",
+      "doc_to_text": "{{passage}} {{question}}",
+      "doc_to_target": "{{ answer|join(',')}}",
+      "unsafe_code": false,
+      "process_results": "def process_results(doc, results):\n    preds, golds = results, doc[\"answers\"]\n    max_em = 0\n    max_f1 = 0\n    for gold_answer in golds:\n        exact_match, f1_score = get_metrics(preds, gold_answer)\n        if gold_answer[0].strip():\n            max_em = max(max_em, exact_match)\n            max_f1 = max(max_f1, f1_score)\n    return {\"em\": max_em, \"f1\": max_f1}\n",
+      "description": "",
+      "target_delimiter": "",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "em",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "f1",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [
+          "."
+        ]
+      },
+      "repeats": 1,
+      "should_decontaminate": true,
+      "doc_to_decontamination_query": "{{passage}} {{question}}",
+      "metadata": {
+        "version": 3.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "gsm8k": {
+      "task": "gsm8k",
+      "tag": [
+        "math_word_problems"
+      ],
+      "dataset_path": "gsm8k",
+      "dataset_name": "main",
+      "training_split": "train",
+      "test_split": "test",
+      "fewshot_split": "train",
+      "doc_to_text": "Question: {{question}}\nAnswer:",
+      "doc_to_target": "{{answer}}",
+      "unsafe_code": false,
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "exact_match",
+          "aggregation": "mean",
+          "higher_is_better": true,
+          "ignore_case": true,
+          "ignore_punctuation": false,
+          "regexes_to_ignore": [
+            ",",
+            "\\$",
+            "(?s).*#### ",
+            "\\.$"
+          ]
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [
+          "Question:",
+          "</s>",
+          "<|im_end|>"
+        ],
+        "do_sample": false,
+        "temperature": 0.0
+      },
+      "repeats": 1,
+      "filter_list": [
+        {
+          "name": "strict-match",
+          "filter": [
+            {
+              "function": "regex",
+              "regex_pattern": "#### (\\-?[0-9\\.\\,]+)"
+            },
+            {
+              "function": "take_first"
+            }
+          ]
+        },
+        {
+          "name": "flexible-extract",
+          "filter": [
+            {
+              "function": "regex",
+              "group_select": -1,
+              "regex_pattern": "(-?[$0-9.,]{2,})|(-?[0-9]+)"
+            },
+            {
+              "function": "take_first"
+            }
+          ]
+        }
+      ],
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 3.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_pro_biology": {
+      "task": "mmlu_pro_biology",
+      "task_alias": "biology",
+      "dataset_path": "TIGER-Lab/MMLU-Pro",
+      "test_split": "test",
+      "fewshot_split": "validation",
+      "process_docs": "functools.partial(<function process_docs at 0x154777185ee0>, subject='biology')",
+      "doc_to_text": "functools.partial(<function format_cot_example at 0x154777186ca0>, including_answer=False)",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "description": "The following are multiple choice questions (with answers) about biology. Think step by step and then finish your answer with \"the answer is (X)\" where X is the correct letter choice.\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n",
+        "doc_to_text": "functools.partial(<function format_cot_example at 0x154777186e80>, including_answer=True)",
+        "doc_to_target": ""
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "exact_match",
+          "aggregation": "mean",
+          "higher_is_better": true,
+          "ignore_case": true,
+          "ignore_punctuation": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [
+          "Question:"
+        ],
+        "max_gen_toks": 2048,
+        "do_sample": false,
+        "temperature": 0.0
+      },
+      "repeats": 1,
+      "filter_list": [
+        {
+          "name": "custom-extract",
+          "filter": [
+            {
+              "function": "regex",
+              "regex_pattern": "answer is \\(?([ABCDEFGHIJ])\\)?"
+            },
+            {
+              "function": "take_first"
+            }
+          ]
+        }
+      ],
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.1,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_pro_business": {
+      "task": "mmlu_pro_business",
+      "task_alias": "business",
+      "dataset_path": "TIGER-Lab/MMLU-Pro",
+      "test_split": "test",
+      "fewshot_split": "validation",
+      "process_docs": "functools.partial(<function process_docs at 0x1547783c2340>, subject='business')",
+      "doc_to_text": "functools.partial(<function format_cot_example at 0x1547783c2480>, including_answer=False)",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "description": "The following are multiple choice questions (with answers) about business. Think step by step and then finish your answer with \"the answer is (X)\" where X is the correct letter choice.\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n",
+        "doc_to_text": "functools.partial(<function format_cot_example at 0x1547783c18a0>, including_answer=True)",
+        "doc_to_target": ""
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "exact_match",
+          "aggregation": "mean",
+          "higher_is_better": true,
+          "ignore_case": true,
+          "ignore_punctuation": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [
+          "Question:"
+        ],
+        "max_gen_toks": 2048,
+        "do_sample": false,
+        "temperature": 0.0
+      },
+      "repeats": 1,
+      "filter_list": [
+        {
+          "name": "custom-extract",
+          "filter": [
+            {
+              "function": "regex",
+              "regex_pattern": "answer is \\(?([ABCDEFGHIJ])\\)?"
+            },
+            {
+              "function": "take_first"
+            }
+          ]
+        }
+      ],
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.1,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_pro_chemistry": {
+      "task": "mmlu_pro_chemistry",
+      "task_alias": "chemistry",
+      "dataset_path": "TIGER-Lab/MMLU-Pro",
+      "test_split": "test",
+      "fewshot_split": "validation",
+      "process_docs": "functools.partial(<function process_docs at 0x154777184860>, subject='chemistry')",
+      "doc_to_text": "functools.partial(<function format_cot_example at 0x154777185440>, including_answer=False)",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "description": "The following are multiple choice questions (with answers) about chemistry. Think step by step and then finish your answer with \"the answer is (X)\" where X is the correct letter choice.\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n",
+        "doc_to_text": "functools.partial(<function format_cot_example at 0x154777185620>, including_answer=True)",
+        "doc_to_target": ""
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "exact_match",
+          "aggregation": "mean",
+          "higher_is_better": true,
+          "ignore_case": true,
+          "ignore_punctuation": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [
+          "Question:"
+        ],
+        "max_gen_toks": 2048,
+        "do_sample": false,
+        "temperature": 0.0
+      },
+      "repeats": 1,
+      "filter_list": [
+        {
+          "name": "custom-extract",
+          "filter": [
+            {
+              "function": "regex",
+              "regex_pattern": "answer is \\(?([ABCDEFGHIJ])\\)?"
+            },
+            {
+              "function": "take_first"
+            }
+          ]
+        }
+      ],
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.1,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_pro_computer_science": {
+      "task": "mmlu_pro_computer_science",
+      "task_alias": "computer_science",
+      "dataset_path": "TIGER-Lab/MMLU-Pro",
+      "test_split": "test",
+      "fewshot_split": "validation",
+      "process_docs": "functools.partial(<function process_docs at 0x1547783a4d60>, subject='computer science')",
+      "doc_to_text": "functools.partial(<function format_cot_example at 0x1547783c3380>, including_answer=False)",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "description": "The following are multiple choice questions (with answers) about computer science. Think step by step and then finish your answer with \"the answer is (X)\" where X is the correct letter choice.\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n",
+        "doc_to_text": "functools.partial(<function format_cot_example at 0x1547783c34c0>, including_answer=True)",
+        "doc_to_target": ""
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "exact_match",
+          "aggregation": "mean",
+          "higher_is_better": true,
+          "ignore_case": true,
+          "ignore_punctuation": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [
+          "Question:"
+        ],
+        "max_gen_toks": 2048,
+        "do_sample": false,
+        "temperature": 0.0
+      },
+      "repeats": 1,
+      "filter_list": [
+        {
+          "name": "custom-extract",
+          "filter": [
+            {
+              "function": "regex",
+              "regex_pattern": "answer is \\(?([ABCDEFGHIJ])\\)?"
+            },
+            {
+              "function": "take_first"
+            }
+          ]
+        }
+      ],
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.1,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_pro_economics": {
+      "task": "mmlu_pro_economics",
+      "task_alias": "economics",
+      "dataset_path": "TIGER-Lab/MMLU-Pro",
+      "test_split": "test",
+      "fewshot_split": "validation",
+      "process_docs": "functools.partial(<function process_docs at 0x1547783c14e0>, subject='economics')",
+      "doc_to_text": "functools.partial(<function format_cot_example at 0x1547783c3d80>, including_answer=False)",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "description": "The following are multiple choice questions (with answers) about economics. Think step by step and then finish your answer with \"the answer is (X)\" where X is the correct letter choice.\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n",
+        "doc_to_text": "functools.partial(<function format_cot_example at 0x154770f54400>, including_answer=True)",
+        "doc_to_target": ""
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "exact_match",
+          "aggregation": "mean",
+          "higher_is_better": true,
+          "ignore_case": true,
+          "ignore_punctuation": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [
+          "Question:"
+        ],
+        "max_gen_toks": 2048,
+        "do_sample": false,
+        "temperature": 0.0
+      },
+      "repeats": 1,
+      "filter_list": [
+        {
+          "name": "custom-extract",
+          "filter": [
+            {
+              "function": "regex",
+              "regex_pattern": "answer is \\(?([ABCDEFGHIJ])\\)?"
+            },
+            {
+              "function": "take_first"
+            }
+          ]
+        }
+      ],
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.1,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_pro_engineering": {
+      "task": "mmlu_pro_engineering",
+      "task_alias": "engineering",
+      "dataset_path": "TIGER-Lab/MMLU-Pro",
+      "test_split": "test",
+      "fewshot_split": "validation",
+      "process_docs": "functools.partial(<function process_docs at 0x154778381f80>, subject='engineering')",
+      "doc_to_text": "functools.partial(<function format_cot_example at 0x1547783809a0>, including_answer=False)",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "description": "The following are multiple choice questions (with answers) about engineering. Think step by step and then finish your answer with \"the answer is (X)\" where X is the correct letter choice.\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n",
+        "doc_to_text": "functools.partial(<function format_cot_example at 0x154778381800>, including_answer=True)",
+        "doc_to_target": ""
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "exact_match",
+          "aggregation": "mean",
+          "higher_is_better": true,
+          "ignore_case": true,
+          "ignore_punctuation": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [
+          "Question:"
+        ],
+        "max_gen_toks": 2048,
+        "do_sample": false,
+        "temperature": 0.0
+      },
+      "repeats": 1,
+      "filter_list": [
+        {
+          "name": "custom-extract",
+          "filter": [
+            {
+              "function": "regex",
+              "regex_pattern": "answer is \\(?([ABCDEFGHIJ])\\)?"
+            },
+            {
+              "function": "take_first"
+            }
+          ]
+        }
+      ],
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.1,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_pro_health": {
+      "task": "mmlu_pro_health",
+      "task_alias": "health",
+      "dataset_path": "TIGER-Lab/MMLU-Pro",
+      "test_split": "test",
+      "fewshot_split": "validation",
+      "process_docs": "functools.partial(<function process_docs at 0x1547783c1940>, subject='health')",
+      "doc_to_text": "functools.partial(<function format_cot_example at 0x1547783c2700>, including_answer=False)",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "description": "The following are multiple choice questions (with answers) about health. Think step by step and then finish your answer with \"the answer is (X)\" where X is the correct letter choice.\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n",
+        "doc_to_text": "functools.partial(<function format_cot_example at 0x1547783a72e0>, including_answer=True)",
+        "doc_to_target": ""
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "exact_match",
+          "aggregation": "mean",
+          "higher_is_better": true,
+          "ignore_case": true,
+          "ignore_punctuation": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [
+          "Question:"
+        ],
+        "max_gen_toks": 2048,
+        "do_sample": false,
+        "temperature": 0.0
+      },
+      "repeats": 1,
+      "filter_list": [
+        {
+          "name": "custom-extract",
+          "filter": [
+            {
+              "function": "regex",
+              "regex_pattern": "answer is \\(?([ABCDEFGHIJ])\\)?"
+            },
+            {
+              "function": "take_first"
+            }
+          ]
+        }
+      ],
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.1,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_pro_history": {
+      "task": "mmlu_pro_history",
+      "task_alias": "history",
+      "dataset_path": "TIGER-Lab/MMLU-Pro",
+      "test_split": "test",
+      "fewshot_split": "validation",
+      "process_docs": "functools.partial(<function process_docs at 0x1547783a5800>, subject='history')",
+      "doc_to_text": "functools.partial(<function format_cot_example at 0x1547783a5120>, including_answer=False)",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "description": "The following are multiple choice questions (with answers) about history. Think step by step and then finish your answer with \"the answer is (X)\" where X is the correct letter choice.\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n",
+        "doc_to_text": "functools.partial(<function format_cot_example at 0x1547783a5580>, including_answer=True)",
+        "doc_to_target": ""
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "exact_match",
+          "aggregation": "mean",
+          "higher_is_better": true,
+          "ignore_case": true,
+          "ignore_punctuation": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [
+          "Question:"
+        ],
+        "max_gen_toks": 2048,
+        "do_sample": false,
+        "temperature": 0.0
+      },
+      "repeats": 1,
+      "filter_list": [
+        {
+          "name": "custom-extract",
+          "filter": [
+            {
+              "function": "regex",
+              "regex_pattern": "answer is \\(?([ABCDEFGHIJ])\\)?"
+            },
+            {
+              "function": "take_first"
+            }
+          ]
+        }
+      ],
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.1,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_pro_law": {
+      "task": "mmlu_pro_law",
+      "task_alias": "law",
+      "dataset_path": "TIGER-Lab/MMLU-Pro",
+      "test_split": "test",
+      "fewshot_split": "validation",
+      "process_docs": "functools.partial(<function process_docs at 0x1547783c0360>, subject='law')",
+      "doc_to_text": "functools.partial(<function format_cot_example at 0x15477848fa60>, including_answer=False)",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "description": "The following are multiple choice questions (with answers) about law. Think step by step and then finish your answer with \"the answer is (X)\" where X is the correct letter choice.\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n",
+        "doc_to_text": "functools.partial(<function format_cot_example at 0x15477848fc40>, including_answer=True)",
+        "doc_to_target": ""
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "exact_match",
+          "aggregation": "mean",
+          "higher_is_better": true,
+          "ignore_case": true,
+          "ignore_punctuation": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [
+          "Question:"
+        ],
+        "max_gen_toks": 2048,
+        "do_sample": false,
+        "temperature": 0.0
+      },
+      "repeats": 1,
+      "filter_list": [
+        {
+          "name": "custom-extract",
+          "filter": [
+            {
+              "function": "regex",
+              "regex_pattern": "answer is \\(?([ABCDEFGHIJ])\\)?"
+            },
+            {
+              "function": "take_first"
+            }
+          ]
+        }
+      ],
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.1,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_pro_math": {
+      "task": "mmlu_pro_math",
+      "task_alias": "math",
+      "dataset_path": "TIGER-Lab/MMLU-Pro",
+      "test_split": "test",
+      "fewshot_split": "validation",
+      "process_docs": "functools.partial(<function process_docs at 0x154778380680>, subject='math')",
+      "doc_to_text": "functools.partial(<function format_cot_example at 0x154778383100>, including_answer=False)",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "description": "The following are multiple choice questions (with answers) about math. Think step by step and then finish your answer with \"the answer is (X)\" where X is the correct letter choice.\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n",
+        "doc_to_text": "functools.partial(<function format_cot_example at 0x154778382b60>, including_answer=True)",
+        "doc_to_target": ""
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "exact_match",
+          "aggregation": "mean",
+          "higher_is_better": true,
+          "ignore_case": true,
+          "ignore_punctuation": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [
+          "Question:"
+        ],
+        "max_gen_toks": 2048,
+        "do_sample": false,
+        "temperature": 0.0
+      },
+      "repeats": 1,
+      "filter_list": [
+        {
+          "name": "custom-extract",
+          "filter": [
+            {
+              "function": "regex",
+              "regex_pattern": "answer is \\(?([ABCDEFGHIJ])\\)?"
+            },
+            {
+              "function": "take_first"
+            }
+          ]
+        }
+      ],
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.1,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_pro_other": {
+      "task": "mmlu_pro_other",
+      "task_alias": "other",
+      "dataset_path": "TIGER-Lab/MMLU-Pro",
+      "test_split": "test",
+      "fewshot_split": "validation",
+      "process_docs": "functools.partial(<function process_docs at 0x1547783a60c0>, subject='other')",
+      "doc_to_text": "functools.partial(<function format_cot_example at 0x1547783a7f60>, including_answer=False)",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "description": "The following are multiple choice questions (with answers) about other. Think step by step and then finish your answer with \"the answer is (X)\" where X is the correct letter choice.\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n",
+        "doc_to_text": "functools.partial(<function format_cot_example at 0x1547783a7ce0>, including_answer=True)",
+        "doc_to_target": ""
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "exact_match",
+          "aggregation": "mean",
+          "higher_is_better": true,
+          "ignore_case": true,
+          "ignore_punctuation": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [
+          "Question:"
+        ],
+        "max_gen_toks": 2048,
+        "do_sample": false,
+        "temperature": 0.0
+      },
+      "repeats": 1,
+      "filter_list": [
+        {
+          "name": "custom-extract",
+          "filter": [
+            {
+              "function": "regex",
+              "regex_pattern": "answer is \\(?([ABCDEFGHIJ])\\)?"
+            },
+            {
+              "function": "take_first"
+            }
+          ]
+        }
+      ],
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.1,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_pro_philosophy": {
+      "task": "mmlu_pro_philosophy",
+      "task_alias": "philosophy",
+      "dataset_path": "TIGER-Lab/MMLU-Pro",
+      "test_split": "test",
+      "fewshot_split": "validation",
+      "process_docs": "functools.partial(<function process_docs at 0x154778383600>, subject='philosophy')",
+      "doc_to_text": "functools.partial(<function format_cot_example at 0x1547783a42c0>, including_answer=False)",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "description": "The following are multiple choice questions (with answers) about philosophy. Think step by step and then finish your answer with \"the answer is (X)\" where X is the correct letter choice.\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n",
+        "doc_to_text": "functools.partial(<function format_cot_example at 0x1547783a44a0>, including_answer=True)",
+        "doc_to_target": ""
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "exact_match",
+          "aggregation": "mean",
+          "higher_is_better": true,
+          "ignore_case": true,
+          "ignore_punctuation": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [
+          "Question:"
+        ],
+        "max_gen_toks": 2048,
+        "do_sample": false,
+        "temperature": 0.0
+      },
+      "repeats": 1,
+      "filter_list": [
+        {
+          "name": "custom-extract",
+          "filter": [
+            {
+              "function": "regex",
+              "regex_pattern": "answer is \\(?([ABCDEFGHIJ])\\)?"
+            },
+            {
+              "function": "take_first"
+            }
+          ]
+        }
+      ],
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.1,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_pro_physics": {
+      "task": "mmlu_pro_physics",
+      "task_alias": "physics",
+      "dataset_path": "TIGER-Lab/MMLU-Pro",
+      "test_split": "test",
+      "fewshot_split": "validation",
+      "process_docs": "functools.partial(<function process_docs at 0x15477848e660>, subject='physics')",
+      "doc_to_text": "functools.partial(<function format_cot_example at 0x15477848e8e0>, including_answer=False)",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "description": "The following are multiple choice questions (with answers) about physics. Think step by step and then finish your answer with \"the answer is (X)\" where X is the correct letter choice.\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n",
+        "doc_to_text": "functools.partial(<function format_cot_example at 0x154778381080>, including_answer=True)",
+        "doc_to_target": ""
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "exact_match",
+          "aggregation": "mean",
+          "higher_is_better": true,
+          "ignore_case": true,
+          "ignore_punctuation": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [
+          "Question:"
+        ],
+        "max_gen_toks": 2048,
+        "do_sample": false,
+        "temperature": 0.0
+      },
+      "repeats": 1,
+      "filter_list": [
+        {
+          "name": "custom-extract",
+          "filter": [
+            {
+              "function": "regex",
+              "regex_pattern": "answer is \\(?([ABCDEFGHIJ])\\)?"
+            },
+            {
+              "function": "take_first"
+            }
+          ]
+        }
+      ],
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.1,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_pro_psychology": {
+      "task": "mmlu_pro_psychology",
+      "task_alias": "psychology",
+      "dataset_path": "TIGER-Lab/MMLU-Pro",
+      "test_split": "test",
+      "fewshot_split": "validation",
+      "process_docs": "functools.partial(<function process_docs at 0x15477848ee80>, subject='psychology')",
+      "doc_to_text": "functools.partial(<function format_cot_example at 0x15477848f060>, including_answer=False)",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "description": "The following are multiple choice questions (with answers) about psychology. Think step by step and then finish your answer with \"the answer is (X)\" where X is the correct letter choice.\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n",
+        "doc_to_text": "functools.partial(<function format_cot_example at 0x15477848f240>, including_answer=True)",
+        "doc_to_target": ""
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "exact_match",
+          "aggregation": "mean",
+          "higher_is_better": true,
+          "ignore_case": true,
+          "ignore_punctuation": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [
+          "Question:"
+        ],
+        "max_gen_toks": 2048,
+        "do_sample": false,
+        "temperature": 0.0
+      },
+      "repeats": 1,
+      "filter_list": [
+        {
+          "name": "custom-extract",
+          "filter": [
+            {
+              "function": "regex",
+              "regex_pattern": "answer is \\(?([ABCDEFGHIJ])\\)?"
+            },
+            {
+              "function": "take_first"
+            }
+          ]
+        }
+      ],
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 2.1,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "nq_open": {
+      "task": "nq_open",
+      "dataset_path": "nq_open",
+      "training_split": "train",
+      "validation_split": "validation",
+      "doc_to_text": "Q: {{question}}?\nA:",
+      "doc_to_target": "{{answer}}",
+      "unsafe_code": false,
+      "description": "Answer these questions:\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "exact_match",
+          "aggregation": "mean",
+          "higher_is_better": true,
+          "ignore_case": true,
+          "ignore_punctuation": true,
+          "regexes_to_ignore": [
+            "\\b(?:The |the |An |A |The |a |an )"
+          ]
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [
+          "\n",
+          ".",
+          ","
+        ],
+        "do_sample": false,
+        "temperature": 0.0
+      },
+      "repeats": 1,
+      "filter_list": [
+        {
+          "name": "remove_whitespace",
+          "filter": [
+            {
+              "function": "remove_whitespace"
+            },
+            {
+              "function": "take_first"
+            }
+          ]
+        }
+      ],
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 4.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    },
+    "triviaqa": {
+      "task": "triviaqa",
+      "dataset_path": "trivia_qa",
+      "dataset_name": "rc.nocontext",
+      "training_split": "train",
+      "validation_split": "validation",
+      "doc_to_text": "Question: {{question}}?\nAnswer:",
+      "doc_to_target": "{{answer.aliases}}",
+      "unsafe_code": false,
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "exact_match",
+          "aggregation": "mean",
+          "higher_is_better": true,
+          "ignore_case": true,
+          "ignore_punctuation": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [
+          "\n",
+          ".",
+          ","
+        ],
+        "do_sample": false,
+        "temperature": 0.0
+      },
+      "repeats": 1,
+      "filter_list": [
+        {
+          "name": "remove_whitespace",
+          "filter": [
+            {
+              "function": "remove_whitespace"
+            },
+            {
+              "function": "take_first"
+            }
+          ]
+        }
+      ],
+      "should_decontaminate": true,
+      "doc_to_decontamination_query": "question",
+      "metadata": {
+        "version": 3.0,
+        "pretrained": "allenai/OLMo-2-1124-7B",
+        "revision": "stage1-step9000-tokens38B",
+        "dtype": "bfloat16",
+        "tensor_parallel_size": 4,
+        "gpu_memory_utilization": 0.7,
+        "trust_remote_code": true
+      }
+    }
+  },
+  "versions": {
+    "agieval": 0.0,
+    "agieval_aqua_rat": 1.0,
+    "agieval_gaokao_biology": 1.0,
+    "agieval_gaokao_chemistry": 1.0,
+    "agieval_gaokao_chinese": 1.0,
+    "agieval_gaokao_english": 1.0,
+    "agieval_gaokao_geography": 1.0,
+    "agieval_gaokao_history": 1.0,
+    "agieval_gaokao_mathcloze": 1.0,
+    "agieval_gaokao_mathqa": 1.0,
+    "agieval_gaokao_physics": 1.0,
+    "agieval_jec_qa_ca": 1.0,
+    "agieval_jec_qa_kd": 1.0,
+    "agieval_logiqa_en": 1.0,
+    "agieval_logiqa_zh": 1.0,
+    "agieval_lsat_ar": 1.0,
+    "agieval_lsat_lr": 1.0,
+    "agieval_lsat_rc": 1.0,
+    "agieval_math": 1.0,
+    "agieval_sat_en": 1.0,
+    "agieval_sat_en_without_passage": 1.0,
+    "agieval_sat_math": 1.0,
+    "drop": 3.0,
+    "gsm8k": 3.0,
+    "mmlu_pro": 2.0,
+    "mmlu_pro_biology": 2.1,
+    "mmlu_pro_business": 2.1,
+    "mmlu_pro_chemistry": 2.1,
+    "mmlu_pro_computer_science": 2.1,
+    "mmlu_pro_economics": 2.1,
+    "mmlu_pro_engineering": 2.1,
+    "mmlu_pro_health": 2.1,
+    "mmlu_pro_history": 2.1,
+    "mmlu_pro_law": 2.1,
+    "mmlu_pro_math": 2.1,
+    "mmlu_pro_other": 2.1,
+    "mmlu_pro_philosophy": 2.1,
+    "mmlu_pro_physics": 2.1,
+    "mmlu_pro_psychology": 2.1,
+    "nq_open": 4.0,
+    "triviaqa": 3.0
+  },
+  "n-shot": {
+    "agieval_aqua_rat": 0,
+    "agieval_gaokao_biology": 0,
+    "agieval_gaokao_chemistry": 0,
+    "agieval_gaokao_chinese": 0,
+    "agieval_gaokao_english": 0,
+    "agieval_gaokao_geography": 0,
+    "agieval_gaokao_history": 0,
+    "agieval_gaokao_mathcloze": 0,
+    "agieval_gaokao_mathqa": 0,
+    "agieval_gaokao_physics": 0,
+    "agieval_jec_qa_ca": 0,
+    "agieval_jec_qa_kd": 0,
+    "agieval_logiqa_en": 0,
+    "agieval_logiqa_zh": 0,
+    "agieval_lsat_ar": 0,
+    "agieval_lsat_lr": 0,
+    "agieval_lsat_rc": 0,
+    "agieval_math": 0,
+    "agieval_sat_en": 0,
+    "agieval_sat_en_without_passage": 0,
+    "agieval_sat_math": 0,
+    "drop": 0,
+    "gsm8k": 5,
+    "mmlu_pro_biology": 5,
+    "mmlu_pro_business": 5,
+    "mmlu_pro_chemistry": 5,
+    "mmlu_pro_computer_science": 5,
+    "mmlu_pro_economics": 5,
+    "mmlu_pro_engineering": 5,
+    "mmlu_pro_health": 5,
+    "mmlu_pro_history": 5,
+    "mmlu_pro_law": 5,
+    "mmlu_pro_math": 5,
+    "mmlu_pro_other": 5,
+    "mmlu_pro_philosophy": 5,
+    "mmlu_pro_physics": 5,
+    "mmlu_pro_psychology": 5,
+    "nq_open": 0,
+    "triviaqa": 0
+  },
+  "higher_is_better": {
+    "agieval": {
+      "exact_match": true,
+      "acc": true,
+      "acc_norm": true
+    },
+    "agieval_aqua_rat": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "agieval_gaokao_biology": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "agieval_gaokao_chemistry": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "agieval_gaokao_chinese": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "agieval_gaokao_english": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "agieval_gaokao_geography": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "agieval_gaokao_history": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "agieval_gaokao_mathcloze": {
+      "acc": true
+    },
+    "agieval_gaokao_mathqa": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "agieval_gaokao_physics": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "agieval_jec_qa_ca": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "agieval_jec_qa_kd": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "agieval_logiqa_en": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "agieval_logiqa_zh": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "agieval_lsat_ar": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "agieval_lsat_lr": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "agieval_lsat_rc": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "agieval_math": {
+      "acc": true
+    },
+    "agieval_sat_en": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "agieval_sat_en_without_passage": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "agieval_sat_math": {
+      "acc": true,
+      "acc_norm": true
+    },
+    "drop": {
+      "em": true,
+      "f1": true
+    },
+    "gsm8k": {
+      "exact_match": true
+    },
+    "mmlu_pro": {
+      "exact_match": true,
+      "acc": true,
+      "acc_norm": true
+    },
+    "mmlu_pro_biology": {
+      "exact_match": true
+    },
+    "mmlu_pro_business": {
+      "exact_match": true
+    },
+    "mmlu_pro_chemistry": {
+      "exact_match": true
+    },
+    "mmlu_pro_computer_science": {
+      "exact_match": true
+    },
+    "mmlu_pro_economics": {
+      "exact_match": true
+    },
+    "mmlu_pro_engineering": {
+      "exact_match": true
+    },
+    "mmlu_pro_health": {
+      "exact_match": true
+    },
+    "mmlu_pro_history": {
+      "exact_match": true
+    },
+    "mmlu_pro_law": {
+      "exact_match": true
+    },
+    "mmlu_pro_math": {
+      "exact_match": true
+    },
+    "mmlu_pro_other": {
+      "exact_match": true
+    },
+    "mmlu_pro_philosophy": {
+      "exact_match": true
+    },
+    "mmlu_pro_physics": {
+      "exact_match": true
+    },
+    "mmlu_pro_psychology": {
+      "exact_match": true
+    },
+    "nq_open": {
+      "exact_match": true
+    },
+    "triviaqa": {
+      "exact_match": true
+    }
+  },
+  "n-samples": {
+    "triviaqa": {
+      "original": 17944,
+      "effective": 17944
+    },
+    "mmlu_pro_biology": {
+      "original": 717,
+      "effective": 717
+    },
+    "mmlu_pro_business": {
+      "original": 789,
+      "effective": 789
+    },
+    "mmlu_pro_chemistry": {
+      "original": 1132,
+      "effective": 1132
+    },
+    "mmlu_pro_computer_science": {
+      "original": 410,
+      "effective": 410
+    },
+    "mmlu_pro_economics": {
+      "original": 844,
+      "effective": 844
+    },
+    "mmlu_pro_engineering": {
+      "original": 969,
+      "effective": 969
+    },
+    "mmlu_pro_health": {
+      "original": 818,
+      "effective": 818
+    },
+    "mmlu_pro_history": {
+      "original": 381,
+      "effective": 381
+    },
+    "mmlu_pro_law": {
+      "original": 1101,
+      "effective": 1101
+    },
+    "mmlu_pro_math": {
+      "original": 1351,
+      "effective": 1351
+    },
+    "mmlu_pro_other": {
+      "original": 924,
+      "effective": 924
+    },
+    "mmlu_pro_philosophy": {
+      "original": 499,
+      "effective": 499
+    },
+    "mmlu_pro_physics": {
+      "original": 1299,
+      "effective": 1299
+    },
+    "mmlu_pro_psychology": {
+      "original": 798,
+      "effective": 798
+    },
+    "gsm8k": {
+      "original": 1319,
+      "effective": 1319
+    },
+    "agieval_gaokao_biology": {
+      "original": 210,
+      "effective": 210
+    },
+    "agieval_gaokao_chemistry": {
+      "original": 207,
+      "effective": 207
+    },
+    "agieval_gaokao_chinese": {
+      "original": 246,
+      "effective": 246
+    },
+    "agieval_gaokao_geography": {
+      "original": 199,
+      "effective": 199
+    },
+    "agieval_gaokao_history": {
+      "original": 235,
+      "effective": 235
+    },
+    "agieval_gaokao_mathcloze": {
+      "original": 118,
+      "effective": 118
+    },
+    "agieval_gaokao_mathqa": {
+      "original": 351,
+      "effective": 351
+    },
+    "agieval_gaokao_physics": {
+      "original": 200,
+      "effective": 200
+    },
+    "agieval_jec_qa_ca": {
+      "original": 999,
+      "effective": 999
+    },
+    "agieval_jec_qa_kd": {
+      "original": 1000,
+      "effective": 1000
+    },
+    "agieval_logiqa_zh": {
+      "original": 651,
+      "effective": 651
+    },
+    "agieval_aqua_rat": {
+      "original": 254,
+      "effective": 254
+    },
+    "agieval_gaokao_english": {
+      "original": 306,
+      "effective": 306
+    },
+    "agieval_logiqa_en": {
+      "original": 651,
+      "effective": 651
+    },
+    "agieval_lsat_ar": {
+      "original": 230,
+      "effective": 230
+    },
+    "agieval_lsat_lr": {
+      "original": 510,
+      "effective": 510
+    },
+    "agieval_lsat_rc": {
+      "original": 269,
+      "effective": 269
+    },
+    "agieval_math": {
+      "original": 1000,
+      "effective": 1000
+    },
+    "agieval_sat_en_without_passage": {
+      "original": 206,
+      "effective": 206
+    },
+    "agieval_sat_en": {
+      "original": 206,
+      "effective": 206
+    },
+    "agieval_sat_math": {
+      "original": 220,
+      "effective": 220
+    },
+    "nq_open": {
+      "original": 3610,
+      "effective": 3610
+    },
+    "drop": {
+      "original": 9536,
+      "effective": 9536
+    }
+  },
+  "config": {
+    "model": "vllm",
+    "model_args": "pretrained=allenai/OLMo-2-1124-7B,revision=stage1-step9000-tokens38B,dtype=bfloat16,tensor_parallel_size=4,gpu_memory_utilization=0.7,trust_remote_code=True",
+    "batch_size": "auto",
+    "batch_sizes": [],
+    "device": null,
+    "use_cache": null,
+    "limit": null,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": null,
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234
+  },
+  "git_hash": "f42f9c70",
+  "date": 1769606761.8836176,
+  "pretty_env_info": "PyTorch version: 2.8.0+cu128\nIs debug build: False\nCUDA used to build PyTorch: 12.8\nROCM used to build PyTorch: N/A\n\nOS: AlmaLinux 9.5 (Teal Serval) (x86_64)\nGCC version: (GCC) 11.5.0 20240719 (Red Hat 11.5.0-5)\nClang version: Could not collect\nCMake version: version 3.26.5\nLibc version: glibc-2.34\n\nPython version: 3.13.7 | packaged by Anaconda, Inc. | (main, Sep  9 2025, 19:59:03) [GCC 11.2.0] (64-bit runtime)\nPython platform: Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34\nIs CUDA available: True\nCUDA runtime version: Could not collect\nCUDA_MODULE_LOADING set to: LAZY\nGPU models and configuration: \nGPU 0: NVIDIA L40S\nGPU 1: NVIDIA L40S\nGPU 2: NVIDIA L40S\nGPU 3: NVIDIA L40S\n\nNvidia driver version: 575.51.03\ncuDNN version: Probably one of the following:\n/usr/lib64/libcudnn.so.8.9.7\n/usr/lib64/libcudnn.so.9.10.0\n/usr/lib64/libcudnn_adv.so.9.10.0\n/usr/lib64/libcudnn_adv_infer.so.8.9.7\n/usr/lib64/libcudnn_adv_train.so.8.9.7\n/usr/lib64/libcudnn_cnn.so.9.10.0\n/usr/lib64/libcudnn_cnn_infer.so.8.9.7\n/usr/lib64/libcudnn_cnn_train.so.8.9.7\n/usr/lib64/libcudnn_engines_precompiled.so.9.10.0\n/usr/lib64/libcudnn_engines_runtime_compiled.so.9.10.0\n/usr/lib64/libcudnn_graph.so.9.10.0\n/usr/lib64/libcudnn_heuristic.so.9.10.0\n/usr/lib64/libcudnn_ops.so.9.10.0\n/usr/lib64/libcudnn_ops_infer.so.8.9.7\n/usr/lib64/libcudnn_ops_train.so.8.9.7\nHIP runtime version: N/A\nMIOpen runtime version: N/A\nIs XNNPACK available: True\n\nCPU:\nArchitecture:                         x86_64\nCPU op-mode(s):                       32-bit, 64-bit\nAddress sizes:                        52 bits physical, 57 bits virtual\nByte Order:                           Little Endian\nCPU(s):                               64\nOn-line CPU(s) list:                  0-63\nVendor ID:                            AuthenticAMD\nModel name:                           AMD EPYC 9354 32-Core Processor\nCPU family:                           25\nModel:                                17\nThread(s) per core:                   1\nCore(s) per socket:                   32\nSocket(s):                            2\nStepping:                             1\nFrequency boost:                      enabled\nCPU(s) scaling MHz:                   91%\nCPU max MHz:                          3799.0720\nCPU min MHz:                          1500.0000\nBogoMIPS:                             6500.15\nFlags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good amd_lbr_v2 nopl nonstop_tsc cpuid extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 pcid sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpb cat_l3 cdp_l3 hw_pstate ssbd mba perfmon_v2 ibrs ibpb stibp ibrs_enhanced vmmcall fsgsbase bmi1 avx2 smep bmi2 erms invpcid cqm rdt_a avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local avx512_bf16 clzero irperf xsaveerptr rdpru wbnoinvd amd_ppin cppc arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold avic v_vmsave_vmload vgif x2avic v_spec_ctrl vnmi avx512vbmi umip pku ospke avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq la57 rdpid overflow_recov succor smca fsrm flush_l1d debug_swap\nVirtualization:                       AMD-V\nL1d cache:                            2 MiB (64 instances)\nL1i cache:                            2 MiB (64 instances)\nL2 cache:                             64 MiB (64 instances)\nL3 cache:                             512 MiB (16 instances)\nNUMA node(s):                         2\nNUMA node0 CPU(s):                    0-31\nNUMA node1 CPU(s):                    32-63\nVulnerability Gather data sampling:   Not affected\nVulnerability Itlb multihit:          Not affected\nVulnerability L1tf:                   Not affected\nVulnerability Mds:                    Not affected\nVulnerability Meltdown:               Not affected\nVulnerability Mmio stale data:        Not affected\nVulnerability Reg file data sampling: Not affected\nVulnerability Retbleed:               Not affected\nVulnerability Spec rstack overflow:   Mitigation; Safe RET\nVulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:             Mitigation; Enhanced / Automatic IBRS; IBPB conditional; STIBP disabled; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected\nVulnerability Srbds:                  Not affected\nVulnerability Tsx async abort:        Not affected\n\nVersions of relevant libraries:\n[pip3] asyncclick==8.2.2.2\n[pip3] numpy==2.2.6\n[pip3] nvidia-cublas-cu12==12.8.4.1\n[pip3] nvidia-cuda-cupti-cu12==12.8.90\n[pip3] nvidia-cuda-nvrtc-cu12==12.8.93\n[pip3] nvidia-cuda-runtime-cu12==12.8.90\n[pip3] nvidia-cudnn-cu12==9.10.2.21\n[pip3] nvidia-cufft-cu12==11.3.3.83\n[pip3] nvidia-curand-cu12==10.3.9.90\n[pip3] nvidia-cusolver-cu12==11.7.3.90\n[pip3] nvidia-cusparse-cu12==12.5.8.93\n[pip3] nvidia-cusparselt-cu12==0.7.1\n[pip3] nvidia-nccl-cu12==2.27.3\n[pip3] nvidia-nvjitlink-cu12==12.8.93\n[pip3] nvidia-nvtx-cu12==12.8.90\n[pip3] torch==2.8.0\n[pip3] torchaudio==2.8.0\n[pip3] torchvision==0.23.0\n[pip3] triton==3.4.0\n[conda] asyncclick                           8.2.2.2          pypi_0              pypi\n[conda] numpy                                2.2.6            pypi_0              pypi\n[conda] nvidia-cublas-cu12                   12.8.4.1         pypi_0              pypi\n[conda] nvidia-cuda-cupti-cu12               12.8.90          pypi_0              pypi\n[conda] nvidia-cuda-nvrtc-cu12               12.8.93          pypi_0              pypi\n[conda] nvidia-cuda-runtime-cu12             12.8.90          pypi_0              pypi\n[conda] nvidia-cudnn-cu12                    9.10.2.21        pypi_0              pypi\n[conda] nvidia-cufft-cu12                    11.3.3.83        pypi_0              pypi\n[conda] nvidia-curand-cu12                   10.3.9.90        pypi_0              pypi\n[conda] nvidia-cusolver-cu12                 11.7.3.90        pypi_0              pypi\n[conda] nvidia-cusparse-cu12                 12.5.8.93        pypi_0              pypi\n[conda] nvidia-cusparselt-cu12               0.7.1            pypi_0              pypi\n[conda] nvidia-nccl-cu12                     2.27.3           pypi_0              pypi\n[conda] nvidia-nvjitlink-cu12                12.8.93          pypi_0              pypi\n[conda] nvidia-nvtx-cu12                     12.8.90          pypi_0              pypi\n[conda] torch                                2.8.0            pypi_0              pypi\n[conda] torchaudio                           2.8.0            pypi_0              pypi\n[conda] torchvision                          0.23.0           pypi_0              pypi\n[conda] triton                               3.4.0            pypi_0              pypi",
+  "transformers_version": "4.56.1",
+  "lm_eval_version": "0.4.9.2",
+  "upper_git_hash": null,
+  "tokenizer_pad_token": [
+    "<|pad|>",
+    "100277"
+  ],
+  "tokenizer_eos_token": [
+    "<|endoftext|>",
+    "100257"
+  ],
+  "tokenizer_bos_token": [
+    "<|endoftext|>",
+    "100257"
+  ],
+  "eot_token_id": 100257,
+  "max_length": 4096,
+  "task_hashes": {},
+  "model_source": "vllm",
+  "model_name": "allenai/OLMo-2-1124-7B",
+  "model_name_sanitized": "allenai__OLMo-2-1124-7B",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": false,
+  "chat_template": null,
+  "chat_template_sha": null,
+  "start_time": 2029270.226161056,
+  "end_time": 2035121.239646668,
+  "total_evaluation_time_seconds": "5851.013485612115"
+}

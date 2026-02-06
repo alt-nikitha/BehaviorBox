@@ -1,0 +1,11 @@
+stage1-step850-tokens4B
+stage1-step9000-tokens38B
+stage1-step47000-tokens198B
+stage1-step94000-tokens395B
+stage1-step235000-tokens986B
+stage1-step470000-tokens1972B
+stage1-step705000-tokens2957B
+stage1-step847000-tokens3553B
+stage2-ingredient1-step1000-tokens5B
+stage2-ingredient1-step7000-tokens30B
+main

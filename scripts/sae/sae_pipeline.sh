@@ -3,7 +3,7 @@
 #SBATCH --output=./slurm-out/sae/train_and_eval_%j.out
 #SBATCH --nodes=1
 #SBATCH --gres=gpu:L40S:1
-#SBATCH --mem=200GB
+#SBATCH --mem=400GB
 #SBATCH --cpus-per-task=20
 #SBATCH --time=48:00:00
 #SBATCH --partition=general

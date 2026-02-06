@@ -7,21 +7,24 @@ import glob
 import os
 
 # tasks = ARC/C	HSwag	WinoG	MMLU	DROP	NQ	AGIEval	GSM8k	MMLUPro	TriviaQA
-tasks = ["arc_challenge", "blimp","hellaswag", "winogrande", "mmlu", "drop", "nq_open", "agieval", "gsm8k", "mmlu_pro", "triviaqa"]
+# tasks = ["arc_challenge", "blimp","hellaswag", "winogrande", "mmlu", "drop", "nq_open", "agieval", "gsm8k", "mmlu_pro", "triviaqa"]
+# tasks ="arc_challenge,blimp,hellaswag,winogrande,mmlu"
+tasks_type = "slow"
+tasks = ["drop"]
 CHECKPOINTS = {
     "olmo2_7b": {
         "name": "allenai/OLMo-2-1124-7B",
         "revisions": [
-            "stage1-step850-tokens4B",
-            "stage1-step9000-tokens38B",
-            "stage1-step47000-tokens198B",
-            "stage1-step94000-tokens395B",
-            "stage1-step235000-tokens986B",
-            "stage1-step470000-tokens1972B",
-            "stage1-step705000-tokens2957B",
-            "stage1-step847000-tokens3553B",
-            "stage2-ingredient1-step1000-tokens5B",
-            "stage2-ingredient1-step7000-tokens30B",
+            # "stage1-step850-tokens4B",
+            # "stage1-step9000-tokens38B",
+            # "stage1-step47000-tokens198B",
+            # "stage1-step94000-tokens395B",
+            # "stage1-step235000-tokens986B",
+            # "stage1-step470000-tokens1972B",
+            # "stage1-step705000-tokens2957B",
+            # "stage1-step847000-tokens3553B",
+            # "stage2-ingredient1-step1000-tokens5B",
+            # "stage2-ingredient1-step7000-tokens30B",
             "main"
         ],
     }
@@ -75,11 +78,11 @@ def run_evals():
         all_results = {}
 
         os.makedirs("logs", exist_ok=True)
-        os.makedirs(f"logs/{model_key}", exist_ok=True)
+        os.makedirs(f"logs/{model_key}/{tasks_type}", exist_ok=True)
         
         # Create logs folder for this run
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        log_dir = f"logs/{model_key}/{name}_{timestamp}"
+        log_dir = f"logs/{model_key}/{tasks_type}/{name}_{timestamp}"
         os.makedirs(log_dir, exist_ok=True)
         
         total = len(model_info["revisions"])
@@ -89,9 +92,12 @@ def run_evals():
             cmd = [
                 "lm_eval",
                 "--model", "vllm",
-                "--model_args", f"pretrained={name},revision={revision},tensor_parallel_size=4,gpu_memory_utilization=0.8",
+                "--model_args", f"pretrained={name},revision={revision},gpu_memory_utilization=0.8,enable_chunked_prefill=False",
                 "--tasks", ",".join(tasks),
                 "--batch_size", "auto",
+                "--gen_kwargs", "min_tokens=1",
+                "--log_samples",
+                "--output_path", f"drop_test"
             ]
             
             print(f"\n[{i}/{total}] Running: {revision}")
@@ -139,7 +145,7 @@ def run_evals():
             
 
         folder = f"logs/{model_key}"
-        results_folder = f"/home/nsrikant/BehaviorBoxNew/lm-evaluation-harness/eval_results/{model_key}"
+        results_folder = f"/home/nsrikant/BehaviorBoxNew/lm-evaluation-harness/eval_results/{model_key}/{tasks_type}"
         os.makedirs(results_folder, exist_ok=True)
         os.makedirs(f"{results_folder}/grouped", exist_ok=True)
         for filename in glob.glob(f"{folder}**/*.log"):

@@ -1,0 +1,85 @@
+{
+  "name": "allenai/Olmo-3-1025-7B",
+  "checkpoints": [
+    {
+      "name": "stage1-step1000",
+      "stage": 1,
+      "step": 1000,
+      "cumulative_steps": 1000,
+      "target_pct": 0.1,
+      "actual_pct": 0.06842294686684484
+    },
+    {
+      "name": "stage1-step15000",
+      "stage": 1,
+      "step": 15000,
+      "cumulative_steps": 15000,
+      "target_pct": 1,
+      "actual_pct": 1.0263442030026726
+    },
+    {
+      "name": "stage1-step73000",
+      "stage": 1,
+      "step": 73000,
+      "cumulative_steps": 73000,
+      "target_pct": 5,
+      "actual_pct": 4.994875121279673
+    },
+    {
+      "name": "stage1-step146000",
+      "stage": 1,
+      "step": 146000,
+      "cumulative_steps": 146000,
+      "target_pct": 10,
+      "actual_pct": 9.989750242559346
+    },
+    {
+      "name": "stage1-step365000",
+      "stage": 1,
+      "step": 365000,
+      "cumulative_steps": 365000,
+      "target_pct": 25,
+      "actual_pct": 24.974375606398365
+    },
+    {
+      "name": "stage1-step731000",
+      "stage": 1,
+      "step": 731000,
+      "cumulative_steps": 731000,
+      "target_pct": 50,
+      "actual_pct": 50.01717415966358
+    },
+    {
+      "name": "stage1-step1096000",
+      "stage": 1,
+      "step": 1096000,
+      "cumulative_steps": 1096000,
+      "target_pct": 75,
+      "actual_pct": 74.99154976606195
+    },
+    {
+      "name": "stage1-step1169000",
+      "stage": 1,
+      "step": 1169000,
+      "cumulative_steps": 1169000,
+      "target_pct": 80,
+      "actual_pct": 79.98642488734163
+    },
+    {
+      "name": "stage1-step1315000",
+      "stage": 1,
+      "step": 1315000,
+      "cumulative_steps": 1315000,
+      "target_pct": 90,
+      "actual_pct": 89.97617512990097
+    },
+    {
+      "name": "stage2-step18000",
+      "stage": 2,
+      "step": 18000,
+      "cumulative_steps": 1431814,
+      "target_pct": 98,
+      "actual_pct": 97.96893324520458
+    }
+  ]
+}

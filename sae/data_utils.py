@@ -103,58 +103,123 @@ def load_dataframe(
 ) -> dd.DataFrame:
     """
     loads features from directories containing parquet files
-    into a dask dataframe that we can manipulate
+    into a dask dataframe that we can manipulate.
+    
+    Optimized to avoid Dask shuffle by performing a broadcast/map-side join.
+    Input features (large) stay partitioned.
+    Model logprobs (small-ish) are loaded to RAM and broadcast.
     """
     doc_ids = _get_valid_doc_ids(input_feature_dir, output_feature_dirs)
+    
+    # 1. Load the heavy input features (Embeddings) normally
     if input_feature_dir is not None:
         print(f"reading data from {input_feature_dir}")
+        # We read with doc_id filters
         df = dd.read_parquet(input_feature_dir, filters=[("doc_id", 'in', doc_ids)])
+        
+        # Ensure distinct row key is available as a column for merging
+        # The original code did: df["word_id"] = df["word_id"].astype(str); df.set_index("word_id")
+        # Setting index triggers a shuffle/sort in Dask if divisions aren't known.
+        # We will keep word_id as a COLUMN to avoid shuffle, or set it index only if sorted.
+        # But safest is to keep as column, join, then set index if needed or just leave as is.
+        # Existing pipeline expects index to be word_id? checking consumers...
+        # consumers use df.index.values.compute() for word_ids.
+        # So we eventually need it as index or at least addressable.
+        
         df["word_id"] = df["word_id"].astype(str)
-        df = df.set_index("word_id")
-        df = client.persist(df)
-        print("Initial df shape:", df.shape[0].compute())
+        # We DO NOT set index here to avoid global shuffle.
+        # We will set index at the very end if strictly necessary, or just rely on 'word_id' column.
+        
+        # Persist input df to keep it ready
+        # df = client.persist(df) # Optional, can wait
+        print("Initial df partition count:", df.npartitions)
     
     if include_logprobs and output_feature_dirs:
-        # Read all models at once and collect their logprobs
+        print("Loading model logprobs into memory for broadcast join...", flush=True)
         all_model_dfs = []
         
+        # 2. Load all model logprobs into local memory (Pandas)
+        # This is safe because 6M rows * 11 models * float16/32 is < 1-2GB.
         for dir in tqdm(output_feature_dirs):
             model = os.path.basename(os.path.normpath(dir))
-            print(f"reading data for {model}", flush=True)
-            model_df = dd.read_parquet(dir, filters=[("doc_id", 'in', doc_ids)])
-            model_df["word_id"] = model_df["word_id"].astype(str)
-            model_df = model_df.set_index("word_id")
-            # Keep only logprobs column and rename it
-            model_df = model_df[["logprobs"]].rename(columns={"logprobs": f"{model}_logprobs"})
-            all_model_dfs.append(model_df)
-        
-        # Concatenate all model dataframes along columns axis
-        print("Concatenating all model logprobs...", flush=True)
-        models_df = dd.concat(all_model_dfs, axis=1)
-        
-        # Clip values
-        print("Clipping data...", flush=True)
-        min_neg_fp16 = -6.10352e-05
-        for dir in output_feature_dirs:
-            model = os.path.basename(os.path.normpath(dir))
+            # Only read necessary columns
+            model_dd = dd.read_parquet(dir, columns=["doc_id", "word_id", "logprobs"], filters=[("doc_id", 'in', doc_ids)])
+            
+            # Compute immediately to get Pandas DataFrame
+            # We filter by columns to minimize IO
+            model_pd = model_dd[["word_id", "logprobs"]].compute()
+            model_pd["word_id"] = model_pd["word_id"].astype(str)
+            model_pd = model_pd.rename(columns={"logprobs": f"{model}_logprobs"})
+            model_pd = model_pd.set_index("word_id")
+            
+            # Clip values locally in Pandas (very fast)
+            min_neg_fp16 = -6.10352e-05
             col_name = f"{model}_logprobs"
-            models_df[col_name] = models_df[col_name].where(
-                ~((models_df[col_name] < 0) & (models_df[col_name] > min_neg_fp16)),
-                min_neg_fp16
-            )
+            vals = model_pd[col_name].values
+            # Vectorized clip
+            vals = np.where((vals < 0) & (vals > min_neg_fp16), min_neg_fp16, vals)
+            model_pd[col_name] = vals
+            
+            all_model_dfs.append(model_pd)
+        
+        # 3. Concatenate all small model DFs horizontally
+        print("Concatenating model logprobs in memory...", flush=True)
+        # This joins on index (word_id). Since we verified all models have same indices, this is fast inner join.
+        models_pd = pd.concat(all_model_dfs, axis=1, join='inner')
+        print(f"Model data shape (Pandas): {models_pd.shape}")
         
         if input_feature_dir is not None:
-            # Single merge operation
-            print("Merging all models with main df...", flush=True)
-            df = dd.merge(df, models_df, left_index=True, right_index=True, how='inner')
-        
-    
-            df = df.repartition(partition_size="100MB")
+            print("Broadcasting model data to workers...", flush=True)
+            # 4. Broadcast join: map_partitions
+            # capturing models_pd in the closure
+            
+            # Define meta: input columns + model columns
+            meta = df._meta.copy()
+            # If word_id was index in original input? No, we kept it as column 'word_id'.
+            # merge result will have indices from 'df' (RangeIndex likely)
+            # We want to emulate the old behavior: index was 'word_id'.
+            
+            # Let's perform the merge on 'word_id'.
+            # inner merge implies we might lose rows if mismatch, but we verified match.
+            
+            # We need to construct the meta DataFrame with added columns
+            for col in models_pd.columns:
+                meta[col] = pd.Series(dtype=models_pd[col].dtype)
+            
+            # Ensure word_id is preserved or becomes index?
+            # Old code: df = df.set_index("word_id") -> resulting DF has index=word_id
+            # So meta should have index name 'word_id'.
+            meta = meta.set_index("word_id")
+
+            def merge_partition(partition):
+                # partition is a Pandas DF of input features
+                # It has 'word_id' column.
+                # models_pd has 'word_id' index.
+                # We merge on word_id.
+                
+                # Verify word_id type
+                partition["word_id"] = partition["word_id"].astype(str)
+                
+                # Merge
+                merged = partition.merge(models_pd, left_on="word_id", right_index=True, how="inner")
+                
+                # Set index to match original behavior
+                merged = merged.set_index("word_id")
+                return merged
+
+            print("Applying map-side join...", flush=True)
+            df = df.map_partitions(merge_partition, meta=meta)
+            
+            # Repartition if needed (keeping original partition count usually fine)
+            # df = df.repartition(partition_size="100MB") 
+            
             df = client.persist(df)
             print("Final df shape:", df.shape[0].compute())
             return df
         else:
-            models_df = models_df.repartition(partition_size="100MB")
+            # If no input_features, we just return the models (convert back to dask)
+            # This path is rarely used in training typically?
+            models_df = dd.from_pandas(models_pd, npartitions=100) # Arbitrary partitions
             models_df = client.persist(models_df)
             print("Final df shape:", models_df.shape[0].compute())
             return models_df
