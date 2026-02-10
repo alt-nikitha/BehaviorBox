@@ -1,4 +1,3 @@
-stage1-step15000
 stage1-step73000
 stage1-step146000
 stage1-step365000

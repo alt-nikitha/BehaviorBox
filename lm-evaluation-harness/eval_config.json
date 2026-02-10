@@ -181,19 +181,6 @@
       "num_samples": 1
     },
     {
-      "name": "drop",
-      "lm_eval_task": "drop",
-      "category": "GenQA",
-      "icl": 0,
-      "format": "GenQA",
-      "temp": 0,
-      "top_p": 1,
-      "max_tokens": 100,
-      "pass_at_k": null,
-      "num_samples": 1,
-      "min_tokens": 1
-    },
-    {
       "name": "naturalqs",
       "lm_eval_task": "nq_open",
       "category": "GenQA",

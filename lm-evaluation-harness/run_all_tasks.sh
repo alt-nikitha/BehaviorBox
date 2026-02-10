@@ -2,7 +2,7 @@
 #SBATCH --job-name=lm-eval
 #SBATCH --output=logs/%x_%A_%a.out
 #SBATCH --error=logs/%x_%A_%a.err
-#SBATCH --array=0-24
+#SBATCH --array=0-23
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
@@ -22,7 +22,7 @@ conda activate bbox_env
 CONFIG_FILE="${CONFIG_FILE:-./eval_config.json}"
 MODEL_PATH="${MODEL_PATH:-allenai/Olmo-3-1025-7B}"
 MODEL_REVISION="${MODEL_REVISION:-main}"
-OUTPUT_DIR="${OUTPUT_DIR:-./eval_results}"
+OUTPUT_DIR="${OUTPUT_DIR:-./eval_results/${MODEL_REVISION}}"
 GPU_MEMORY_UTILIZATION="${GPU_MEMORY_UTILIZATION:-0.9}"
 BATCH_SIZE="${BATCH_SIZE:-auto}"
 

@@ -18,4 +18,4 @@ BASE_OUTPUT_DIR="${BASE_OUTPUT_DIR:-./eval_results}"
 # done < "$CHECKPOINT_FILE" 
 
 
-sbatch --export=ALL,MODEL_REVISION="stage1-step146000",OUTPUT_DIR="./eval_results/stage1-step146000" run_all_tasks.sh
+sbatch --export=ALL,MODEL_REVISION="stage1-step365000",OUTPUT_DIR="./eval_results/stage1-step365000" run_all_tasks.sh
