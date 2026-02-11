@@ -17,20 +17,26 @@ source ${MINICONDA_PATH}
 conda activate ${ENV_NAME}
 
 usage() {
-  echo "Usage: $0 [--exp_cfg=STRING] [--hp_cfg=STRING] [--prefix=STRING] [--seed=NUMBER] [--data_seed=NUMBER] [--help]"
+  echo "Usage: $0 [--exp_cfg=STRING] [--hp_cfg=STRING] [--prefix=STRING] [--seed=NUMBER] [--data_seed=NUMBER] [--use_freq_weighting] [--freq_smoothing=NUMBER] [--freq_power=NUMBER] [--help]"
   echo
   echo "Options:"
-  echo "  --exp_cfg=STRING    Path to experiment config file (default: empty)"
-  echo "  --hp_cfg=STRING    Path to hyperparam config file (default: empty)"
-  echo "  --prefix=STRING    Additional prefix for the SAE name (default: empty)"
-  echo "  --seed=NUMBER    Random seed value for model initialization (default: 42)"
-  echo "  --data_seed=NUMBER    Random seed value for data shuffling (default: 0)"
-  echo "  --help           Display this help message"
+  echo "  --exp_cfg=STRING         Path to experiment config file (default: empty)"
+  echo "  --hp_cfg=STRING          Path to hyperparam config file (default: empty)"
+  echo "  --prefix=STRING          Additional prefix for the SAE name (default: empty)"
+  echo "  --seed=NUMBER            Random seed value for model initialization (default: 42)"
+  echo "  --data_seed=NUMBER       Random seed value for data shuffling (default: 0)"
+  echo "  --use_freq_weighting     Enable inverse frequency weighting for rare tokens"
+  echo "  --freq_smoothing=NUMBER  Smoothing factor for frequency weights (default: 1.0)"
+  echo "  --freq_power=NUMBER      Power to raise inverse frequency to (default: 1.0)"
+  echo "  --help                   Display this help message"
   exit 1
 }
 
 seed=42
 data_seed=0
+use_freq_weighting=False
+freq_smoothing=1.0
+freq_power=1.0
 
 # Parse named arguments
 while [[ $# -gt 0 ]]; do
@@ -53,6 +59,18 @@ while [[ $# -gt 0 ]]; do
       ;;
     --data_seed=*)
       data_seed="${1#*=}"
+      shift
+      ;;
+    --use_freq_weighting)
+      use_freq_weighting=True
+      shift
+      ;;
+    --freq_smoothing=*)
+      freq_smoothing="${1#*=}"
+      shift
+      ;;
+    --freq_power=*)
+      freq_power="${1#*=}"
       shift
       ;;
     --help)
@@ -85,6 +103,11 @@ echo "Path to experiment arguents: $exp_cfg"
 echo "Path to hyperparameter config: $hp_cfg"
 echo "Seed: $seed"
 echo "Data seed: $data_seed"
+echo "Frequency weighting: $use_freq_weighting"
+if [ "$use_freq_weighting" = "True" ]; then
+  echo "  Smoothing: $freq_smoothing"
+  echo "  Power: $freq_power"
+fi
 
 export NCCL_P2P_DISABLE=1
 module load cuda-12.4
@@ -131,7 +154,10 @@ python train_sae.py \
     --model_string $model_string \
     --spill_dir $temp_dir \
     --temp_dir $temp_dir \
-    --workers 8
+    --workers 8 \
+    --use_freq_weighting $use_freq_weighting \
+    --freq_weight_smoothing $freq_smoothing \
+    --freq_weight_power $freq_power
 
 if [ $? -ne 0 ]; then
     echo "Training failed with exit code $?. Terminating."

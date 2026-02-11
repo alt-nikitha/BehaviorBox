@@ -10,6 +10,8 @@ import time
 import torch
 import wandb
 
+from collections import Counter
+
 from dask import config as dask_cfg
 from dask.distributed import Client
 from natsort import natsorted
@@ -38,6 +40,77 @@ log_eval_act_freqs_every = 30000
 checkpoint_every = 50000
 
 reset_dead_threshold = 0.15
+
+
+def load_frequency_weights(
+    cache_dir: str,
+    unigram_freq_path: str,
+    data_dir: str,
+    smoothing: float = 1.0,
+    power: float = 1.0,
+) -> np.ndarray:
+    """Load unigram frequencies and compute inverse frequency weights for each sample.
+    
+    Args:
+        cache_dir: Directory containing word_ids.pkl
+        unigram_freq_path: Path to unigram_freqs.csv file
+        data_dir: Original data directory to get word_id mapping
+        smoothing: Smoothing factor for inverse frequency (higher = less weight variation)
+        power: Power to raise inverse frequency to (higher = more extreme weighting)
+    
+    Returns:
+        Array of weights, one per sample
+    """
+    import dask.dataframe as dd
+    
+    # Load unigram frequencies
+    freq_df = pd.read_csv(unigram_freq_path)
+    word_to_count = dict(zip(freq_df['word'], freq_df['count']))
+    max_count = max(word_to_count.values())
+    
+    # Load word_id -> word mapping from original data
+    input_feat_dir = os.path.join(data_dir, "input_features")
+    df = dd.read_parquet(input_feat_dir, columns=["word_id", "word"]).compute()
+    df["word_id"] = df["word_id"].astype(str)
+    word_id_to_word = dict(zip(df["word_id"], df["word"]))
+    
+    # Load word_ids for this cached data
+    word_ids_path = os.path.join(cache_dir, "word_ids.pkl")
+    
+    word_ids = pd.read_pickle(word_ids_path)
+    
+    # Compute weight for each sample
+    weights = []
+    for wid in tqdm(word_ids, desc="Computing frequency weights"):
+        word = word_id_to_word.get(str(wid), '')
+        count = word_to_count.get(word, 1)  # default to 1 if not found
+        # Inverse frequency weight: rarer words get higher weights
+        weight = ((max_count + smoothing) / (count + smoothing)) ** power
+        weights.append(weight)
+    
+    weights = np.array(weights, dtype=np.float32)
+    # Normalize so mean weight is 1.0 (preserves overall loss scale)
+    weights = weights / weights.mean()
+    return weights
+
+
+def compute_unigram_freqs(cache_root: str, data_dir: str, out_path: str) -> None:
+    """Compute unigram frequencies from cached word_ids and write to CSV."""
+    input_feat_dir = os.path.join(data_dir, "input_features")
+    df = dd.read_parquet(input_feat_dir, columns=["word_id", "word"]).compute()
+    df["word_id"] = df["word_id"].astype(str)
+    word_id_to_word = dict(zip(df["word_id"], df["word"]))
+
+    ctr = Counter()
+    for root, _, files in os.walk(cache_root):
+        if "word_ids.pkl" in files:
+            ids = pd.read_pickle(os.path.join(root, "word_ids.pkl"))
+            
+            words = [word_id_to_word.get(str(wid), "") for wid in ids]
+            ctr.update([w for w in words if w])
+
+    rows = [{"word": word, "count": cnt} for word, cnt in ctr.most_common()]
+    pd.DataFrame(rows).to_csv(out_path, index=False)
 
 
 def get_logger():
@@ -146,6 +219,7 @@ def train(
     continue_from_checkpoint: bool = False,
     checkpoint_path: str = None,
     cfg: dict = None,
+    sample_weights: np.ndarray = None,
 ):      
     def _save_and_log_hist(freqs: list[float], cur_step: int):
         nonlocal encoder
@@ -205,7 +279,8 @@ def train(
     batch_size=cfg["batch_size"]
     train_indices, eval_indices = get_train_eval_indices(data, data_shuffling_seed=cfg["data_shuffling_seed"])
     
-    logger.info("Beginning training...")
+    use_freq_weighting = sample_weights is not None
+    logger.info(f"Beginning training... (frequency weighting: {use_freq_weighting})")
     encoder.train()
     for epoch in range(num_epochs):
         train_dataloader = DataLoader(data, batch_size, train_indices)
@@ -218,7 +293,21 @@ def train(
                 continue
             batch = batch.to(cfg["device"])
             # loss, _, penalty, _ = encoder(batch)
-            loss, _, _, _ = encoder(batch)
+            loss, _, _, l2_error_per_sample = encoder(batch, return_l2_error_per_sample=True)
+            
+            # Apply frequency weighting if available
+            if use_freq_weighting:
+                batch_indices = train_dataloader.batch_indices[i % train_dataloader.num_batches]
+                weights = torch.from_numpy(sample_weights[batch_indices]).to(cfg["device"])
+                weighted_l2_loss = (l2_error_per_sample.squeeze() * weights).mean()
+                if not cfg["topk"]:
+                    acts = encoder.enc(batch - encoder.dec.bias)
+                    acts = torch.nn.functional.relu(acts)
+                    l1_loss = cfg["l1_coeff"] * (acts.abs().sum(-1).mean())
+                    loss = weighted_l2_loss + l1_loss
+                else:
+                    loss = weighted_l2_loss
+            
             loss_dict = {
                 "epoch": epoch,
                 "batch": f"{i} / {total_batches}",
@@ -247,15 +336,29 @@ def train(
                     }
                 # record loss on eval data
                 with torch.no_grad():
-                    for eval_batch in eval_dataloader:
+                    for eval_idx, eval_batch in enumerate(eval_dataloader):
                         eval_batch = eval_batch.to(cfg["device"])
                         if cfg["topk"]:
                             # loss, _, penalty, _ = encoder(eval_batch)
-                            loss, _, _, _ = encoder(eval_batch)
+                            loss, _, _, l2_error_per_sample = encoder(eval_batch, return_l2_error_per_sample=True)
+                            if use_freq_weighting:
+                                batch_indices = eval_dataloader.batch_indices[eval_idx]
+                                weights = torch.from_numpy(sample_weights[batch_indices]).to(cfg["device"])
+                                loss = (l2_error_per_sample.squeeze() * weights).mean()
                             total_eval_loss_dict["total_eval_loss"] += loss.item()
                             # total_eval_loss_dict["total_penalty"] += penalty.item()
                         else:
                             loss, _, l2_loss, l1_loss = encoder(eval_batch)
+                            if use_freq_weighting:
+                                batch_indices = eval_dataloader.batch_indices[eval_idx]
+                                weights = torch.from_numpy(sample_weights[batch_indices]).to(cfg["device"])
+                                _, _, _, l2_error_per_sample = encoder(eval_batch, return_l2_error_per_sample=True)
+                                weighted_l2_loss = (l2_error_per_sample.squeeze() * weights).mean()
+                                acts = encoder.enc(eval_batch - encoder.dec.bias)
+                                acts = torch.nn.functional.relu(acts)
+                                l1_loss = cfg["l1_coeff"] * (acts.abs().sum(-1).mean())
+                                loss = weighted_l2_loss + l1_loss
+                                l2_loss = weighted_l2_loss
                             total_eval_loss_dict["total_eval_loss"] += loss.item()
                             total_eval_loss_dict["total_eval_l2_loss"] += l2_loss.item()
                             total_eval_loss_dict["total_eval_l1_loss"] += l1_loss.item()
@@ -447,6 +550,24 @@ def train(
     type=bool,
     default=False,
 )
+@click.option(
+    "--use_freq_weighting",
+    help="Use inverse frequency weighting for rare tokens",
+    type=bool,
+    default=False,
+)
+@click.option(
+    "--freq_weight_smoothing",
+    help="Smoothing factor for inverse frequency weights (higher = less variation)",
+    type=float,
+    default=1.0,
+)
+@click.option(
+    "--freq_weight_power",
+    help="Power to raise inverse frequency to (higher = more extreme weighting)",
+    type=float,
+    default=1.0,
+)
 def main(
     args: str,
     cache_dir: str,
@@ -463,7 +584,10 @@ def main(
     spill_dir: str,
     temp_dir: str,
     workers: int,
-    only_probs: bool, 
+    only_probs: bool,
+    use_freq_weighting: bool,
+    freq_weight_smoothing: float,
+    freq_weight_power: float,
 ):  
     logger = get_logger()
     continue_from_checkpoint = False
@@ -482,6 +606,9 @@ def main(
         temp_dir = args_dict.get("temp_dir", temp_dir)
         workers = args_dict.get("workers", workers)
         only_probs = args_dict.get("only_probs", only_probs)
+        use_freq_weighting = args_dict.get("use_freq_weighting", use_freq_weighting)
+        freq_weight_smoothing = args_dict.get("freq_weight_smoothing", freq_weight_smoothing)
+        freq_weight_power = args_dict.get("freq_weight_power", freq_weight_power)
     
     # if data_dirs are provided, sort them in natural order
     if len(data_dirs) > 1:    
@@ -500,6 +627,12 @@ def main(
     
     pprint.pprint(cfg)
     logger.info(cfg)
+    
+    if use_freq_weighting:
+        logger.info(f"Frequency weighting ENABLED: smoothing={freq_weight_smoothing}, power={freq_weight_power}")
+        print(f"Frequency weighting ENABLED: smoothing={freq_weight_smoothing}, power={freq_weight_power}", flush=True)
+    else:
+        logger.info("Frequency weighting DISABLED")
     
     # first check if model config exists in the save directory
     # if it does, then we can load the model and continue training
@@ -635,6 +768,39 @@ def main(
         copy_temp_memmap(cached_data_filepath, tempfile_path)
         logger.info(f"Copied data to temporary path {tempfile_path}")
         data = np.memmap(tempfile_path, dtype=dtype, mode='r', shape=shape)
+        
+        # Load frequency weights if enabled
+        sample_weights = None
+        if use_freq_weighting:
+            # Compute unigram freq path from cache structure
+            # cache_dir is like: /path/to/cache/model_string/data_name/ofw=X
+            # unigram_freqs.csv is at: /path/to/cache/model_string/data_name/unigram_freqs.csv
+            data_cache_dir = os.path.dirname(cache_dir)  # Go up from ofw=X to data_name
+            unigram_freq_path = os.path.join(data_cache_dir, "unigram_freqs.csv")
+            if not os.path.exists(unigram_freq_path):
+                logger.info(f"unigram_freqs.csv not found, computing at {unigram_freq_path}")
+                compute_unigram_freqs(
+                    cache_root=data_cache_dir,
+                    data_dir=cached_data_info["data_dir"],
+                    out_path=unigram_freq_path,
+                )
+
+            if os.path.exists(unigram_freq_path):
+                logger.info(f"Loading frequency weights from {unigram_freq_path} "
+                           f"(smoothing={freq_weight_smoothing}, power={freq_weight_power})")
+                sample_weights = load_frequency_weights(
+                    cache_dir=data_cache_dir,
+                    unigram_freq_path=unigram_freq_path,
+                    data_dir=cached_data_info["data_dir"],
+                    smoothing=freq_weight_smoothing,
+                    power=freq_weight_power,
+                )
+                logger.info(f"Loaded {len(sample_weights)} sample weights "
+                           f"(mean={sample_weights.mean():.3f}, std={sample_weights.std():.3f}, "
+                           f"min={sample_weights.min():.3f}, max={sample_weights.max():.3f})")
+            else:
+                logger.warning(f"Frequency weighting enabled but unigram_freqs.csv not found at {unigram_freq_path}. "
+                              f"Run compute_unigram_freqs.py first. Training without frequency weighting for this dataset.")
 
         final_checkpoint_path, encoder = train(
             data=data,
@@ -644,7 +810,8 @@ def main(
             model_checkpoint_dir=model_data_checkpoint_dir,
             continue_from_checkpoint=continue_from_checkpoint,
             checkpoint_path=checkpoint_path,
-            cfg=cfg
+            cfg=cfg,
+            sample_weights=sample_weights,
         )
 
         # load from checkpoint if we are training on multiple data directories
