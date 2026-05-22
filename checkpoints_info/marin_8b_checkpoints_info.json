@@ -1,0 +1,35 @@
+{
+  "name": "marin-community/marin-8b-base",
+  "checkpoints": [
+    {
+      "name": "kestrel",
+      "tokens": "2.7T",
+      "checkpoint_number": 1
+    },
+    {
+      "name": "ocelot",
+      "tokens": "3.78T",
+      "checkpoint_number": 2
+    },
+    {
+      "name": "jellyfish",
+      "tokens": "4.78T",
+      "checkpoint_number": 3
+    },
+    {
+      "name": "phoenix",
+      "tokens": "11.1T",
+      "checkpoint_number": 4
+    },
+    {
+      "name": "starling",
+      "tokens": "12.4T",
+      "checkpoint_number": 5
+    },
+    {
+      "name": "deeper-starling",
+      "tokens": "12.7T",
+      "checkpoint_number": 6
+    }
+  ]
+}

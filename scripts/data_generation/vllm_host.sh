@@ -11,6 +11,12 @@ set -a
 source scripts/env_configs/.env
 set +a
 
+# Deactivate any existing virtual environment
+if [ -n "$VIRTUAL_ENV" ]; then
+    deactivate 2>/dev/null || true
+    unset VIRTUAL_ENV
+fi
+
 # Activate environment
 source ${MINICONDA_PATH}
 conda activate ${ENV_NAME}

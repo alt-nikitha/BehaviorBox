@@ -1,0 +1,24 @@
+{
+    "cache_dir": "/home/nsrikant/.cache",
+    "train_data_dirs": [
+        "/data/user_data/nsrikant/bbox_data/output/amber_300_unseen"
+    ],
+    "eval_data_dirs": [
+        "/data/user_data/nsrikant/bbox_data/output/amber_300_unseen"
+    ],
+    "model_names": [
+        "amber-ckpt_001",
+        "amber-ckpt_040",
+        "amber-ckpt_080",
+        "amber-ckpt_120",
+        "amber-ckpt_180",
+        "amber-ckpt_240",
+        "amber-ckpt_300"
+    ],
+    "output_feature_weight": 0.8,
+    "train_save_dir": "/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_amber_300",
+    "eval_save_dir": "/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_amber_300",
+    "dict_size": 3000,
+    "only_probs": false,
+    "device": "cuda"
+}

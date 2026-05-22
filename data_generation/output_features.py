@@ -45,7 +45,7 @@ def process_jsonl_file(
     start_batch: int = 0,
     end_batch: int = None,
     batch_size: int = 100,
-    max_length: int = 1800,  # was 4000, reduced for Pythia-160m context window (2048)
+    max_length: int = 2048,  # Set to Amber context window
     stride: int = 900,       # was 2000, reduced proportionally
     async_limiter: int = 100,
 ) -> torch.Tensor:
@@ -69,10 +69,19 @@ def process_jsonl_file(
         batch_to_doc_df = pd.read_csv(batch_to_doc_file)
         continuing_processing = True
     
+    # load tokenizers once outside the loop to avoid repeated allocation
+    tokenizer = AutoTokenizer.from_pretrained(model_id)
+    tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+    embedding_model_tokenizer = AutoTokenizer.from_pretrained("allenai/longformer-base-4096")
+
     for batch_idx in tqdm(range(start_batch, num_batches)):
         batch_text, batch_sample_ids, _ = get_batch_data(
             text, sample_ids, domains, batch_size, batch_idx
         )
+        # Skip empty batches to avoid tokenizer errors
+        if not batch_text:
+            logger.info(f"Batch {batch_idx} is empty, skipping.")
+            continue
         # first check that we haven't already processed these documents
         # we do this by checking that the last batch_sample_id is not in the batch_to_doc_file
         if continuing_processing:
@@ -81,16 +90,12 @@ def process_jsonl_file(
                 continue
         try:
             print("getting overlapping strings\n")
-            # this may need to be changed if we switch out the tokenizer
-            tokenizer = AutoTokenizer.from_pretrained(model_id)
-            tokenizer.add_special_tokens({'pad_token': '[PAD]'})
-            embedding_model_tokenizer = AutoTokenizer.from_pretrained("allenai/longformer-base-4096")
             overlapping_strings, window_start_idx, window_to_sample_mapping, window_word_ids = get_output_overlapping_strings(
                 text=batch_text,
                 sample_ids=batch_sample_ids,
                 tokenizer=tokenizer,
                 embedding_model_tokenizer=embedding_model_tokenizer,
-                max_length=max_length,
+                max_length=2046,
                 stride=stride,
             )
             print("getting model logprobs\n")
@@ -105,6 +110,8 @@ def process_jsonl_file(
                 window_to_sample_mapping=window_to_sample_mapping,
                 async_limiter=async_limiter,
             )
+            del overlapping_strings, window_start_idx, window_to_sample_mapping, window_word_ids
+            gc.collect()
             logprobs = list(output_features.values())
             num_words = [len(sample_logprobs) for sample_logprobs in logprobs]
             doc_ids = list(output_features.keys())
@@ -138,7 +145,8 @@ def process_jsonl_file(
             })
             logger.info(f"saving output features for batch {batch_idx}")
             logprobs_df.to_parquet(output_filepath, engine="pyarrow")
-            del output_features
+            del output_features, logprobs, logprobs_df
+            del flattened_logprobs, flattened_doc_ids, word_id, num_words, doc_ids
             gc.collect()
             torch.cuda.empty_cache()
         except AssertionError as msg:

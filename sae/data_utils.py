@@ -1,5 +1,7 @@
 import dask.array as da
 import dask.dataframe as dd
+import gc
+import glob as globmod
 import numpy as np
 import os
 import pandas as pd
@@ -38,10 +40,11 @@ def _get_valid_doc_ids(
     # filter the dataframes to only include these features
     # reset index so that the order matches
     # filter for rows where the number of words match
+    # allow model num_words <= input num_words (output models may truncate long texts)
     for model_df in all_output_file_df:
         model_df = model_df.loc[overlapping_doc_ids]
         model_df = model_df.reindex(index=input_file_df.index)
-        input_file_df = input_file_df[input_file_df["num_words"] == model_df["num_words"]]
+        input_file_df = input_file_df[input_file_df["num_words"] >= model_df["num_words"]]
     return input_file_df.index.to_list()
 
 
@@ -102,127 +105,64 @@ def load_dataframe(
     include_logprobs: bool = True,
 ) -> dd.DataFrame:
     """
-    loads features from directories containing parquet files
-    into a dask dataframe that we can manipulate.
-    
-    Optimized to avoid Dask shuffle by performing a broadcast/map-side join.
-    Input features (large) stay partitioned.
-    Model logprobs (small-ish) are loaded to RAM and broadcast.
+    loads features from directories containing parquet files.
+
+    Everything is loaded into Pandas (the node has plenty of RAM),
+    joined in-memory, then converted to a Dask DataFrame at the end.
     """
-    doc_ids = _get_valid_doc_ids(input_feature_dir, output_feature_dirs)
-    
-    # 1. Load the heavy input features (Embeddings) normally
+    doc_ids = [str(x) for x in _get_valid_doc_ids(input_feature_dir, output_feature_dirs)]
+
+    df = None
     if input_feature_dir is not None:
         print(f"reading data from {input_feature_dir}")
-        # We read with doc_id filters
-        df = dd.read_parquet(input_feature_dir, filters=[("doc_id", 'in', doc_ids)])
-        
-        # Ensure distinct row key is available as a column for merging
-        # The original code did: df["word_id"] = df["word_id"].astype(str); df.set_index("word_id")
-        # Setting index triggers a shuffle/sort in Dask if divisions aren't known.
-        # We will keep word_id as a COLUMN to avoid shuffle, or set it index only if sorted.
-        # But safest is to keep as column, join, then set index if needed or just leave as is.
-        # Existing pipeline expects index to be word_id? checking consumers...
-        # consumers use df.index.values.compute() for word_ids.
-        # So we eventually need it as index or at least addressable.
-        
+        parquet_files = sorted(globmod.glob(os.path.join(input_feature_dir, "*.parquet")))
+        df = pd.concat([pd.read_parquet(f, filters=[("doc_id", 'in', doc_ids)]) for f in parquet_files])
         df["word_id"] = df["word_id"].astype(str)
-        # We DO NOT set index here to avoid global shuffle.
-        # We will set index at the very end if strictly necessary, or just rely on 'word_id' column.
-        
-        # Persist input df to keep it ready
-        # df = client.persist(df) # Optional, can wait
-        print("Initial df partition count:", df.npartitions)
-    
+        df = df.set_index("word_id")
+        print(f"Input features loaded: {df.shape}")
+
     if include_logprobs and output_feature_dirs:
-        print("Loading model logprobs into memory for broadcast join...", flush=True)
+        print("Loading model logprobs...", flush=True)
         all_model_dfs = []
-        
-        # 2. Load all model logprobs into local memory (Pandas)
-        # This is safe because 6M rows * 11 models * float16/32 is < 1-2GB.
+
         for dir in tqdm(output_feature_dirs):
             model = os.path.basename(os.path.normpath(dir))
-            # Only read necessary columns
-            model_dd = dd.read_parquet(dir, columns=["doc_id", "word_id", "logprobs"], filters=[("doc_id", 'in', doc_ids)])
-            
-            # Compute immediately to get Pandas DataFrame
-            # We filter by columns to minimize IO
-            model_pd = model_dd[["word_id", "logprobs"]].compute()
+            model_files = sorted(globmod.glob(os.path.join(dir, "*.parquet")))
+            model_pd = pd.concat([
+                pd.read_parquet(f, columns=["doc_id", "word_id", "logprobs"],
+                                filters=[("doc_id", 'in', doc_ids)])
+                for f in model_files
+            ])[["word_id", "logprobs"]]
             model_pd["word_id"] = model_pd["word_id"].astype(str)
             model_pd = model_pd.rename(columns={"logprobs": f"{model}_logprobs"})
             model_pd = model_pd.set_index("word_id")
-            
-            # Clip values locally in Pandas (very fast)
+
             min_neg_fp16 = -6.10352e-05
             col_name = f"{model}_logprobs"
             vals = model_pd[col_name].values
-            # Vectorized clip
             vals = np.where((vals < 0) & (vals > min_neg_fp16), min_neg_fp16, vals)
             model_pd[col_name] = vals
-            
+
             all_model_dfs.append(model_pd)
-        
-        # 3. Concatenate all small model DFs horizontally
-        print("Concatenating model logprobs in memory...", flush=True)
-        # This joins on index (word_id). Since we verified all models have same indices, this is fast inner join.
+
+        print("Concatenating model logprobs...", flush=True)
         models_pd = pd.concat(all_model_dfs, axis=1, join='inner')
-        print(f"Model data shape (Pandas): {models_pd.shape}")
-        
-        if input_feature_dir is not None:
-            print("Broadcasting model data to workers...", flush=True)
-            # 4. Broadcast join: map_partitions
-            # capturing models_pd in the closure
-            
-            # Define meta: input columns + model columns
-            meta = df._meta.copy()
-            # If word_id was index in original input? No, we kept it as column 'word_id'.
-            # merge result will have indices from 'df' (RangeIndex likely)
-            # We want to emulate the old behavior: index was 'word_id'.
-            
-            # Let's perform the merge on 'word_id'.
-            # inner merge implies we might lose rows if mismatch, but we verified match.
-            
-            # We need to construct the meta DataFrame with added columns
-            for col in models_pd.columns:
-                meta[col] = pd.Series(dtype=models_pd[col].dtype)
-            
-            # Ensure word_id is preserved or becomes index?
-            # Old code: df = df.set_index("word_id") -> resulting DF has index=word_id
-            # So meta should have index name 'word_id'.
-            meta = meta.set_index("word_id")
+        print(f"Model data shape: {models_pd.shape}")
 
-            def merge_partition(partition):
-                # partition is a Pandas DF of input features
-                # It has 'word_id' column.
-                # models_pd has 'word_id' index.
-                # We merge on word_id.
-                
-                # Verify word_id type
-                partition["word_id"] = partition["word_id"].astype(str)
-                
-                # Merge
-                merged = partition.merge(models_pd, left_on="word_id", right_index=True, how="inner")
-                
-                # Set index to match original behavior
-                merged = merged.set_index("word_id")
-                return merged
-
-            print("Applying map-side join...", flush=True)
-            df = df.map_partitions(merge_partition, meta=meta)
-            
-            # Repartition if needed (keeping original partition count usually fine)
-            # df = df.repartition(partition_size="100MB") 
-            
-            df = client.persist(df)
-            print("Final df shape:", df.shape[0].compute())
-            return df
+        if df is not None:
+            print("Joining input features with model logprobs...", flush=True)
+            df = df.join(models_pd, how='inner')
+            print(f"Joined shape: {df.shape}")
         else:
-            # If no input_features, we just return the models (convert back to dask)
-            # This path is rarely used in training typically?
-            models_df = dd.from_pandas(models_pd, npartitions=100) # Arbitrary partitions
-            models_df = client.persist(models_df)
-            print("Final df shape:", models_df.shape[0].compute())
-            return models_df
+            df = models_pd
+
+    # Convert back to Dask for downstream compatibility
+    print(f"Final df shape: {len(df)}")
+    result = dd.from_pandas(df, npartitions=200)
+    del df
+    gc.collect()
+    result = client.persist(result)
+    return result
 
 
 
@@ -234,8 +174,14 @@ def preprocess_data(
     input_feature_dim: int = 768,
     output_feature_weight: float = None,
     logprobs: bool = False,
-    only_probs: bool = False
+    only_probs: bool = False,
+    use_delta_prob: bool = False,
+    use_delta_logprob: bool = False,
+    normalize_per_part: bool = False,
+    norm_stats_out: dict = None,
 ) -> da.Array:
+    if use_delta_prob and use_delta_logprob:
+        raise ValueError("use_delta_prob and use_delta_logprob are mutually exclusive")
     def block_to_probs(block, input_feature_dim):
         block[:, input_feature_dim:] = np.exp(block[:, input_feature_dim:])
         return block
@@ -300,10 +246,46 @@ def preprocess_data(
     print("Converting to dask array", flush=True)
     data = data_features.to_dask_array(lengths=True)
     
-    if not logprobs:
+    if not logprobs and not use_delta_logprob:
         print("Converting to probabilities", flush=True)
         data = data.map_blocks(block_to_probs, input_feature_dim, dtype=np.float16)
-    
+
+    if use_delta_prob or use_delta_logprob:
+        space = "logprobs" if use_delta_logprob else "probabilities"
+        print(f"Converting {space} to consecutive deltas", flush=True)
+        embed = data[:, :input_feature_dim]
+        vals = data[:, input_feature_dim:]
+        deltas = vals[:, :-1] - vals[:, 1:]
+        data = da.concatenate([embed, deltas], axis=1)
+        data = data.rechunk({0: data.chunks[0], 1: -1})
+
+    if normalize_per_part:
+        # Per-column z-score, computed independently on the embedding block and the
+        # output (prob/logprob/delta) block so each block has unit variance per dim.
+        # `output_feature_weight` is ignored here — block-level magnitude balance is
+        # handled by the loss-side per-dim weighting (output_dim_loss_weight).
+        print("Computing per-column means/stds for z-score normalization", flush=True)
+        data_f32 = data.astype(np.float32)
+        col_mean = data_f32.mean(axis=0).compute()
+        col_std = data_f32.std(axis=0).compute()
+        eps = 1e-6
+        col_std_safe = np.where(col_std < eps, 1.0, col_std).astype(np.float32)
+        col_mean_f32 = col_mean.astype(np.float32)
+
+        if norm_stats_out is not None:
+            norm_stats_out["mean"] = col_mean_f32
+            norm_stats_out["std"] = col_std_safe
+            norm_stats_out["embedding_dim"] = input_feature_dim
+            norm_stats_out["output_feature_dim"] = output_feature_dim
+
+        def znorm_block(block, mean, std):
+            block = block.astype(np.float32)
+            block = (block - mean) / std
+            return block.astype(np.float16)
+
+        data = data.map_blocks(znorm_block, col_mean_f32, col_std_safe, dtype=np.float16)
+        return data
+
     mean_total_norm = None
     mean_embedding_norm = None
     mean_prob_norm = None
@@ -428,13 +410,16 @@ def get_words_in_context(
     word_ids: list[str],
     N: int = 10,
 ) -> dict[str, dict]:
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
     def clean_string(s):
         s = s.replace("Ġ", " ")
         s = s.replace("Ċ", "\t")
         return s
-    
+
     file_df = pd.read_csv(f"{input_feature_dir}/file_to_doc.csv")
     file_df.drop(columns=["num_words"], inplace=True)
+    file_df["doc_id"] = file_df["doc_id"].astype(str)
     doc_pos = {}
     for id in word_ids:
         doc_id = "_".join(id.split("_")[:-1])
@@ -445,24 +430,38 @@ def get_words_in_context(
             doc_pos[doc_id] = [word_pos]
     doc_ids = list(doc_pos.keys())
     file_df = file_df[file_df["doc_id"].isin(doc_ids)]
-    words_in_context = {}
-    for file in tqdm(file_df["file"].to_list()):
-        docs = file_df[file_df["file"] == file]["doc_id"].to_list()
-        file = os.path.join(input_feature_dir, file)
-        docs_df = pd.read_parquet(file, columns=["doc_id", "word"], filters=[("doc_id", 'in', docs)])
-        for doc in tqdm(docs):
-            doc_df = docs_df[docs_df["doc_id"] == doc]
-            doc_words = doc_df["word"].tolist()
-            for pos in doc_pos[doc]:
-                word_id = f"{doc}_{pos}"
+    # Group doc_ids by file upfront to avoid O(n) scan per file
+    file_to_docs = file_df.groupby("file")["doc_id"].apply(list).to_dict()
+
+    def _process_file(file, docs):
+        filepath = os.path.join(input_feature_dir, file)
+        docs_df = pd.read_parquet(filepath, columns=["doc_id", "word"], filters=[("doc_id", 'in', docs)])
+        results = {}
+        for doc_id, group in docs_df.groupby("doc_id"):
+            doc_id = str(doc_id)
+            if doc_id not in doc_pos:
+                continue
+            doc_words = group["word"].tolist()
+            for pos in doc_pos[doc_id]:
+                word_id = f"{doc_id}_{pos}"
                 start_id = max(pos - N, 0)
                 end_id = min(pos + N + 1, len(doc_words))
                 before = clean_string("".join(doc_words[start_id:pos]))
                 word = clean_string(doc_words[pos])
                 after = clean_string("".join(doc_words[pos+1:end_id]))
-                words_in_context[word_id] = {
+                results[word_id] = {
                     "before": before,
                     "word": word,
                     "after": after,
                 }
+        return results
+
+    words_in_context = {}
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        futures = {
+            executor.submit(_process_file, file, docs): file
+            for file, docs in file_to_docs.items()
+        }
+        for future in tqdm(as_completed(futures), total=len(futures)):
+            words_in_context.update(future.result())
     return words_in_context

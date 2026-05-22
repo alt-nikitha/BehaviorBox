@@ -22,7 +22,7 @@
     "output_feature_weight": 0.7,
     "train_save_dir": "/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_olmo3_7b_unigram_power_0_5",
     "eval_save_dir": "/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_olmo3_7b_unigram_power_0_5",
-    "dict_size": 6000,
+    "dict_size": 3000,
     "only_probs": false,
     "device": "cuda"
 }

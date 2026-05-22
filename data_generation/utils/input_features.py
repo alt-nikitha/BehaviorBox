@@ -168,9 +168,24 @@ def get_longformer_word_features(
     all_last_token_id = torch.sub(torch.sum(attn_masks, dim=1), 1)
 
     print("getting embeddings...\n")
+    # Process windows in smaller batches to avoid GPU OOM
+    # Even with batch_size=25, sliding windows create ~50 windows which causes OOM
+    window_batch_size = 4
+    num_windows = input_ids.shape[0]
+    all_embeddings_list = []
+    
     with torch.no_grad():
-        outputs = model(input_ids, attention_mask=attn_masks)
-        all_embeddings = outputs.last_hidden_state
+        for i in range(0, num_windows, window_batch_size):
+            end_idx = min(i + window_batch_size, num_windows)
+            batch_input_ids = input_ids[i:end_idx]
+            batch_attn_masks = attn_masks[i:end_idx]
+            outputs = model(batch_input_ids, attention_mask=batch_attn_masks)
+            all_embeddings_list.append(outputs.last_hidden_state)
+            del outputs
+            torch.cuda.empty_cache()
+    
+    all_embeddings = torch.cat(all_embeddings_list, dim=0)
+    del all_embeddings_list
     print("getting token->word features...\n")
     if use_sliding_window:
         buffer_size = stride // 2

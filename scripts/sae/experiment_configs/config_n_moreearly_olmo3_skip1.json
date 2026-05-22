@@ -1,0 +1,24 @@
+{
+    "cache_dir": "/home/nsrikant/.cache",
+    "train_data_dirs": [
+        "/data/user_data/nsrikant/bbox_data/output/olmo_256000_unseen"
+    ],
+    "eval_data_dirs": [
+        "/data/user_data/nsrikant/bbox_data/output/olmo_256000_unseen"
+    ],
+    "model_names": [
+        "olmo3-stage1-step34000",
+        "olmo3-stage1-step68000",
+        "olmo3-stage1-step103000",
+        "olmo3-stage1-step154000",
+        "olmo3-stage1-step205000",
+        "olmo3-stage1-step256000"
+
+    ],
+    "output_feature_weight": 0.8,
+    "train_save_dir": "/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_olmo_256000",
+    "eval_save_dir": "/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_olmo_256000",
+    "dict_size": 3000,
+    "only_probs": false,
+    "device": "cuda"
+}

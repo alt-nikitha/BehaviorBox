@@ -17,20 +17,24 @@ source ${MINICONDA_PATH}
 conda activate ${ENV_NAME}
 
 usage() {
-  echo "Usage: $0 [--exp_cfg=STRING] [--hp_cfg=STRING] [--prefix=STRING] [--seed=NUMBER] [--data_seed=NUMBER] [--help]"
+  echo "Usage: $0 [--exp_cfg=STRING] [--hp_cfg=STRING] [--prefix=STRING] [--seed=NUMBER] [--data_seed=NUMBER] [--normalize_per_part] [--output_dim_loss_weight=STRING] [--help]"
   echo
   echo "Options:"
-  echo "  --exp_cfg=STRING    Path to experiment config file (default: empty)"
-  echo "  --hp_cfg=STRING    Path to hyperparam config file (default: empty)"
-  echo "  --prefix=STRING    Additional prefix for the SAE name (default: empty)"
-  echo "  --seed=NUMBER    Random seed value for model initialization (default: 42)"
-  echo "  --data_seed=NUMBER    Random seed value for data shuffling (default: 0)"
-  echo "  --help           Display this help message"
+  echo "  --exp_cfg=STRING                 Path to experiment config file (default: empty)"
+  echo "  --hp_cfg=STRING                  Path to hyperparam config file (default: empty)"
+  echo "  --prefix=STRING                  Additional prefix for the SAE name (default: empty)"
+  echo "  --seed=NUMBER                    Random seed value for model initialization (default: 42)"
+  echo "  --data_seed=NUMBER               Random seed value for data shuffling (default: 0)"
+  echo "  --normalize_per_part             Match a training run that used per-part z-score normalization"
+  echo "  --output_dim_loss_weight=STRING  Match a training run's output_dim_loss_weight ('auto' / float / unset)"
+  echo "  --help                           Display this help message"
   exit 1
 }
 
 seed=42
 data_seed=0
+normalize_per_part=False
+output_dim_loss_weight=""
 
 # Parse named arguments
 while [[ $# -gt 0 ]]; do
@@ -53,6 +57,14 @@ while [[ $# -gt 0 ]]; do
       ;;
     --data_seed=*)
       data_seed="${1#*=}"
+      shift
+      ;;
+    --normalize_per_part)
+      normalize_per_part=True
+      shift
+      ;;
+    --output_dim_loss_weight=*)
+      output_dim_loss_weight="${1#*=}"
       shift
       ;;
     --help)
@@ -116,6 +128,11 @@ cd sae
 
 
 
+eval_extra_args=()
+if [ -n "$output_dim_loss_weight" ]; then
+    eval_extra_args+=(--output_dim_loss_weight "$output_dim_loss_weight")
+fi
+
 python eval_sae.py \
     --args $exp_cfg \
     --config_path $hp_cfg \
@@ -125,7 +142,9 @@ python eval_sae.py \
     --workers 8 \
     --seed $seed \
     --save_activations True \
-    --self_eval_mode False
+    --self_eval_mode False \
+    --normalize_per_part $normalize_per_part \
+    "${eval_extra_args[@]}"
 
 rm -r $temp_dir
 echo "$temp_dir removed"

@@ -38,14 +38,20 @@ def get_sae_name(cfg: dict, sae_name_prefix: str):
         cfg["dec_penalty_coeff"] = None
     if cfg["topk"] is None:
         if sae_name_prefix:
-            return f"{sae_name_prefix}_N={cfg['dict_size']}_l1={cfg['l1_coeff']}_lp={cfg['dec_penalty_coeff']}"
+            base = f"{sae_name_prefix}_N={cfg['dict_size']}_l1={cfg['l1_coeff']}_lp={cfg['dec_penalty_coeff']}"
         else:
-            return f"N={cfg['dict_size']}_l1={cfg['l1_coeff']}_lp={cfg['dec_penalty_coeff']}"
+            base = f"N={cfg['dict_size']}_l1={cfg['l1_coeff']}_lp={cfg['dec_penalty_coeff']}"
     else:
         if sae_name_prefix:
-            return f"{sae_name_prefix}_N={cfg['dict_size']}_k={cfg['topk']}_lp={cfg['dec_penalty_coeff']}"
+            base = f"{sae_name_prefix}_N={cfg['dict_size']}_k={cfg['topk']}_lp={cfg['dec_penalty_coeff']}"
         else:
-            return f"N={cfg['dict_size']}_k={cfg['topk']}_lp={cfg['dec_penalty_coeff']}"
+            base = f"N={cfg['dict_size']}_k={cfg['topk']}_lp={cfg['dec_penalty_coeff']}"
+    if cfg.get("normalize_per_part", False):
+        base = f"{base}_znorm"
+    odlw = cfg.get("output_dim_loss_weight", None)
+    if odlw is not None:
+        base = f"{base}_odlw={odlw}"
+    return base
 
 
 def get_encoder(cfg, model=None):
@@ -198,11 +204,19 @@ def get_config(
     if sae_type == "TopKAutoEncoder" or sae_type == "BatchTopKAutoEncoder":
         cfg["l1_coeff"] = None
     cfg["seed"] = seed
+    cfg.setdefault("normalize_per_part", False)
+    cfg.setdefault("output_dim_loss_weight", None)
+    cfg.setdefault("embedding_dim", 768)
+    cfg.setdefault("output_feature_dim", 0)
+    cfg.setdefault("superimpose_loss_weight", 0.0)
     return cfg
 
 
-def l2_loss_per_sample(x, x_reconstruct):
-    return (x_reconstruct - x.float()).pow(2).sum(-1).reshape(-1, 1)
+def l2_loss_per_sample(x, x_reconstruct, loss_weights=None):
+    sq_err = (x_reconstruct - x.float()).pow(2)
+    if loss_weights is not None:
+        sq_err = sq_err * loss_weights
+    return sq_err.sum(-1).reshape(-1, 1)
 
 
 class AutoEncoder(nn.Module):
@@ -234,22 +248,150 @@ class AutoEncoder(nn.Module):
         self.l1_coeff = l1_coeff
         self.save_dir = cfg["train_save_dir"]
 
+        # Within-feature curve consistency loss (superimpose-style). Penalizes the mean
+        # squared distance between each active sample's min-max-normalized prob curve and
+        # the feature's centroid. self._last_superimpose_loss is updated each forward()
+        # so callers (train_sae.py) can log it without re-computing.
+        self.superimpose_loss_weight = float(cfg.get("superimpose_loss_weight", 0.0))
+        self._emb_dim = cfg.get("embedding_dim", 768)
+        self._out_dim = cfg.get("output_feature_dim", 0)
+        self._last_superimpose_loss = 0.0
+
+        # Per-dim loss weights: 1.0 on embedding dims, output_dim_loss_weight on prob dims.
+        # If output_dim_loss_weight == "auto", the per-dim prob weight is set so that the
+        # prob block's total MSE contribution matches the ratio implied by
+        # output_feature_weight (ofw):
+        #     tail_w = (ofw / (1-ofw)) * (embedding_dim / output_feature_dim)
+        # so total_prob_loss / total_emb_loss == ofw / (1-ofw).
+        # Falls back to embedding_dim / output_feature_dim (i.e. 50:50) when ofw is unset
+        # or not in (0, 1).
+        odlw = cfg.get("output_dim_loss_weight", None)
+        emb_dim = cfg.get("embedding_dim", 768)
+        out_dim = cfg.get("output_feature_dim", 0)
+        if odlw is not None and out_dim > 0:
+            if isinstance(odlw, str) and odlw == "auto":
+                ofw = cfg.get("output_feature_weight", None)
+                if ofw is not None and 0.0 < float(ofw) < 1.0:
+                    ratio = float(ofw) / (1.0 - float(ofw))
+                else:
+                    ratio = 1.0
+                tail_w = ratio * float(emb_dim) / float(out_dim)
+            else:
+                tail_w = float(odlw)
+            weights = torch.ones(cfg["input_dim"], dtype=dtype)
+            weights[emb_dim:emb_dim + out_dim] = tail_w
+            self.register_buffer("loss_weights", weights)
+        else:
+            self.loss_weights = None
+
     def forward(self, x, return_acts=False, return_l2_error_per_sample=False):
         x_cent = x - self.dec.bias
         acts = F.relu(self.enc(x_cent))
         x_reconstruct = self.dec(acts)
-        l2_error_per_sample = l2_loss_per_sample(x, x_reconstruct)
+        l2_error_per_sample = l2_loss_per_sample(x, x_reconstruct, self.loss_weights)
         l2_loss = l2_error_per_sample.mean(0)
         l1_loss = self.l1_coeff * (acts.abs().sum().mean())
         loss = l2_loss + l1_loss
         if self.dec_penalty_coeff is not None:
             penalty = self.laplace_dec_penalty()
             loss += penalty
+        if self.superimpose_loss_weight > 0.0:
+            sup_loss = self.superimpose_consistency_loss(x, acts)
+            self._last_superimpose_loss = float(sup_loss.detach().item())
+            loss = loss + self.superimpose_loss_weight * sup_loss
+        else:
+            self._last_superimpose_loss = 0.0
         if not return_acts:
             acts = None
         if not return_l2_error_per_sample:
             l2_error_per_sample = None
         return loss, acts, penalty, l2_error_per_sample
+
+    def _compute_acts(self, x):
+        """Return (acts, x_cent) for this encoder's activation pattern. Subclasses
+        override to apply topk / batch-topk gating. The base class uses ReLU."""
+        x_cent = x - self.dec.bias
+        acts = F.relu(self.enc(x_cent))
+        return acts, x_cent
+
+    def forward_with_components(self, x):
+        """Forward pass returning loss components separately as a dict, so callers
+        can take per-loss gradients for GradNorm-style automatic weight balancing.
+
+        Returns dict:
+          recon_loss: scalar — weighted reconstruction MSE (the main objective)
+          sup_loss:   scalar — raw superimpose loss (before its weight); 0 if disabled
+          acts:       (B, F) sparse activations (or dense for base AutoEncoder)
+          x_reconstruct: (B, D) reconstruction
+          l2_error_per_sample: (B, 1) per-sample weighted MSE (used by freq-weighting)
+
+        Note: l1 penalty and laplace_dec_penalty are NOT included here — they aren't
+        active in the GradNorm-targeted training paths. Reconstruction is the only
+        primary loss; sup_loss and (externally-computed) ortho_loss are the aux losses
+        whose weights GradNorm tunes.
+        """
+        acts, _ = self._compute_acts(x)
+        x_reconstruct = self.dec(acts)
+        l2_error_per_sample = l2_loss_per_sample(x, x_reconstruct, self.loss_weights)
+        recon_loss = l2_error_per_sample.mean(0).squeeze()
+        sup_loss = self.superimpose_consistency_loss(x, acts)
+        self._last_superimpose_loss = float(sup_loss.detach().item())
+        return {
+            "recon_loss": recon_loss,
+            "sup_loss": sup_loss,
+            "acts": acts,
+            "x_reconstruct": x_reconstruct,
+            "l2_error_per_sample": l2_error_per_sample,
+        }
+
+    def superimpose_consistency_loss(self, x, acts):
+        """Mean squared distance between each active sample's min-max-normalized prob
+        curve and its feature's centroid curve, uniformly averaged over active (sample,
+        feature) pairs. Gradient flows through `acts` via the centroid (a weighted mean
+        of active samples' curves), not via a per-pair activation weight — that
+        previously let the encoder dodge the loss by attenuating activations on
+        dissimilar samples. Only features with ≥2 active samples contribute. Returns 0
+        if output_feature_dim ≤ 1 (structural — only meaningful with ≥2 timesteps).
+        Always computed when called from forward_with_components so GradNorm can take
+        per-loss grads regardless of the static superimpose_loss_weight."""
+        if self._out_dim <= 1 or acts is None:
+            return torch.tensor(0.0, device=x.device, dtype=x.dtype)
+        emb_dim, out_dim = self._emb_dim, self._out_dim
+        prob = x[:, emb_dim:emb_dim + out_dim].float()  # (B, T) — no grad through x
+        mins = prob.min(dim=-1, keepdim=True).values
+        maxs = prob.max(dim=-1, keepdim=True).values
+        rng = (maxs - mins).clamp(min=1e-6)
+        norm_prob = (prob - mins) / rng  # (B, T) each row in [0,1]
+
+        # Use activation magnitudes (not a hard mask) as soft weights so gradient flows
+        # back through `acts` → encoder weights.
+        w = acts.float()  # (B, F) — sparse from topk, zeros are exactly zero
+        active_count = (w > 0).float().sum(dim=0)  # (F,)
+        active_feat = active_count >= 2  # only features with ≥2 active samples
+        if not active_feat.any():
+            return torch.tensor(0.0, device=x.device, dtype=x.dtype)
+
+        w_sum = w.sum(dim=0).clamp(min=1e-6)  # (F,)
+        # Weighted centroid prob curve per feature
+        w_detached = w.detach()
+        centroids = (w_detached.T @ norm_prob) / w_sum.unsqueeze(-1)  # (F, T)
+
+        # Active (sample, feature) pairs
+        sample_idx, feat_idx = (w > 0).nonzero(as_tuple=True)
+        keep = active_feat[feat_idx]
+        sample_idx = sample_idx[keep]
+        feat_idx = feat_idx[keep]
+        if sample_idx.numel() == 0:
+            return torch.tensor(0.0, device=x.device, dtype=x.dtype)
+
+        diffs = norm_prob[sample_idx] - centroids[feat_idx]  # (n_active, T)
+        # Mean squared diff along the curve. Smoother gradient than L∞ (which
+        # only penalizes the single worst timestep) and uniform weighting across
+        # active pairs prevents the encoder from dodging the loss by attenuating
+        # activations on curve-dissimilar samples — gradient still flows through
+        # `acts` via the centroid term `(w.T @ norm_prob) / w_sum`.
+        l2_per_pair = diffs.pow(2).mean(dim=-1)  # (n_active,)
+        return l2_per_pair.mean()
 
     @torch.no_grad()
     def make_decoder_weights_and_grad_unit_norm(self):
@@ -289,6 +431,14 @@ class TopKAutoEncoder(AutoEncoder):
         super().__init__(cfg)
         self.k = cfg["topk"]
 
+    def _compute_acts(self, x):
+        x_cent = x - self.dec.bias
+        post_enc = self.enc(x_cent)
+        topk = torch.topk(post_enc, k=self.k, dim=-1)
+        values = F.relu(topk.values)
+        acts = torch.zeros_like(post_enc).scatter_(-1, topk.indices, values)
+        return acts, x_cent
+
     def forward(self, x, return_acts=False, return_l2_error_per_sample=False):
         x_cent = x - self.dec.bias
         post_enc = self.enc(x_cent)
@@ -298,11 +448,17 @@ class TopKAutoEncoder(AutoEncoder):
         acts = torch.zeros_like(post_enc).scatter_(-1, topk.indices, values)
         x_reconstruct = self.dec(acts)
         penalty = torch.tensor(0.0)
-        l2_error_per_sample = l2_loss_per_sample(x, x_reconstruct)
+        l2_error_per_sample = l2_loss_per_sample(x, x_reconstruct, self.loss_weights)
         loss = l2_error_per_sample.mean(0)
         if self.dec_penalty_coeff is not None:
             penalty = self.laplace_dec_penalty()
             loss += penalty
+        if self.superimpose_loss_weight > 0.0:
+            sup_loss = self.superimpose_consistency_loss(x, acts)
+            self._last_superimpose_loss = float(sup_loss.detach().item())
+            loss = loss + self.superimpose_loss_weight * sup_loss
+        else:
+            self._last_superimpose_loss = 0.0
         if not return_acts:
             acts = None
         if not return_l2_error_per_sample:
@@ -318,6 +474,17 @@ class BatchTopKAutoEncoder(TopKAutoEncoder):
     def __init__(self, cfg):
         super().__init__(cfg)
 
+    def _compute_acts(self, x):
+        batch_k = self.k * x.shape[0]
+        x_cent = x - self.dec.bias
+        post_enc = self.enc(x_cent)
+        post_enc_flat = post_enc.view(1, -1)
+        batch_topk = torch.topk(post_enc_flat, k=batch_k, dim=-1)
+        values = F.relu(batch_topk.values)
+        acts = torch.zeros_like(post_enc_flat).scatter_(-1, batch_topk.indices, values)
+        acts = acts.view(post_enc.size())
+        return acts, x_cent
+
     def forward(self, x, return_acts=False, return_l2_error_per_sample=False):
         batch_k = self.k * x.shape[0]
         x_cent = x - self.dec.bias
@@ -331,11 +498,17 @@ class BatchTopKAutoEncoder(TopKAutoEncoder):
         acts = acts.view(post_enc.size())
         x_reconstruct = self.dec(acts)
         penalty = torch.tensor(0.0)
-        l2_error_per_sample = l2_loss_per_sample(x, x_reconstruct)
+        l2_error_per_sample = l2_loss_per_sample(x, x_reconstruct, self.loss_weights)
         loss = l2_error_per_sample.mean(0)
         if self.dec_penalty_coeff is not None:
             penalty = self.laplace_dec_penalty()
             loss += penalty
+        if self.superimpose_loss_weight > 0.0:
+            sup_loss = self.superimpose_consistency_loss(x, acts)
+            self._last_superimpose_loss = float(sup_loss.detach().item())
+            loss = loss + self.superimpose_loss_weight * sup_loss
+        else:
+            self._last_superimpose_loss = 0.0
         if not return_acts:
             acts = None
         if not return_l2_error_per_sample:
@@ -375,17 +548,17 @@ def re_init(indices, encoder):
 # Eval functions
 
 def calc_feature_hist_and_densities(sae_dir: str):
-    acts = np.load(os.path.join(sae_dir, "feature_activations.npy"), mmap_mode="r")
+    # Load fully into RAM to avoid repeated column-slice reads on row-major memmap
+    acts = np.load(os.path.join(sae_dir, "feature_activations.npy"))
     all_hist = []
     all_bin_edges = []
-    all_densities = []
+    # Vectorize density: fraction of non-zero activations per feature
+    all_densities = ((acts > 0).sum(axis=0) / acts.shape[0]).tolist()
     for i in tqdm(range(acts.shape[1])):
         feature_acts = acts[:, i]
         hist, bin_edges = np.histogram(feature_acts, bins="auto")
         all_hist.append(hist)
         all_bin_edges.append(bin_edges)
-        density = feature_acts[feature_acts > 0].shape[0] / feature_acts.shape[0]
-        all_densities.append(density)
     np.savez(os.path.join(sae_dir, "feature_histograms.npz"), *all_hist)
     np.savez(os.path.join(sae_dir, "feature_bin_edges.npz"), *all_bin_edges)
     np.save(os.path.join(sae_dir, "feature_densities.npy"), all_densities)
@@ -396,8 +569,11 @@ def calc_feature_metrics(sae_dir: str, data_dirs:list, k: int = 50):
         input_feature_dir: str,
         word_ids: list[str],
     ) -> dict[str, np.ndarray]:
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+
         file_df = pd.read_csv(f"{input_feature_dir}/file_to_doc.csv")
         file_df.drop(columns=["num_words"], inplace=True)
+        file_df["doc_id"] = file_df["doc_id"].astype(str)
         all_doc_word_ids = {}
         for word_id in word_ids:
             doc_id = "_".join(word_id.split("_")[:-1])
@@ -407,21 +583,29 @@ def calc_feature_metrics(sae_dir: str, data_dirs:list, k: int = 50):
                 all_doc_word_ids[doc_id] = [word_id]
         doc_ids = list(all_doc_word_ids.keys())
         file_df = file_df[file_df["doc_id"].isin(doc_ids)]
-        orig_embeddings = {}
-        for file in tqdm(file_df["file"].to_list()):
-            docs = file_df[file_df["file"] == file]["doc_id"].to_list()
-            file = os.path.join(input_feature_dir, file)
+        # Group doc_ids by file upfront to avoid O(n) scan per file
+        file_to_docs = file_df.groupby("file")["doc_id"].apply(list).to_dict()
+
+        embedding_cols = [f"embedding_{i}" for i in range(768)]
+        cols = ["word_id"] + embedding_cols
+
+        def _process_file(file, docs):
+            filepath = os.path.join(input_feature_dir, file)
             file_word_ids = []
             for doc in docs:
                 file_word_ids += all_doc_word_ids[doc]
-            embedding_cols = [f"embedding_{i}" for i in range(768)]
-            cols = ["word_id"] + embedding_cols
-            words_df = pd.read_parquet(file, columns=cols, filters=[("word_id", 'in', file_word_ids)])
-            ordered_word_ids = words_df["word_id"].tolist()
-            embeddings_df = words_df[embedding_cols]
-            ordered_embeddings = embeddings_df.to_numpy()
-            for i, word_id in enumerate(ordered_word_ids):
-                orig_embeddings[word_id] = ordered_embeddings[i]
+            words_df = pd.read_parquet(filepath, columns=cols, filters=[("word_id", 'in', file_word_ids)])
+            embeddings = words_df[embedding_cols].to_numpy()
+            return dict(zip(words_df["word_id"].tolist(), embeddings))
+
+        orig_embeddings = {}
+        with ThreadPoolExecutor(max_workers=8) as executor:
+            futures = {
+                executor.submit(_process_file, file, docs): file
+                for file, docs in file_to_docs.items()
+            }
+            for future in tqdm(as_completed(futures), total=len(futures)):
+                orig_embeddings.update(future.result())
         return orig_embeddings
     
     with open(f"{sae_dir}/config.json", 'r') as f:
@@ -477,8 +661,8 @@ def calc_feature_metrics(sae_dir: str, data_dirs:list, k: int = 50):
     sample_centroid_embedding_dist = []
     sample_centroid_cos_sim = []
     
-    for feature in tqdm(topk_df["feature"].unique()):
-        feature_df = topk_df[topk_df["feature"] == feature]
+    grouped = topk_df.groupby("feature")
+    for feature, feature_df in tqdm(grouped):
         acts = feature_df["act_value"].values
         feature_embeddings = np.array([word_id_embeddings[word_id] for word_id in feature_df["word_id"].values])    # 50 x 768
         # max act value should be at top of vector since topk sorts

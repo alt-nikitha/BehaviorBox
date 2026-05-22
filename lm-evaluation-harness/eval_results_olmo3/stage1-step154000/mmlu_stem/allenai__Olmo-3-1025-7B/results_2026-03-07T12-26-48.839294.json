@@ -1,0 +1,1203 @@
+{
+  "results": {
+    "mmlu_stem": {
+      "acc,none": 0.4287979701871234,
+      "acc_stderr,none": 0.008585151594645088,
+      "alias": "stem"
+    },
+    "mmlu_abstract_algebra": {
+      "alias": " - abstract_algebra",
+      "acc,none": 0.22,
+      "acc_stderr,none": 0.041633319989322654
+    },
+    "mmlu_anatomy": {
+      "alias": " - anatomy",
+      "acc,none": 0.42962962962962964,
+      "acc_stderr,none": 0.04276349494376599
+    },
+    "mmlu_astronomy": {
+      "alias": " - astronomy",
+      "acc,none": 0.5723684210526315,
+      "acc_stderr,none": 0.04026097083296561
+    },
+    "mmlu_college_biology": {
+      "alias": " - college_biology",
+      "acc,none": 0.5694444444444444,
+      "acc_stderr,none": 0.04140685639111502
+    },
+    "mmlu_college_chemistry": {
+      "alias": " - college_chemistry",
+      "acc,none": 0.4,
+      "acc_stderr,none": 0.0492365963917331
+    },
+    "mmlu_college_computer_science": {
+      "alias": " - college_computer_science",
+      "acc,none": 0.4,
+      "acc_stderr,none": 0.0492365963917331
+    },
+    "mmlu_college_mathematics": {
+      "alias": " - college_mathematics",
+      "acc,none": 0.3,
+      "acc_stderr,none": 0.04605661864718382
+    },
+    "mmlu_college_physics": {
+      "alias": " - college_physics",
+      "acc,none": 0.4411764705882353,
+      "acc_stderr,none": 0.049406356306056644
+    },
+    "mmlu_computer_security": {
+      "alias": " - computer_security",
+      "acc,none": 0.67,
+      "acc_stderr,none": 0.04725815626252609
+    },
+    "mmlu_conceptual_physics": {
+      "alias": " - conceptual_physics",
+      "acc,none": 0.44680851063829785,
+      "acc_stderr,none": 0.03250053684365844
+    },
+    "mmlu_electrical_engineering": {
+      "alias": " - electrical_engineering",
+      "acc,none": 0.5241379310344828,
+      "acc_stderr,none": 0.04161808503501534
+    },
+    "mmlu_elementary_mathematics": {
+      "alias": " - elementary_mathematics",
+      "acc,none": 0.31216931216931215,
+      "acc_stderr,none": 0.023865206836972675
+    },
+    "mmlu_high_school_biology": {
+      "alias": " - high_school_biology",
+      "acc,none": 0.6225806451612903,
+      "acc_stderr,none": 0.02757596072327827
+    },
+    "mmlu_high_school_chemistry": {
+      "alias": " - high_school_chemistry",
+      "acc,none": 0.4187192118226601,
+      "acc_stderr,none": 0.03471192860518467
+    },
+    "mmlu_high_school_computer_science": {
+      "alias": " - high_school_computer_science",
+      "acc,none": 0.47,
+      "acc_stderr,none": 0.05016135580465919
+    },
+    "mmlu_high_school_mathematics": {
+      "alias": " - high_school_mathematics",
+      "acc,none": 0.3111111111111111,
+      "acc_stderr,none": 0.028226446749683488
+    },
+    "mmlu_high_school_physics": {
+      "alias": " - high_school_physics",
+      "acc,none": 0.31125827814569534,
+      "acc_stderr,none": 0.03780445850526736
+    },
+    "mmlu_high_school_statistics": {
+      "alias": " - high_school_statistics",
+      "acc,none": 0.42592592592592593,
+      "acc_stderr,none": 0.03372343271653058
+    },
+    "mmlu_machine_learning": {
+      "alias": " - machine_learning",
+      "acc,none": 0.30357142857142855,
+      "acc_stderr,none": 0.043642261558410424
+    }
+  },
+  "groups": {
+    "mmlu_stem": {
+      "acc,none": 0.4287979701871234,
+      "acc_stderr,none": 0.008585151594645088,
+      "alias": "stem"
+    }
+  },
+  "group_subtasks": {
+    "mmlu_stem": [
+      "mmlu_abstract_algebra",
+      "mmlu_anatomy",
+      "mmlu_astronomy",
+      "mmlu_college_biology",
+      "mmlu_college_chemistry",
+      "mmlu_college_computer_science",
+      "mmlu_college_mathematics",
+      "mmlu_college_physics",
+      "mmlu_computer_security",
+      "mmlu_conceptual_physics",
+      "mmlu_electrical_engineering",
+      "mmlu_elementary_mathematics",
+      "mmlu_high_school_biology",
+      "mmlu_high_school_chemistry",
+      "mmlu_high_school_computer_science",
+      "mmlu_high_school_mathematics",
+      "mmlu_high_school_physics",
+      "mmlu_high_school_statistics",
+      "mmlu_machine_learning"
+    ]
+  },
+  "configs": {
+    "mmlu_abstract_algebra": {
+      "task": "mmlu_abstract_algebra",
+      "task_alias": "abstract_algebra",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "abstract_algebra",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about abstract algebra.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/Olmo-3-1025-7B",
+        "revision": "stage1-step154000",
+        "gpu_memory_utilization": 0.9,
+        "dtype": "auto",
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_anatomy": {
+      "task": "mmlu_anatomy",
+      "task_alias": "anatomy",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "anatomy",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about anatomy.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/Olmo-3-1025-7B",
+        "revision": "stage1-step154000",
+        "gpu_memory_utilization": 0.9,
+        "dtype": "auto",
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_astronomy": {
+      "task": "mmlu_astronomy",
+      "task_alias": "astronomy",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "astronomy",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about astronomy.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/Olmo-3-1025-7B",
+        "revision": "stage1-step154000",
+        "gpu_memory_utilization": 0.9,
+        "dtype": "auto",
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_college_biology": {
+      "task": "mmlu_college_biology",
+      "task_alias": "college_biology",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "college_biology",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about college biology.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/Olmo-3-1025-7B",
+        "revision": "stage1-step154000",
+        "gpu_memory_utilization": 0.9,
+        "dtype": "auto",
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_college_chemistry": {
+      "task": "mmlu_college_chemistry",
+      "task_alias": "college_chemistry",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "college_chemistry",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about college chemistry.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/Olmo-3-1025-7B",
+        "revision": "stage1-step154000",
+        "gpu_memory_utilization": 0.9,
+        "dtype": "auto",
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_college_computer_science": {
+      "task": "mmlu_college_computer_science",
+      "task_alias": "college_computer_science",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "college_computer_science",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about college computer science.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/Olmo-3-1025-7B",
+        "revision": "stage1-step154000",
+        "gpu_memory_utilization": 0.9,
+        "dtype": "auto",
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_college_mathematics": {
+      "task": "mmlu_college_mathematics",
+      "task_alias": "college_mathematics",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "college_mathematics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about college mathematics.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/Olmo-3-1025-7B",
+        "revision": "stage1-step154000",
+        "gpu_memory_utilization": 0.9,
+        "dtype": "auto",
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_college_physics": {
+      "task": "mmlu_college_physics",
+      "task_alias": "college_physics",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "college_physics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about college physics.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/Olmo-3-1025-7B",
+        "revision": "stage1-step154000",
+        "gpu_memory_utilization": 0.9,
+        "dtype": "auto",
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_computer_security": {
+      "task": "mmlu_computer_security",
+      "task_alias": "computer_security",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "computer_security",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about computer security.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/Olmo-3-1025-7B",
+        "revision": "stage1-step154000",
+        "gpu_memory_utilization": 0.9,
+        "dtype": "auto",
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_conceptual_physics": {
+      "task": "mmlu_conceptual_physics",
+      "task_alias": "conceptual_physics",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "conceptual_physics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about conceptual physics.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/Olmo-3-1025-7B",
+        "revision": "stage1-step154000",
+        "gpu_memory_utilization": 0.9,
+        "dtype": "auto",
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_electrical_engineering": {
+      "task": "mmlu_electrical_engineering",
+      "task_alias": "electrical_engineering",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "electrical_engineering",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about electrical engineering.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/Olmo-3-1025-7B",
+        "revision": "stage1-step154000",
+        "gpu_memory_utilization": 0.9,
+        "dtype": "auto",
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_elementary_mathematics": {
+      "task": "mmlu_elementary_mathematics",
+      "task_alias": "elementary_mathematics",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "elementary_mathematics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about elementary mathematics.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/Olmo-3-1025-7B",
+        "revision": "stage1-step154000",
+        "gpu_memory_utilization": 0.9,
+        "dtype": "auto",
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_high_school_biology": {
+      "task": "mmlu_high_school_biology",
+      "task_alias": "high_school_biology",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "high_school_biology",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about high school biology.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/Olmo-3-1025-7B",
+        "revision": "stage1-step154000",
+        "gpu_memory_utilization": 0.9,
+        "dtype": "auto",
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_high_school_chemistry": {
+      "task": "mmlu_high_school_chemistry",
+      "task_alias": "high_school_chemistry",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "high_school_chemistry",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about high school chemistry.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/Olmo-3-1025-7B",
+        "revision": "stage1-step154000",
+        "gpu_memory_utilization": 0.9,
+        "dtype": "auto",
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_high_school_computer_science": {
+      "task": "mmlu_high_school_computer_science",
+      "task_alias": "high_school_computer_science",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "high_school_computer_science",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about high school computer science.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/Olmo-3-1025-7B",
+        "revision": "stage1-step154000",
+        "gpu_memory_utilization": 0.9,
+        "dtype": "auto",
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_high_school_mathematics": {
+      "task": "mmlu_high_school_mathematics",
+      "task_alias": "high_school_mathematics",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "high_school_mathematics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about high school mathematics.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/Olmo-3-1025-7B",
+        "revision": "stage1-step154000",
+        "gpu_memory_utilization": 0.9,
+        "dtype": "auto",
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_high_school_physics": {
+      "task": "mmlu_high_school_physics",
+      "task_alias": "high_school_physics",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "high_school_physics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about high school physics.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/Olmo-3-1025-7B",
+        "revision": "stage1-step154000",
+        "gpu_memory_utilization": 0.9,
+        "dtype": "auto",
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_high_school_statistics": {
+      "task": "mmlu_high_school_statistics",
+      "task_alias": "high_school_statistics",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "high_school_statistics",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about high school statistics.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/Olmo-3-1025-7B",
+        "revision": "stage1-step154000",
+        "gpu_memory_utilization": 0.9,
+        "dtype": "auto",
+        "trust_remote_code": true
+      }
+    },
+    "mmlu_machine_learning": {
+      "task": "mmlu_machine_learning",
+      "task_alias": "machine_learning",
+      "tag": "mmlu_stem_tasks",
+      "dataset_path": "cais/mmlu",
+      "dataset_name": "machine_learning",
+      "test_split": "test",
+      "fewshot_split": "dev",
+      "doc_to_text": "{{question.strip()}}\nA. {{choices[0]}}\nB. {{choices[1]}}\nC. {{choices[2]}}\nD. {{choices[3]}}\nAnswer:",
+      "doc_to_target": "answer",
+      "unsafe_code": false,
+      "doc_to_choice": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "description": "The following are multiple choice questions (with answers) about machine learning.\n\n",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "first_n"
+      },
+      "num_fewshot": 5,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "multiple_choice",
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "pretrained": "allenai/Olmo-3-1025-7B",
+        "revision": "stage1-step154000",
+        "gpu_memory_utilization": 0.9,
+        "dtype": "auto",
+        "trust_remote_code": true
+      }
+    }
+  },
+  "versions": {
+    "mmlu_abstract_algebra": 1.0,
+    "mmlu_anatomy": 1.0,
+    "mmlu_astronomy": 1.0,
+    "mmlu_college_biology": 1.0,
+    "mmlu_college_chemistry": 1.0,
+    "mmlu_college_computer_science": 1.0,
+    "mmlu_college_mathematics": 1.0,
+    "mmlu_college_physics": 1.0,
+    "mmlu_computer_security": 1.0,
+    "mmlu_conceptual_physics": 1.0,
+    "mmlu_electrical_engineering": 1.0,
+    "mmlu_elementary_mathematics": 1.0,
+    "mmlu_high_school_biology": 1.0,
+    "mmlu_high_school_chemistry": 1.0,
+    "mmlu_high_school_computer_science": 1.0,
+    "mmlu_high_school_mathematics": 1.0,
+    "mmlu_high_school_physics": 1.0,
+    "mmlu_high_school_statistics": 1.0,
+    "mmlu_machine_learning": 1.0,
+    "mmlu_stem": 2
+  },
+  "n-shot": {
+    "mmlu_abstract_algebra": 5,
+    "mmlu_anatomy": 5,
+    "mmlu_astronomy": 5,
+    "mmlu_college_biology": 5,
+    "mmlu_college_chemistry": 5,
+    "mmlu_college_computer_science": 5,
+    "mmlu_college_mathematics": 5,
+    "mmlu_college_physics": 5,
+    "mmlu_computer_security": 5,
+    "mmlu_conceptual_physics": 5,
+    "mmlu_electrical_engineering": 5,
+    "mmlu_elementary_mathematics": 5,
+    "mmlu_high_school_biology": 5,
+    "mmlu_high_school_chemistry": 5,
+    "mmlu_high_school_computer_science": 5,
+    "mmlu_high_school_mathematics": 5,
+    "mmlu_high_school_physics": 5,
+    "mmlu_high_school_statistics": 5,
+    "mmlu_machine_learning": 5
+  },
+  "higher_is_better": {
+    "mmlu_abstract_algebra": {
+      "acc": true
+    },
+    "mmlu_anatomy": {
+      "acc": true
+    },
+    "mmlu_astronomy": {
+      "acc": true
+    },
+    "mmlu_college_biology": {
+      "acc": true
+    },
+    "mmlu_college_chemistry": {
+      "acc": true
+    },
+    "mmlu_college_computer_science": {
+      "acc": true
+    },
+    "mmlu_college_mathematics": {
+      "acc": true
+    },
+    "mmlu_college_physics": {
+      "acc": true
+    },
+    "mmlu_computer_security": {
+      "acc": true
+    },
+    "mmlu_conceptual_physics": {
+      "acc": true
+    },
+    "mmlu_electrical_engineering": {
+      "acc": true
+    },
+    "mmlu_elementary_mathematics": {
+      "acc": true
+    },
+    "mmlu_high_school_biology": {
+      "acc": true
+    },
+    "mmlu_high_school_chemistry": {
+      "acc": true
+    },
+    "mmlu_high_school_computer_science": {
+      "acc": true
+    },
+    "mmlu_high_school_mathematics": {
+      "acc": true
+    },
+    "mmlu_high_school_physics": {
+      "acc": true
+    },
+    "mmlu_high_school_statistics": {
+      "acc": true
+    },
+    "mmlu_machine_learning": {
+      "acc": true
+    },
+    "mmlu_stem": {
+      "acc": true
+    }
+  },
+  "n-samples": {
+    "mmlu_abstract_algebra": {
+      "original": 100,
+      "effective": 100
+    },
+    "mmlu_anatomy": {
+      "original": 135,
+      "effective": 135
+    },
+    "mmlu_astronomy": {
+      "original": 152,
+      "effective": 152
+    },
+    "mmlu_college_biology": {
+      "original": 144,
+      "effective": 144
+    },
+    "mmlu_college_chemistry": {
+      "original": 100,
+      "effective": 100
+    },
+    "mmlu_college_computer_science": {
+      "original": 100,
+      "effective": 100
+    },
+    "mmlu_college_mathematics": {
+      "original": 100,
+      "effective": 100
+    },
+    "mmlu_college_physics": {
+      "original": 102,
+      "effective": 102
+    },
+    "mmlu_computer_security": {
+      "original": 100,
+      "effective": 100
+    },
+    "mmlu_conceptual_physics": {
+      "original": 235,
+      "effective": 235
+    },
+    "mmlu_electrical_engineering": {
+      "original": 145,
+      "effective": 145
+    },
+    "mmlu_elementary_mathematics": {
+      "original": 378,
+      "effective": 378
+    },
+    "mmlu_high_school_biology": {
+      "original": 310,
+      "effective": 310
+    },
+    "mmlu_high_school_chemistry": {
+      "original": 203,
+      "effective": 203
+    },
+    "mmlu_high_school_computer_science": {
+      "original": 100,
+      "effective": 100
+    },
+    "mmlu_high_school_mathematics": {
+      "original": 270,
+      "effective": 270
+    },
+    "mmlu_high_school_physics": {
+      "original": 151,
+      "effective": 151
+    },
+    "mmlu_high_school_statistics": {
+      "original": 216,
+      "effective": 216
+    },
+    "mmlu_machine_learning": {
+      "original": 112,
+      "effective": 112
+    }
+  },
+  "config": {
+    "model": "vllm",
+    "model_args": "pretrained=allenai/Olmo-3-1025-7B,revision=stage1-step154000,gpu_memory_utilization=0.9,dtype=auto,trust_remote_code=True",
+    "batch_size": "auto",
+    "batch_sizes": [],
+    "device": null,
+    "use_cache": null,
+    "limit": null,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": null,
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234
+  },
+  "git_hash": "242ec103",
+  "date": 1772903391.0971427,
+  "pretty_env_info": "PyTorch version: 2.9.1+cu128\nIs debug build: False\nCUDA used to build PyTorch: 12.8\nROCM used to build PyTorch: N/A\n\nOS: AlmaLinux 9.5 (Teal Serval) (x86_64)\nGCC version: (GCC) 11.5.0 20240719 (Red Hat 11.5.0-5)\nClang version: Could not collect\nCMake version: version 3.26.5\nLibc version: glibc-2.34\n\nPython version: 3.13.7 | packaged by Anaconda, Inc. | (main, Sep  9 2025, 19:59:03) [GCC 11.2.0] (64-bit runtime)\nPython platform: Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34\nIs CUDA available: True\nCUDA runtime version: Could not collect\nCUDA_MODULE_LOADING set to: \nGPU models and configuration: GPU 0: NVIDIA RTX A6000\nNvidia driver version: 575.51.03\ncuDNN version: Probably one of the following:\n/usr/lib64/libcudnn.so.8.9.7\n/usr/lib64/libcudnn.so.9.10.0\n/usr/lib64/libcudnn_adv.so.9.10.0\n/usr/lib64/libcudnn_adv_infer.so.8.9.7\n/usr/lib64/libcudnn_adv_train.so.8.9.7\n/usr/lib64/libcudnn_cnn.so.9.10.0\n/usr/lib64/libcudnn_cnn_infer.so.8.9.7\n/usr/lib64/libcudnn_cnn_train.so.8.9.7\n/usr/lib64/libcudnn_engines_precompiled.so.9.10.0\n/usr/lib64/libcudnn_engines_runtime_compiled.so.9.10.0\n/usr/lib64/libcudnn_graph.so.9.10.0\n/usr/lib64/libcudnn_heuristic.so.9.10.0\n/usr/lib64/libcudnn_ops.so.9.10.0\n/usr/lib64/libcudnn_ops_infer.so.8.9.7\n/usr/lib64/libcudnn_ops_train.so.8.9.7\nIs XPU available: False\nHIP runtime version: N/A\nMIOpen runtime version: N/A\nIs XNNPACK available: True\n\nCPU:\nArchitecture:                         x86_64\nCPU op-mode(s):                       32-bit, 64-bit\nAddress sizes:                        48 bits physical, 48 bits virtual\nByte Order:                           Little Endian\nCPU(s):                               128\nOn-line CPU(s) list:                  0-127\nVendor ID:                            AuthenticAMD\nModel name:                           AMD EPYC 7763 64-Core Processor\nCPU family:                           25\nModel:                                1\nThread(s) per core:                   1\nCore(s) per socket:                   64\nSocket(s):                            2\nStepping:                             1\nFrequency boost:                      enabled\nCPU(s) scaling MHz:                   73%\nCPU max MHz:                          3529.0520\nCPU min MHz:                          1500.0000\nBogoMIPS:                             4900.17\nFlags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl nonstop_tsc cpuid extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 pcid sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpb cat_l3 cdp_l3 hw_pstate ssbd mba ibrs ibpb stibp vmmcall fsgsbase bmi1 avx2 smep bmi2 invpcid cqm rdt_a rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local clzero irperf xsaveerptr rdpru wbnoinvd amd_ppin brs arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold v_vmsave_vmload vgif v_spec_ctrl umip pku ospke vaes vpclmulqdq rdpid overflow_recov succor smca debug_swap\nVirtualization:                       AMD-V\nL1d cache:                            4 MiB (128 instances)\nL1i cache:                            4 MiB (128 instances)\nL2 cache:                             64 MiB (128 instances)\nL3 cache:                             512 MiB (16 instances)\nNUMA node(s):                         2\nNUMA node0 CPU(s):                    0-63\nNUMA node1 CPU(s):                    64-127\nVulnerability Gather data sampling:   Not affected\nVulnerability Itlb multihit:          Not affected\nVulnerability L1tf:                   Not affected\nVulnerability Mds:                    Not affected\nVulnerability Meltdown:               Not affected\nVulnerability Mmio stale data:        Not affected\nVulnerability Reg file data sampling: Not affected\nVulnerability Retbleed:               Not affected\nVulnerability Spec rstack overflow:   Mitigation; Safe RET\nVulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:             Mitigation; Retpolines; IBPB conditional; IBRS_FW; STIBP disabled; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected\nVulnerability Srbds:                  Not affected\nVulnerability Tsx async abort:        Not affected\n\nVersions of relevant libraries:\n[pip3] asyncclick==8.2.2.2\n[pip3] numpy==2.2.6\n[pip3] nvidia-cublas-cu12==12.8.4.1\n[pip3] nvidia-cuda-cupti-cu12==12.8.90\n[pip3] nvidia-cuda-nvrtc-cu12==12.8.93\n[pip3] nvidia-cuda-runtime-cu12==12.8.90\n[pip3] nvidia-cudnn-cu12==9.10.2.21\n[pip3] nvidia-cudnn-frontend==1.18.0\n[pip3] nvidia-cufft-cu12==11.3.3.83\n[pip3] nvidia-curand-cu12==10.3.9.90\n[pip3] nvidia-cusolver-cu12==11.7.3.90\n[pip3] nvidia-cusparse-cu12==12.5.8.93\n[pip3] nvidia-cusparselt-cu12==0.7.1\n[pip3] nvidia-nccl-cu12==2.27.5\n[pip3] nvidia-nvjitlink-cu12==12.8.93\n[pip3] nvidia-nvtx-cu12==12.8.90\n[pip3] torch==2.9.1\n[pip3] torchaudio==2.9.1\n[pip3] torchvision==0.24.1\n[pip3] triton==3.5.1\n[conda] asyncclick                           8.2.2.2          pypi_0              pypi\n[conda] numpy                                2.2.6            pypi_0              pypi\n[conda] nvidia-cublas-cu12                   12.8.4.1         pypi_0              pypi\n[conda] nvidia-cuda-cupti-cu12               12.8.90          pypi_0              pypi\n[conda] nvidia-cuda-nvrtc-cu12               12.8.93          pypi_0              pypi\n[conda] nvidia-cuda-runtime-cu12             12.8.90          pypi_0              pypi\n[conda] nvidia-cudnn-cu12                    9.10.2.21        pypi_0              pypi\n[conda] nvidia-cudnn-frontend                1.18.0           pypi_0              pypi\n[conda] nvidia-cufft-cu12                    11.3.3.83        pypi_0              pypi\n[conda] nvidia-curand-cu12                   10.3.9.90        pypi_0              pypi\n[conda] nvidia-cusolver-cu12                 11.7.3.90        pypi_0              pypi\n[conda] nvidia-cusparse-cu12                 12.5.8.93        pypi_0              pypi\n[conda] nvidia-cusparselt-cu12               0.7.1            pypi_0              pypi\n[conda] nvidia-nccl-cu12                     2.27.5           pypi_0              pypi\n[conda] nvidia-nvjitlink-cu12                12.8.93          pypi_0              pypi\n[conda] nvidia-nvtx-cu12                     12.8.90          pypi_0              pypi\n[conda] torch                                2.9.1            pypi_0              pypi\n[conda] torchaudio                           2.9.1            pypi_0              pypi\n[conda] torchvision                          0.24.1           pypi_0              pypi\n[conda] triton                               3.5.1            pypi_0              pypi",
+  "transformers_version": "4.57.6",
+  "lm_eval_version": "0.4.9.2",
+  "upper_git_hash": null,
+  "tokenizer_pad_token": [
+    "<|pad|>",
+    "100277"
+  ],
+  "tokenizer_eos_token": [
+    "<|endoftext|>",
+    "100257"
+  ],
+  "tokenizer_bos_token": [
+    null,
+    "None"
+  ],
+  "eot_token_id": 100257,
+  "max_length": 8192,
+  "task_hashes": {
+    "mmlu_abstract_algebra": "0e2f49943ac30da4eb2d7d2f5db73abb69da69d6988007197e6bdf138bfb3369",
+    "mmlu_anatomy": "9578a460fa25b65077e6da48a36e49d1e6b094807d65c9e5bf7e07ad0fbb6296",
+    "mmlu_astronomy": "83e572d3948bb6dbfb66031ab4dcb5b70054a5bc110de1a0fbc324940f4c04da",
+    "mmlu_college_biology": "14cbae605287fc3c9ff25c8f2b2175619e036287a2e217767382b5f48f044943",
+    "mmlu_college_chemistry": "20b91eb7e582696bf39216d1757ac477675fe6de640150d7ae29993234af04dc",
+    "mmlu_college_computer_science": "c2355a53d39d8bf1fbec4ea4b0f2b50c3fe104f2b36556ecae1038b0c315816a",
+    "mmlu_college_mathematics": "33a226a6b1a6492f38387286d516c0941f5d8debbdfaa054b11fcda1cdb6dc1a",
+    "mmlu_college_physics": "ffe4456084dbfeb89e20d4b6138b97bbf415fd619691dbc7b38bfe5934b30e10",
+    "mmlu_computer_security": "e122c4bc113d812e7e083e316b358cc7e16a0d1c2e6506480caebcf9d1e27ecd",
+    "mmlu_conceptual_physics": "d9a7c4fd2d286215624dffc2aaec8e0295a6353daf2300d3461537e3fb5425eb",
+    "mmlu_electrical_engineering": "58857d23657299553045d3db7b7b0de43f9a078a2fd53902d0e59251ac497e9c",
+    "mmlu_elementary_mathematics": "da1d3600f010ce76c00a62b991b7606ee7df0b2e82413ee1f1977440ddd8550d",
+    "mmlu_high_school_biology": "cfa833fafa27f991b540ece0e0583e1ebedfcaa50d030891935b000b7757c1cb",
+    "mmlu_high_school_chemistry": "7b7e216abbacc50a1613fc9e02f3f3dda2709059394b121e43f3ad534cadcf80",
+    "mmlu_high_school_computer_science": "2db28b8942d29e448cb587b398788f3cba6693cfe20772102b5bb1907999abea",
+    "mmlu_high_school_mathematics": "313c7a073f5b7339d283ad977ea74584374b6e0281898dfd89ff4bdfd2fb7b03",
+    "mmlu_high_school_physics": "7780579caacd56f607968e81d5256d7d386095ab1d93b672047c5a5d8444ec1d",
+    "mmlu_high_school_statistics": "0598ccf63c944eeab0ba3ad2dcfbcaebddf4c5d124174071beb52e8a73f19e86",
+    "mmlu_machine_learning": "d02c202c0ad4c729890962d842ea70cad80faaae66a51a4c35c3685783ca06c1"
+  },
+  "model_source": "vllm",
+  "model_name": "allenai/Olmo-3-1025-7B",
+  "model_name_sanitized": "allenai__Olmo-3-1025-7B",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": false,
+  "chat_template": null,
+  "chat_template_sha": null,
+  "start_time": 444895.948318404,
+  "end_time": 445920.857394276,
+  "total_evaluation_time_seconds": "1024.9090758720413"
+}

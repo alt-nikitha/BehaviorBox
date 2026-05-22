@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from collections import defaultdict
 
 # --- Configuration ---
-ROOT_DIR = './eval_results'
+ROOT_DIR = './eval_results_marin'
 SAVE_DIR = os.path.join(ROOT_DIR, 'plots')
 
 # Priority for Harness v0.4 metrics
@@ -50,8 +50,15 @@ def get_sort_key(name):
             int(step_match.group(1)) if step_match else 0)
 
 # 1. Sort Checkpoints
-folders = [f for f in os.listdir(ROOT_DIR) if os.path.isdir(os.path.join(ROOT_DIR, f)) and f != 'plots']
-sorted_ckpts = sorted(folders, key=get_sort_key)
+if "marin" in ROOT_DIR.lower():
+    with open("/home/nsrikant/BehaviorBoxNew/checkpoints_info/marin_8b_checkpoints.txt", "r") as fp:
+        sorted_ckpts = fp.read().splitlines()
+    
+else:
+
+    folders = [f for f in os.listdir(ROOT_DIR) if os.path.isdir(os.path.join(ROOT_DIR, f)) and f != 'plots']
+
+    sorted_ckpts = sorted(folders, key=get_sort_key)
 
 # 2. Extract Data
 task_data = defaultdict(dict)

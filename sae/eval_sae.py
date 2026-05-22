@@ -70,13 +70,14 @@ def get_eval_metrics_and_topk_feature_acts(
     """
     batch_size = 512
     topk_acts = torch.full((topk, cfg["dict_size"]), -np.inf).to(cfg["device"])
-    topk_indices = torch.full((topk, cfg["dict_size"]), -1).to(cfg["device"])
-    topk_error = torch.full((topk, cfg["dict_size"]), np.inf).to(cfg["device"])
-    
+    topk_indices = torch.full((topk, cfg["dict_size"]), -1, dtype=torch.long).to(cfg["device"])
+
     mse = 0
     num_samples = 0
     activated = torch.zeros(cfg["dict_size"]).to(cfg["device"])
-    
+    # Collect all per-sample errors in a flat list; look up by index at the end
+    all_errors = []
+
     prev_data_size = 0
     num_random_indices = math.floor(512 * random_acts_percent)
     if save_activations:
@@ -96,18 +97,14 @@ def get_eval_metrics_and_topk_feature_acts(
                     mse = mse * (num_samples / (num_samples + batch.shape[0])) + torch.sum(error_per_sample).item() / (num_samples + batch.shape[0])
                     num_samples += batch.shape[0]
                     activated += (batch_acts > 0).sum(0)
-                    feature_samples_error = torch.tile(error_per_sample, (1, cfg["dict_size"]))
+                    all_errors.append(error_per_sample.squeeze(-1).cpu())
                     npaa.append(batch_acts[random_indices].cpu().numpy())
-                    acts = torch.cat([topk_acts, batch_acts], 0)   # 562 x dict_size
-                    error = torch.cat([topk_error, feature_samples_error], 0) # 562
+                    acts = torch.cat([topk_acts, batch_acts], 0)   # (topk+batch) x dict_size
                     start_idx = (i * batch_size) + prev_data_size
                     end_idx = start_idx + batch.shape[0]
-                    batch_indices = torch.tile(
-                        torch.arange(start_idx, end_idx).reshape(-1, 1), (1, cfg["dict_size"])
-                    ).to(cfg["device"])
-                    indices = torch.cat([topk_indices, batch_indices], 0) 
+                    batch_indices = torch.arange(start_idx, end_idx, device=cfg["device"]).unsqueeze(1).expand(-1, cfg["dict_size"])
+                    indices = torch.cat([topk_indices, batch_indices], 0)
                     topk_acts, sorted_indices = torch.topk(acts, topk, dim=0)
-                    topk_error = torch.gather(error, 0, sorted_indices)
                     topk_indices = torch.gather(indices, 0, sorted_indices)
         else:
             for i, batch in tqdm(enumerate(background_loader)):
@@ -116,20 +113,20 @@ def get_eval_metrics_and_topk_feature_acts(
                 mse = mse * (num_samples / (num_samples + batch.shape[0])) + torch.sum(error_per_sample).item() / (num_samples + batch.shape[0])
                 num_samples += batch.shape[0]
                 activated += (batch_acts > 0).sum(0)
-                feature_samples_error = torch.tile(error_per_sample, (1, cfg["dict_size"]))
-                acts = torch.cat([topk_acts, batch_acts], 0)   # 562 x dict_size
-                error = torch.cat([topk_error, feature_samples_error], 0)
+                all_errors.append(error_per_sample.squeeze(-1).cpu())
+                acts = torch.cat([topk_acts, batch_acts], 0)   # (topk+batch) x dict_size
                 start_idx = (i * batch_size) + prev_data_size
                 end_idx = start_idx + batch.shape[0]
-                batch_indices = torch.tile(
-                    torch.arange(start_idx, end_idx).reshape(-1, 1), (1, cfg["dict_size"])
-                ).to(cfg["device"])
-                indices = torch.cat([topk_indices, batch_indices], 0) 
+                batch_indices = torch.arange(start_idx, end_idx, device=cfg["device"]).unsqueeze(1).expand(-1, cfg["dict_size"])
+                indices = torch.cat([topk_indices, batch_indices], 0)
                 topk_acts, sorted_indices = torch.topk(acts, topk, dim=0)
-                topk_error = torch.gather(error, 0, sorted_indices)
                 topk_indices = torch.gather(indices, 0, sorted_indices)
         prev_data_size += data.shape[0]
     percent_dead = (activated == 0).sum().item() / cfg["dict_size"]
+
+    # Look up errors for the topk indices
+    all_errors = torch.cat(all_errors, dim=0)  # (total_samples,)
+    topk_error = all_errors[topk_indices.cpu()]  # (topk, dict_size)
 
     metrics_dict = {
         "num_samples": num_samples,
@@ -238,6 +235,74 @@ def get_eval_metrics_and_topk_feature_acts(
     default=0.7,
 )
 @click.option(
+    "--use_delta_prob",
+    help="Use consecutive prob deltas (p_i - p_{i+1}) instead of raw probs as output features",
+    type=bool,
+    default=False,
+)
+@click.option(
+    "--use_delta_logprob",
+    help="Use consecutive logprob deltas (log p_i - log p_{i+1}) as output features (mutually exclusive with --use_delta_prob)",
+    type=bool,
+    default=False,
+)
+@click.option(
+    "--decoder_ortho_loss_weight",
+    help="If > 0, decoder orthogonality penalty weight (used to locate the trained SAE checkpoint)",
+    type=float,
+    default=0.0,
+)
+@click.option(
+    "--normalize_per_part",
+    help="Z-score embedding/prob blocks independently (must match training run for SAE folder lookup)",
+    type=bool,
+    default=False,
+)
+@click.option(
+    "--output_dim_loss_weight",
+    help="Per-dim loss weight on prob block used at training time (must match for SAE folder lookup): "
+         "'auto', a float, or unset",
+    type=str,
+    default=None,
+)
+@click.option(
+    "--variance_filter_top_pct",
+    help="Variance filter fraction used at training time (must match for SAE folder lookup). "
+         "Eval still runs over the full dataset.",
+    type=float,
+    default=None,
+)
+@click.option(
+    "--variance_filter_mode",
+    help="Variance filter mode used at training time (must match for SAE folder lookup).",
+    type=click.Choice(["linear", "log"]),
+    default="linear",
+)
+@click.option(
+    "--cluster_strat_k",
+    help="Cluster-stratified sampling K used at training time (must match for SAE folder lookup).",
+    type=int,
+    default=0,
+)
+@click.option(
+    "--cluster_strat_per_cluster",
+    help="Per-cluster count used at training time (must match for SAE folder lookup).",
+    type=int,
+    default=2000,
+)
+@click.option(
+    "--cluster_strat_mode",
+    help="Cluster-stratified mode used at training time (must match for SAE folder lookup).",
+    type=click.Choice(["linear", "log"]),
+    default="linear",
+)
+@click.option(
+    "--superimpose_loss_weight",
+    help="Superimpose-loss weight used at training time (must match for SAE folder lookup).",
+    type=float,
+    default=0.0,
+)
+@click.option(
     "--self_eval_mode",
     help="Self Eval Mode",
     type=bool,
@@ -271,10 +336,21 @@ def main(
     workers: int = 16,
     seed: int = 42,
     ofw: float = 0.7,
+    use_delta_prob: bool = False,
+    use_delta_logprob: bool = False,
+    decoder_ortho_loss_weight: float = 0.0,
+    normalize_per_part: bool = False,
+    output_dim_loss_weight: str = None,
+    variance_filter_top_pct: float = None,
+    variance_filter_mode: str = "linear",
+    cluster_strat_k: int = 0,
+    cluster_strat_per_cluster: int = 2000,
+    cluster_strat_mode: str = "linear",
+    superimpose_loss_weight: float = 0.0,
     self_eval_mode: bool = True,
     train_data_dirs: list = [],
     eval_data_dirs: list = []
-):    
+):
     np.random.seed(seed)
     if args is not None:
         with open(args, "r") as f:
@@ -282,10 +358,47 @@ def main(
         cache_dir = args_dict.get("cache_dir", cache_dir)
         ofw = args_dict.get("output_feature_weight", None)
         seed = args_dict.get("seed", seed)
+        use_delta_prob = args_dict.get("use_delta_prob", use_delta_prob)
+        use_delta_logprob = args_dict.get("use_delta_logprob", use_delta_logprob)
+        decoder_ortho_loss_weight = args_dict.get("decoder_ortho_loss_weight", decoder_ortho_loss_weight)
+        normalize_per_part = args_dict.get("normalize_per_part", normalize_per_part)
+        output_dim_loss_weight = args_dict.get("output_dim_loss_weight", output_dim_loss_weight)
+        variance_filter_top_pct = args_dict.get("variance_filter_top_pct", variance_filter_top_pct)
+        variance_filter_mode = args_dict.get("variance_filter_mode", variance_filter_mode)
+        cluster_strat_k = args_dict.get("cluster_strat_k", cluster_strat_k)
+        cluster_strat_per_cluster = args_dict.get("cluster_strat_per_cluster", cluster_strat_per_cluster)
+        cluster_strat_mode = args_dict.get("cluster_strat_mode", cluster_strat_mode)
+        superimpose_loss_weight = args_dict.get("superimpose_loss_weight", superimpose_loss_weight)
+        if use_delta_prob and use_delta_logprob:
+            raise ValueError("use_delta_prob and use_delta_logprob are mutually exclusive")
         if config_path:
             orig_cfg = get_config(config_path)
             if base_sae_dir is None:
                 sae_name_prefix = f"{model_string}_seed={seed}_ofw={ofw}"
+                if use_delta_prob:
+                    sae_name_prefix = f"{sae_name_prefix}_delta"
+                elif use_delta_logprob:
+                    sae_name_prefix = f"{sae_name_prefix}_logdelta"
+                if decoder_ortho_loss_weight > 0:
+                    sae_name_prefix = f"{sae_name_prefix}_ortho={decoder_ortho_loss_weight}"
+                if variance_filter_top_pct is not None and variance_filter_top_pct < 1.0:
+                    mode_tag = "" if variance_filter_mode == "linear" else f"-{variance_filter_mode}"
+                    sae_name_prefix = f"{sae_name_prefix}_varfilt={variance_filter_top_pct}{mode_tag}"
+                if cluster_strat_k and cluster_strat_k > 0:
+                    cmode_tag = "" if cluster_strat_mode == "linear" else f"-{cluster_strat_mode}"
+                    sae_name_prefix = (
+                        f"{sae_name_prefix}_cstrat=k{cluster_strat_k}x{cluster_strat_per_cluster}{cmode_tag}"
+                    )
+                if superimpose_loss_weight and float(superimpose_loss_weight) > 0:
+                    sae_name_prefix = f"{sae_name_prefix}_sup={superimpose_loss_weight}"
+                # Match the suffixes get_sae_name appends for these flags
+                orig_cfg["normalize_per_part"] = normalize_per_part
+                if output_dim_loss_weight is None or (isinstance(output_dim_loss_weight, str) and output_dim_loss_weight.lower() in ("none", "")):
+                    orig_cfg["output_dim_loss_weight"] = None
+                elif isinstance(output_dim_loss_weight, str) and output_dim_loss_weight.lower() == "auto":
+                    orig_cfg["output_dim_loss_weight"] = "auto"
+                else:
+                    orig_cfg["output_dim_loss_weight"] = float(output_dim_loss_weight)
                 sae_model_name = get_sae_name(orig_cfg, sae_name_prefix)
                 base_sae_dir = f"{args_dict['train_save_dir']}/{sae_model_name}"
         if not self_eval_mode:
@@ -318,13 +431,23 @@ def main(
 
     encoder.eval()
     pprint.pprint(base_cfg)
+    use_delta_prob = base_cfg.get("use_delta_prob", use_delta_prob)
+    use_delta_logprob = base_cfg.get("use_delta_logprob", use_delta_logprob)
+    normalize_per_part = base_cfg.get("normalize_per_part", normalize_per_part)
+    cache_subdir = f"ofw={base_cfg['output_feature_weight']}"
+    if use_delta_prob:
+        cache_subdir = f"{cache_subdir}_delta"
+    elif use_delta_logprob:
+        cache_subdir = f"{cache_subdir}_logdelta"
+    if normalize_per_part:
+        cache_subdir = f"{cache_subdir}_znorm"
     print("Loading data...", flush=True)
     data_dir_names = [os.path.basename(d) for d in data_dirs]
     cached_dataset_dirs = [f"{cache_dir}/{model_string}/{os.path.basename(d)}" for d in data_dir_names]
     data_dirs_to_cache = []
     for i, dir in enumerate(cached_dataset_dirs):
-        if not os.path.exists(os.path.join(dir, f"ofw={base_cfg['output_feature_weight']}")):
-            data_dirs_to_cache.append(data_dirs[i]) 
+        if not os.path.exists(os.path.join(dir, cache_subdir)):
+            data_dirs_to_cache.append(data_dirs[i])
     if len(data_dirs_to_cache) > 0:
         dask_cfg.set({'distributed.scheduler.worker-ttl': None})
         client = Client(
@@ -340,6 +463,9 @@ def main(
                 data_dir,
                 base_cfg["model_names"],
                 base_cfg["output_feature_weight"],
+                use_delta_prob=use_delta_prob,
+                use_delta_logprob=use_delta_logprob,
+                normalize_per_part=normalize_per_part,
             )
     all_data = []
     all_word_ids = []
@@ -347,7 +473,7 @@ def main(
     all_zscores = {}
     all_tempfiles = []
     for data_dir in cached_dataset_dirs:
-        preprocessed_data_dir = os.path.join(data_dir, f"ofw={base_cfg['output_feature_weight']}")
+        preprocessed_data_dir = os.path.join(data_dir, cache_subdir)
         cached_data_filepath = os.path.join(preprocessed_data_dir, "preprocessed_data.dat")
         # try:
             
@@ -355,7 +481,7 @@ def main(
         with open(f"{preprocessed_data_dir}/cached_data_info.json", "r") as f:
             cached_data_info = json.load(f)
             
-        cached_data_dir_name = os.path.join(os.path.basename(data_dir), f"ofw={base_cfg['output_feature_weight']}")
+        cached_data_dir_name = os.path.join(os.path.basename(data_dir), cache_subdir)
         tempfile_path = f"{temp_dir}/{cached_data_dir_name}/preprocessed_data.dat"
         if not os.path.exists(tempfile_path):
             os.makedirs(f"{temp_dir}/{cached_data_dir_name}", exist_ok=True)
@@ -364,7 +490,7 @@ def main(
         all_tempfiles.append(tempfile_path)
         dtype = DTYPES[cached_data_info["dtype"]]
         shape = tuple(cached_data_info["shape"])
-        data = np.memmap(tempfile_path, dtype=dtype, mode='r', shape=shape)
+        data = np.array(np.memmap(tempfile_path, dtype=dtype, mode='r', shape=shape))
         print(f"getting word ids, logprobs, and zscores...", flush=True)
         with open(f"{data_dir}/word_ids.pkl", "rb") as f:
             word_ids = pickle.load(f)
@@ -412,39 +538,29 @@ def main(
     topk_indices = topk_dict["topk_indices"].cpu().numpy()
     topk_error = topk_dict["topk_error"].cpu().numpy()
 
-    # iterate through all sae features, save as csv
-    feature = []
-    act_value = []
-    sample_error = []
-    word_id = []
-    word_logprobs = {}
-    word_zscores = {}
+    # Build topk CSV using vectorized operations
+    n_topk, n_features = topk_acts.shape
+    # Feature column: [0,0,...,0, 1,1,...,1, ..., N-1,...]  (column-major flatten)
+    feature_col = np.repeat(np.arange(n_features), n_topk)
+    # Flatten in column-major order to match: for each feature, all topk rows
+    act_col = topk_acts.T.ravel()
+    error_col = topk_error.T.ravel()
+    idx_col = topk_indices.T.ravel()
+    all_word_ids_arr = np.array(all_word_ids)
+    word_id_col = all_word_ids_arr[idx_col]
+
+    df = pd.DataFrame({
+        "feature": feature_col,
+        "act_value": act_col,
+        "sample_error": error_col,
+        "word_id": word_id_col,
+    })
     for model in base_cfg["model_names"]:
-        word_logprobs[model] = []
-        word_zscores[model + "_zscore"] = []
-    for i in tqdm(range(topk_acts.shape[1])):
-        feature += [i] * topk_acts.shape[0]
-        act_value += topk_acts[:, i].tolist()
-        sample_error += topk_error[:, i].tolist()
-        feature_indices = topk_indices[:, i].tolist()
-        feature_word_ids = [all_word_ids[j] for j in feature_indices]
-        word_id += feature_word_ids
-        for model in logprobs.keys():
-            word_logprobs[model] += all_logprobs[model][feature_indices].tolist()
-            word_zscores[model + "_zscore"] += all_zscores[model][feature_indices].tolist()
-    df = pd.DataFrame(
-        {
-            "feature": feature,
-            "act_value": act_value,
-            "sample_error": sample_error,
-            "word_id": word_id,
-        }
-    )
-    model_logprobs_df = pd.DataFrame.from_dict(word_logprobs)
-    model_zscores_df = pd.DataFrame.from_dict(word_zscores)
+        df[model] = all_logprobs[model][idx_col]
+        df[model + "_zscore"] = all_zscores[model][idx_col]
     # calculate variance of z-scores per word across models
-    model_zscores_df["var"] = model_zscores_df.var(axis=1)
-    df = pd.concat([df, model_logprobs_df, model_zscores_df], axis=1)
+    zscore_cols = [model + "_zscore" for model in base_cfg["model_names"]]
+    df["var"] = df[zscore_cols].var(axis=1)
     # drop activations equal to 0
     df = df[df["act_value"] > 0]
     print(f"Saving top {k} activations to {eval_sae_dir}/top-{k}_activations.csv", flush=True)

@@ -101,3 +101,8 @@ Thumbs.db
 **slurm-out
 
 **samples**.jsonl
+
+**sae_archetypal**
+**old_analysis**
+**precomputed_*
+**/eval_results_olmo3_**

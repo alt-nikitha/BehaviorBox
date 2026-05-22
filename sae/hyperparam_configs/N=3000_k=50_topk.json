@@ -7,5 +7,5 @@
     "input_dim": 768,
     "enc_dtype": "fp32",
     "topk": 50,
-    "type": "TopKAutoEncoder"
+    "type": "BatchTopKAutoEncoder"
 }

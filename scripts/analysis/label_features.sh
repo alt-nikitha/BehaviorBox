@@ -6,6 +6,7 @@
 #SBATCH --time=1:00:00
 #SBATCH --partition=general
 #SBATCH --gres=gpu:1
+#SBATCH --exclude=babel-m5-32,babel-n9-32,babel-n9-28,babel-p9-28
 
 set -a 
 source scripts/env_configs/.env
@@ -16,14 +17,17 @@ source ${MINICONDA_PATH}
 conda activate ${ENV_NAME}
 
 usage() {
-  echo "Usage: $0 [--sae_dir=PATH] [--labeling_model=STRING] [--help]"
+  echo "Usage: $0 [--sae_dir=PATH] [--labeling_model=STRING] [--min_acts=N] [--help]"
   echo
   echo "Options:"
   echo "  --sae_dir=PATH      Directory containing SAE model and outputs"
   echo "  --labeling_model=STRING Model to use for labeling"
+  echo "  --min_acts=N       Skip features with fewer than N top activations (default: 50)"
   echo "  --help             Display this help message"
   exit 1
 }
+
+min_acts=5
 
 # Parse named arguments
 while [[ $# -gt 0 ]]; do
@@ -34,6 +38,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --labeling_model=*)
       labeling_model="${1#*=}"
+      shift
+      ;;
+    --min_acts=*)
+      min_acts="${1#*=}"
       shift
       ;;
     --help)
@@ -61,8 +69,10 @@ cd analysis/autolabel
 mkdir -p $sae_dir/feature_labels
 python automatic_labels.py \
     --sae_dir $sae_dir \
-    --labeling_model $labeling_model
+    --labeling_model $labeling_model \
+    --min_acts $min_acts
 
 python filter_and_validate_labels.py \
     --sae_dir $sae_dir \
-    --labeling_model $labeling_model
+    --labeling_model $labeling_model \
+    --min_acts $min_acts

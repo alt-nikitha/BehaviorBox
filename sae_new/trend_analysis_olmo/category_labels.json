@@ -1,0 +1,224 @@
+{
+  "monotonic_decrease": {
+    "label": {
+      "Coherent": "NO",
+      "Description": "NONE"
+    },
+    "raw": "<BEGIN ANSWER>\nCoherent: NO\nDescription: NONE\n<END ANSWER>",
+    "n_total": 289340,
+    "n_samples_in_prompt": 20,
+    "exemplars": [
+      {
+        "word_id": "14777_403",
+        "word": "01",
+        "domain": "common_crawl_education_and_jobs"
+      },
+      {
+        "word_id": "329_631",
+        "word": "of",
+        "domain": "common_crawl_health"
+      },
+      {
+        "word_id": "12318_1920",
+        "word": "of",
+        "domain": "s2pdf_industrial"
+      },
+      {
+        "word_id": "1771_826",
+        "word": "\t",
+        "domain": "stack-edu_Cpp"
+      },
+      {
+        "word_id": "5407_971",
+        "word": "Cons",
+        "domain": "common_crawl_transportation"
+      },
+      {
+        "word_id": "19883_1931",
+        "word": "x",
+        "domain": "finemath-3plus"
+      },
+      {
+        "word_id": "3791_662",
+        "word": "begin",
+        "domain": "s2pdf_science_math_and_technology"
+      },
+      {
+        "word_id": "19141_1256",
+        "word": "v",
+        "domain": "common_crawl_science_math_and_technology"
+      },
+      {
+        "word_id": "18163_1909",
+        "word": "|",
+        "domain": "s2pdf_science_math_and_technology"
+      },
+      {
+        "word_id": "11741_317",
+        "word": "times",
+        "domain": "s2pdf_science_math_and_technology"
+      },
+      {
+        "word_id": "12952_1427",
+        "word": "=",
+        "domain": "stack-edu_Cpp"
+      },
+      {
+        "word_id": "7083_1186",
+        "word": "',",
+        "domain": "stack-edu_Python"
+      },
+      {
+        "word_id": "5782_1004",
+        "word": "same",
+        "domain": "s2pdf_software_development"
+      },
+      {
+        "word_id": "5407_1503",
+        "word": "Cons",
+        "domain": "common_crawl_transportation"
+      },
+      {
+        "word_id": "5407_1920",
+        "word": "Cons",
+        "domain": "common_crawl_transportation"
+      },
+      {
+        "word_id": "5407_1720",
+        "word": "Cons",
+        "domain": "common_crawl_transportation"
+      },
+      {
+        "word_id": "5416_1242",
+        "word": "ERK",
+        "domain": "s2pdf_science_math_and_technology"
+      },
+      {
+        "word_id": "10708_343",
+        "word": "method",
+        "domain": "common_crawl_software_development"
+      },
+      {
+        "word_id": "8178_546",
+        "word": ".",
+        "domain": "s2pdf_science_math_and_technology"
+      },
+      {
+        "word_id": "4653_1348",
+        "word": "nullptr",
+        "domain": "stack-edu_Cpp"
+      }
+    ]
+  },
+  "fall_then_plateau": {
+    "label": {
+      "Coherent": "NO",
+      "Description": "NONE"
+    },
+    "raw": "<BEGIN ANSWER>\nCoherent: NO\nDescription: NONE\n<END ANSWER>",
+    "n_total": 1140985,
+    "n_samples_in_prompt": 20,
+    "exemplars": [
+      {
+        "word_id": "5387_191",
+        "word": "::",
+        "domain": "stack-edu_Cpp"
+      },
+      {
+        "word_id": "13034_1382",
+        "word": "{",
+        "domain": "common_crawl_software_development"
+      },
+      {
+        "word_id": "17084_1063",
+        "word": "et",
+        "domain": "common_crawl_science_math_and_technology"
+      },
+      {
+        "word_id": "19617_259",
+        "word": "#",
+        "domain": "common_crawl_science_math_and_technology"
+      },
+      {
+        "word_id": "19555_1860",
+        "word": ";",
+        "domain": "s2pdf_science_math_and_technology"
+      },
+      {
+        "word_id": "6495_1551",
+        "word": "transmitted",
+        "domain": "common_crawl_health"
+      },
+      {
+        "word_id": "2518_1132",
+        "word": "\\",
+        "domain": "s2pdf_industrial"
+      },
+      {
+        "word_id": "5407_112",
+        "word": "Cons",
+        "domain": "common_crawl_transportation"
+      },
+      {
+        "word_id": "3590_1277",
+        "word": "my",
+        "domain": "finemath-3plus"
+      },
+      {
+        "word_id": "14656_779",
+        "word": "=",
+        "domain": "s2pdf_science_math_and_technology"
+      },
+      {
+        "word_id": "6986_1539",
+        "word": "  ",
+        "domain": "stack-edu_CSharp"
+      },
+      {
+        "word_id": "7832_1143",
+        "word": "\",\"",
+        "domain": "stack-edu_JavaScript"
+      },
+      {
+        "word_id": "10274_1905",
+        "word": "him",
+        "domain": "s2pdf_science_math_and_technology"
+      },
+      {
+        "word_id": "5215_448",
+        "word": "method",
+        "domain": "s2pdf_software_development"
+      },
+      {
+        "word_id": "3042_700",
+        "word": "rule",
+        "domain": "s2pdf_science_math_and_technology"
+      },
+      {
+        "word_id": "16164_953",
+        "word": "2",
+        "domain": "s2pdf_software"
+      },
+      {
+        "word_id": "18762_1566",
+        "word": "other",
+        "domain": "common_crawl_games"
+      },
+      {
+        "word_id": "5758_579",
+        "word": "of",
+        "domain": "common_crawl_games"
+      },
+      {
+        "word_id": "18877_811",
+        "word": "of",
+        "domain": "common_crawl_art_and_design"
+      },
+      {
+        "word_id": "12581_1552",
+        "word": "Step",
+        "domain": "common_crawl_software"
+      }
+    ]
+  }
+}

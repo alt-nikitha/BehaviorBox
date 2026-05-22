@@ -52,14 +52,6 @@ def classify_trend_soft(arr, tol=1e-5):
 def get_relevant_features(
     feature_metrics: pd.DataFrame,
 ):
-    """
-    Gets the indices of the features that have a absolute median logprob diff of > 1
-    """
-    feature_metrics['prob_means'] = feature_metrics['prob_means'].apply(lambda x: np.array([float(v) for v in x.strip("[]").split()]))
-
-    feature_metrics["trend"] = feature_metrics["prob_means"].apply(classify_trend_soft)
-    feature_metrics = feature_metrics[feature_metrics["trend"]!="other"]
-    # feature_metrics = feature_metrics[(feature_metrics["logprob_median_diff"].abs() > 1) | (feature_metrics["prob_median_diff"].abs() > 0.1)]
     return feature_metrics["feature"].values
 
 
@@ -71,9 +63,12 @@ def get_activations_and_wic(
     feature_acts = top_acts[top_acts['feature'] == feature_id]
     # drop activations that are 0
     feature_acts = feature_acts[feature_acts["act_value"] != 0]
+    if len(feature_acts.index) == 0:
+        return None
     max_act = feature_acts["act_value"].max()
     # keep activation and associated sample if
-    # activation value is in the top 3 quartiles or >= 0.25 * max_act
+    # activation value is in the top 3 quartiles AND >= 0.25 * max_act
+    # (drops weak activations whose value is small relative to the feature's peak)
     max_act_threshold = 0.25 * max_act
     feature_acts = feature_acts[
         (feature_acts["act_value"] >= max_act_threshold) | (feature_acts["act_value"] >= feature_acts["act_value"].quantile(0.25))]

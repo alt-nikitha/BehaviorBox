@@ -1,0 +1,124 @@
+{
+  "tasks": [
+    {
+      "name": "gsm8k",
+      "lm_eval_task": "gsm8k_cot",
+      "icl": 8
+    },
+    {
+      "name": "minerva_math",
+      "lm_eval_task": "minerva_math",
+      "icl": 4
+    },
+    {
+      "name": "humaneval",
+      "lm_eval_task": "humaneval",
+      "icl": 10
+    },
+    {
+      "name": "mbpp",
+      "lm_eval_task": "mbpp",
+      "icl": 3
+    },
+    {
+      "name": "arc_challenge",
+      "lm_eval_task": "arc_challenge",
+      "icl": 10
+    },
+    {
+      "name": "mmlu_stem",
+      "lm_eval_task": "mmlu_stem",
+      "icl": 5
+    },
+    {
+      "name": "medmcqa",
+      "lm_eval_task": "medmcqa",
+      "icl": 0
+    },
+    {
+      "name": "medqa",
+      "lm_eval_task": "medqa_4options",
+      "icl": 0
+    },
+    {
+      "name": "sciq",
+      "lm_eval_task": "sciq",
+      "icl": 0
+    },
+    {
+      "name": "mmlu_humanities",
+      "lm_eval_task": "mmlu_humanities",
+      "icl": 5
+    },
+    {
+      "name": "mmlu_social_sciences",
+      "lm_eval_task": "mmlu_social_sciences",
+      "icl": 5
+    },
+    {
+      "name": "mmlu_other",
+      "lm_eval_task": "mmlu_other",
+      "icl": 5
+    },
+    {
+      "name": "csqa",
+      "lm_eval_task": "commonsense_qa",
+      "icl": 10
+    },
+    {
+      "name": "piqa",
+      "lm_eval_task": "piqa",
+      "icl": 10
+    },
+    {
+      "name": "siqa",
+      "lm_eval_task": "social_iqa",
+      "icl": 0
+    },
+    {
+      "name": "naturalqs",
+      "lm_eval_task": "nq_open",
+      "icl": 0
+    },
+    {
+      "name": "squad",
+      "lm_eval_task": "squadv2",
+      "icl": 0
+    },
+    {
+      "name": "coqa",
+      "lm_eval_task": "coqa",
+      "icl": 0
+    },
+    {
+      "name": "hellaswag",
+      "lm_eval_task": "hellaswag",
+      "icl": 10
+    },
+    {
+      "name": "winogrande",
+      "lm_eval_task": "winogrande",
+      "icl": 0
+    },
+    {
+      "name": "lambada",
+      "lm_eval_task": "lambada_openai",
+      "icl": 0
+    },
+    {
+      "name": "mmlu_pro",
+      "lm_eval_task": "mmlu_pro",
+      "icl": 5
+    },
+    {
+      "name": "bbh",
+      "lm_eval_task": "bbh",
+      "icl": 3
+    },
+    {
+      "name": "blimp",
+      "lm_eval_task": "blimp",
+      "icl": 0
+    }
+  ]
+}

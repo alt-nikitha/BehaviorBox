@@ -1,0 +1,40 @@
+{
+  "name": "LLM360/Amber",
+  "checkpoints": [
+    {
+      "name": "ckpt_001",
+      "tokens": "3.6B",
+      "checkpoint_number": 1
+    },
+    {
+      "name": "ckpt_040",
+      "tokens": "144B",
+      "checkpoint_number": 2
+    },
+    {
+      "name": "ckpt_080",
+      "tokens": "288B",
+      "checkpoint_number": 3
+    },
+    {
+      "name": "ckpt_120",
+      "tokens": "432B",
+      "checkpoint_number": 4
+    },
+    {
+      "name": "ckpt_180",
+      "tokens": "648B",
+      "checkpoint_number": 5
+    },
+    {
+      "name": "ckpt_240",
+      "tokens": "864B",
+      "checkpoint_number": 6
+    },
+    {
+      "name": "ckpt_300",
+      "tokens": "1.08T",
+      "checkpoint_number": 7
+    }
+  ]
+}

@@ -4,11 +4,15 @@ set -e
 source /home/nsrikant/miniconda3/etc/profile.d/conda.sh
 conda activate bbox_env
 
+# Allow code execution for humaneval/mbpp tasks
+export HF_ALLOW_CODE_EVAL="1"
+
 # Configuration
 CONFIG_FILE="${CONFIG_FILE:-./eval_config.json}"
 MODEL_PATH="${MODEL_PATH:-allenai/Olmo-3-1025-7B}"
-MODEL_REVISION="${MODEL_REVISION:-main}"
-OUTPUT_DIR="${OUTPUT_DIR:-./eval_results}"
+# MODEL_PATH="${MODEL_PATH:-LLM360/Amber}"
+MODEL_REVISION="${MODEL_REVISION:-stage1-step1000}"
+OUTPUT_DIR="${OUTPUT_DIR:-./eval_results_olmo3}"
 GPU_MEMORY_UTILIZATION="${GPU_MEMORY_UTILIZATION:-0.9}"
 BATCH_SIZE="${BATCH_SIZE:-auto}"
 
@@ -17,7 +21,7 @@ mkdir -p "$OUTPUT_DIR"
 mkdir -p logs
 
 # Get task index from SLURM array
-TASK_IDX=15 #drop
+TASK_IDX=1 #minerva_math
 
 # Check if jq is installed
 if ! command -v jq &> /dev/null; then
@@ -41,6 +45,7 @@ fi
 
 # Extract task configuration using jq
 task_name=$(jq -r ".tasks[$TASK_IDX].name" "$CONFIG_FILE")
+
 lm_eval_task=$(jq -r ".tasks[$TASK_IDX].lm_eval_task" "$CONFIG_FILE")
 category=$(jq -r ".tasks[$TASK_IDX].category" "$CONFIG_FILE")
 icl=$(jq -r ".tasks[$TASK_IDX].icl" "$CONFIG_FILE")

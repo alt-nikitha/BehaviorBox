@@ -17,6 +17,7 @@ LLAMA_MODEL_IDS = [
     "meta-llama/Llama-2-7b-chat-hf",
     "meta-llama/Llama-2-13b-hf",
     "meta-llama/Llama-2-13b-chat-hf",
+    "LLM360/Amber",
 ]
 OLMO_MODEL_IDS = [
     "allenai/OLMo-2-1124-7B",
@@ -66,6 +67,9 @@ def get_output_overlapping_strings(
         return_tensors="pt",
     )
     input_ids = encodings["input_ids"]
+    # Ensure input_ids are strictly truncated to max_length
+    if input_ids.shape[1] > max_length:
+        input_ids = input_ids[:, :max_length]
     overflow_to_sample_mapping = encodings["overflow_to_sample_mapping"]
     num_samples = overflow_to_sample_mapping[-1].item() + 1
     assert num_samples == len(text)
@@ -94,10 +98,17 @@ def get_output_overlapping_strings(
             # sample_word_indices do not include pad tokens
             # we exclude these from the input_ids as well
             sample_input_ids = sample_input_ids[:len(sample_word_indices)]
+            # clamp end_index to valid range after trimming pad tokens
+            end_index = min(end_index, len(sample_word_indices) - 1)
             # first check that splitting on end_index will not split a word
             # otherwise, adjust until it no longer does
-            while sample_word_indices[end_index-1] == sample_word_indices[end_index]:
+            orig_end_index = end_index
+            while end_index > 0 and sample_word_indices[end_index-1] == sample_word_indices[end_index]:
                 end_index -= 1
+            # if all tokens belong to one word (e.g. gibberish text with no spaces),
+            # end_index drops to 0 causing an infinite loop — force a split instead
+            if end_index == 0:
+                end_index = orig_end_index
             # first window starts at index 0
             # since there is nothing overlapping to throw out
             overlapping_ids.append(sample_input_ids[:end_index])
@@ -106,9 +117,12 @@ def get_output_overlapping_strings(
             window_word_ids.append(sample_word_indices[:end_index])
             # also need to check that the first split we make will not split a word
             first_split_index = stride
+            orig_first_split = first_split_index
             # slicing at the beginning is inclusive (hence +1)
-            while sample_word_indices[first_split_index] == sample_word_indices[first_split_index+1]:
+            while first_split_index > 0 and sample_word_indices[first_split_index] == sample_word_indices[first_split_index+1]:
                 first_split_index -= 1
+            if first_split_index == 0:
+                first_split_index = orig_first_split
             # shorten the remaining input and word IDs
             # so that we can start at index 0 again
             sample_input_ids = sample_input_ids[first_split_index:]
@@ -128,8 +142,12 @@ def get_output_overlapping_strings(
                     window_word_ids.append(sample_word_indices)
                     break
                 # adjust the end_index before appending a new window
-                while sample_word_indices[end_index-1] == sample_word_indices[end_index]:
+                orig_end_index = end_index
+                while end_index > 0 and sample_word_indices[end_index-1] == sample_word_indices[end_index]:
                     end_index -= 1
+                # prevent infinite loop: if adjustment made no progress, force a split
+                if end_index <= prev_end_index:
+                    end_index = orig_end_index
                 overlapping_ids.append(sample_input_ids[:end_index])
                 window_start_idx.append(prev_end_index)
                 window_to_sample_mapping.append(i)
@@ -193,13 +211,16 @@ def get_model_logprobs(
         async with limiter:
             for _ in range(3):
                 try:
-                    return await client.completions.create(
+                    response = await client.completions.create(
                         model=model_name,
                         prompt=text,
                         max_tokens=0,
                         echo=True,
                         logprobs=0
                     )
+                    # Extract only token_logprobs and immediately discard the full response
+                    # object to avoid accumulating large Pydantic objects in memory
+                    return response.choices[0].logprobs.token_logprobs
                 # If we encounter a timeout error, it's likely that we've encountered an OOM error
                 # This can only be resolved by reducing the async limiter or restarting the model :(
                 # So we'll exit with an error message
@@ -219,12 +240,12 @@ def get_model_logprobs(
 
     async def batch_generate(input_text):
         try:
-            logprobs = await tqdm_asyncio.gather(
+            token_logprobs = await tqdm_asyncio.gather(
             *[generate_with_limiter(text) for text in input_text]
         )
         except SystemExit as e:
             sys.exit(e)
-        return logprobs
+        return token_logprobs
 
     generations = asyncio.run(batch_generate(input_text))
     all_word_logprobs = {}
@@ -232,9 +253,16 @@ def get_model_logprobs(
     i = 0
     while i < len(generations):
         generation = generations[i]
+        # free the reference from the list so processed results can be GC'd
+        generations[i] = None
         sample_index = window_to_sample_mapping[i]
         sample_id = sample_ids[sample_index]
-        logprobs = generation.choices[0].logprobs.token_logprobs[1:]
+        if generation is None:
+            logger.warning(f"No logprobs returned for sample {sample_id} (input may exceed model max sequence length), skipping")
+            while i < len(generations) and window_to_sample_mapping[i] == sample_index:
+                i += 1
+            continue
+        logprobs = generation[1:]
         word_logprobs = token_to_word_logprobs(window_word_ids[i], logprobs, window_start_idx[i])
         if word_logprobs is None:
             logger.info(f"Skipping sample {sample_id}")
@@ -254,6 +282,7 @@ def get_model_logprobs(
         # update the previous sample index
         prev_sample_index = sample_index
         i += 1
+    del generations
     return all_word_logprobs
 
 
@@ -262,6 +291,7 @@ def get_word_indices(
     sample_id: str,
     input_model_tokenizer,
     output_model_tokenizer,
+    max_tokens: int = 2048,
 ) -> list[int]:
     """
     Args:
@@ -269,16 +299,26 @@ def get_word_indices(
         sample_id: document ID associated with the text
         input_model: model ID for input pre-tokenizer, defaults to longformer
         output_model: path to weights/model ID for output model, defaults to Llama2-70b
+        max_tokens: maximum number of tokens to process (default 2048)
 
     Returns:
         word_ids: list of word ID per token
     """
+    # First check if text would exceed max tokens, truncate if needed
+    tokens = output_model_tokenizer.tokenize(text)
+    if len(tokens) > max_tokens:
+        logger.info(f"Text for sample {sample_id} exceeds {max_tokens} tokens ({len(tokens)} tokens). Truncating.")
+        # Decode back to text at the token limit to maintain clean boundaries
+        token_ids = output_model_tokenizer.encode(text, add_special_tokens=False)
+        truncated_token_ids = token_ids[:max_tokens]
+        text = output_model_tokenizer.decode(truncated_token_ids)
+        tokens = output_model_tokenizer.tokenize(text)
+    
     word_tuples = input_model_tokenizer.backend_tokenizer.pre_tokenizer.pre_tokenize_str(text)
     words = [word_tuple[0] for word_tuple in word_tuples]
     num_words = len(words)
     word_ids = []
     word_idx = 0
-    tokens = output_model_tokenizer.tokenize(text)
     # llama2 adds an additional space at the beginning of the text
     # we need to remove this for this to work
     # sometimes, the added space is its own token
@@ -295,17 +335,22 @@ def get_word_indices(
             aligned_tokens = tokens
     else:
         aligned_tokens = tokens
+    is_llama = output_model_tokenizer.name_or_path in LLAMA_MODEL_IDS
     built_word = ""
-    word_tokenized_ids = input_model_tokenizer(words[word_idx], add_special_tokens=False)['input_ids']
-    word_from_tokens = input_model_tokenizer.decode(word_tokenized_ids)
-    word = word_from_tokens
+    # For non-Llama byte-level BPE tokenizers (GPT2, OLMo, etc.),
+    # encode+decode on tokens and words is an identity operation.
+    # We skip it for a ~17x speedup in word alignment.
+    if is_llama:
+        word_tokenized_ids = input_model_tokenizer(words[word_idx], add_special_tokens=False)['input_ids']
+        word = input_model_tokenizer.decode(word_tokenized_ids)
+    else:
+        word = words[word_idx]
     for token in aligned_tokens:
-        output_model_token_id = output_model_tokenizer(token, add_special_tokens=False)['input_ids']
-        token = output_model_tokenizer.decode(output_model_token_id)
-        # change whitespace hexadecimal encodings to char literals
-        # if we cannot decode, throw out the sample
-        # this is for the llama models
-        if output_model_tokenizer.name_or_path in LLAMA_MODEL_IDS:
+        if is_llama:
+            output_model_token_id = output_model_tokenizer(token, add_special_tokens=False)['input_ids']
+            token = output_model_tokenizer.decode(output_model_token_id)
+            # change whitespace hexadecimal encodings to char literals
+            # if we cannot decode, throw out the sample
             if token.startswith("<0x") and token.endswith(">"):
                 try:
                     token = bytearray.fromhex(token[3:-1]).decode()
@@ -320,9 +365,15 @@ def get_word_indices(
         # and need to append the next word to the current word
         while len(built_word) > len(word):
             word_idx += 1
-            word_tokenized_ids = input_model_tokenizer(words[word_idx], add_special_tokens=False)['input_ids']
-            word_from_tokens = input_model_tokenizer.decode(word_tokenized_ids)
-            word += word_from_tokens
+            # Add bounds checking to prevent IndexError
+            if word_idx >= num_words:
+                logger.info(f"Word index exceeded word list for sample {sample_id}. Alignment failed.")
+                return None
+            if is_llama:
+                word_tokenized_ids = input_model_tokenizer(words[word_idx], add_special_tokens=False)['input_ids']
+                word += input_model_tokenizer.decode(word_tokenized_ids)
+            else:
+                word += words[word_idx]
         # add the word ID for the current token
         word_ids.append(word_idx)
         # if the words match
@@ -330,11 +381,13 @@ def get_word_indices(
         if built_word == word:
             word_idx += 1
             built_word = ""
-            if word_idx == num_words:
+            if word_idx >= num_words:
                 break
-            word_tokenized_ids = input_model_tokenizer(words[word_idx], add_special_tokens=False)['input_ids']
-            word_from_tokens = input_model_tokenizer.decode(word_tokenized_ids)
-            word = word_from_tokens
+            if is_llama:
+                word_tokenized_ids = input_model_tokenizer(words[word_idx], add_special_tokens=False)['input_ids']
+                word = input_model_tokenizer.decode(word_tokenized_ids)
+            else:
+                word = words[word_idx]
         
     # check that the number of words matches the number we've counted
     if num_words != word_ids[-1] + 1:
@@ -396,7 +449,10 @@ def token_to_word_logprobs(
         num_words = word_idx - prev_word_idx
         if num_words == 0:
             # aggregate logprobs of tokens in the same word
-            word_logprobs[-1] += text_token_logprobs[i]
+            if len(word_logprobs) == 0:
+                word_logprobs.append(text_token_logprobs[i])
+            else:
+                word_logprobs[-1] += text_token_logprobs[i]
         elif num_words == 1:
             word_logprobs.append(text_token_logprobs[i])
         else:

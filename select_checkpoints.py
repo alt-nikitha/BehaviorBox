@@ -16,7 +16,8 @@ def get_checkpoints(repo_id: str = "allenai/Olmo-3-1025-7B") -> list[str]:
         List of branch names (checkpoint revisions)
     """
     refs = list_repo_refs(repo_id)
-    return [b.name for b in refs.branches]
+    tags = [r.name for r in refs.tags]
+    return [b.name for b in refs.branches], tags
 
 
 def parse_olmo2_checkpoints(branches: list[str], ingredient: int = 1) -> list[dict]:
@@ -163,8 +164,9 @@ def select_by_percent(checkpoints: list[dict], percentages: list[float]) -> list
     return selected
 
 
-if __name__ == "__main__":
-    branches = get_checkpoints("allenai/Olmo-3-1025-7B")
+
+def save_olmo_checkpoint_info(name, nickname):
+    branches = get_checkpoints(name)
     ckpts = parse_olmo3_checkpoints(branches, ingredient=1)
     
     print(f"Total checkpoints: {len(ckpts)}")
@@ -173,13 +175,66 @@ if __name__ == "__main__":
     percentages = [0.1, 1, 5, 10, 25, 50, 75, 80, 90, 98]
     selected = select_by_percent(ckpts, percentages)
     checkpoints_info = {}
-    checkpoints_info["name"] = "allenai/Olmo-3-1025-7B"
+    checkpoints_info["name"] = name
     checkpoints_info["checkpoints"] = selected
     for c in selected:
         print(f"{c['target_pct']:>6}% -> {c['actual_pct']:>6.2f}% | {c['cumulative_steps']:>5} | {c['name']}")
-    with open("/home/nsrikant/BehaviorBoxNew/checkpoints_info/olmo3_7b_checkpoints_info.json", "w") as f:
+    with open(f"/home/nsrikant/BehaviorBoxNew/checkpoints_info/{nickname}_checkpoints_info.json", "w") as f:
         json.dump(checkpoints_info, f, indent=2)
 
-    with open("/home/nsrikant/BehaviorBoxNew/checkpoints_info/olmo3_7b_checkpoints.txt", "w") as f:
+    with open(f"/home/nsrikant/BehaviorBoxNew/checkpoints_info/{nickname}_checkpoints.txt", "w") as f:
         f.write("\n".join([c['name'] for c in selected]+["main"]))
+
+
+def save_marin_checkpoint_info(name, nickname):
+    # branches, tags = get_checkpoints(name)
+    checkpoint_ordering = [
+
+        ("kestrel", "2.7T"),
+        ("ocelot", "3.78T"),
+        ("jellyfish", "4.78T"),
+        ("phoenix", "11.1T"),
+        ("starling", "12.4T"),
+        ("deeper-starling", "12.7T")
+    ]
+    
+
+    checkpoints_info = {}
+    checkpoints_info["name"] = name
+    checkpoints_info["checkpoints"] = []
+    for checkpoint, tokens in checkpoint_ordering:
+            checkpoints_info["checkpoints"].append({
+                "name": checkpoint,
+                "tokens": tokens,
+                "checkpoint_number": len(checkpoints_info["checkpoints"]) + 1
+            })
+
+    
+    
+    # ckpts = parse_olmo2_checkpoints(branches, ingredient=1)
+    
+    # print(f"Total checkpoints: {len(ckpts)}")
+    # print(f"Max tokens: {ckpts[-1]['cumulative_tokens']}B\n")
+    
+    # percentages = [0.1, 1, 5, 10, 25, 50, 75, 80, 90, 98]
+    # selected = select_by_percent(ckpts, percentages)
+    # checkpoints_info = {}
+    # checkpoints_info["name"] = name
+    # checkpoints_info["checkpoints"] = selected
+    # for c in selected:
+    #     print(f"{c['target_pct']:>6}% -> {c['actual_pct']:>6.2f}% | {c['cumulative_tokens']:>5}B | {c['name']}")
+    with open(f"/home/nsrikant/BehaviorBoxNew/checkpoints_info/{nickname}_checkpoints_info.json", "w") as f:
+        json.dump(checkpoints_info, f, indent=2)
+
+    with open(f"/home/nsrikant/BehaviorBoxNew/checkpoints_info/{nickname}_checkpoints.txt", "w") as f:
+        f.write("\n".join([c['name'] for c in checkpoints_info["checkpoints"]]))
+
+if __name__ == "__main__":
+
+    # olmo
+    # save_olmo_checkpoint_info("allenai/Olmo-3-1025-7B", "olmo3_7b")
+
+    # marin
+    save_marin_checkpoint_info("marin-community/marin-8b-base", "marin_8b")
+    
         

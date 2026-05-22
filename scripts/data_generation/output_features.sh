@@ -11,6 +11,12 @@ set -a
 source scripts/env_configs/.env
 set +a
 
+# Deactivate any existing virtual environment
+if [ -n "$VIRTUAL_ENV" ]; then
+    deactivate 2>/dev/null || true
+    unset VIRTUAL_ENV
+fi
+
 source ${MINICONDA_PATH}
 conda init bash
 conda activate ${ENV_NAME}
@@ -98,6 +104,7 @@ echo "Async limiter: $async_limiter"
 
 echo $model_name $model_addr
 cd data_generation
+export PYTHONUNBUFFERED=1
 python output_features.py \
     --data ${data} \
     --output_dir ${output_dir}/output_features/${model_name} \

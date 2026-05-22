@@ -21,13 +21,25 @@ def cache_data_per_dir(
     data_dir: str,
     model_names: list[str] = None,
     output_feature_weight: float = None,
-    only_probs: bool = False
+    only_probs: bool = False,
+    use_delta_prob: bool = False,
+    use_delta_logprob: bool = False,
+    normalize_per_part: bool = False,
 ) -> str:
+    if use_delta_prob and use_delta_logprob:
+        raise ValueError("use_delta_prob and use_delta_logprob are mutually exclusive")
     # model_string = "_".join(model_names)
     # model_string = "n_moreearly_models"
     print(data_dir)
     cache_dir = os.path.join(cache_dir, f"{model_string}/{os.path.basename(data_dir)}")
-    cache_data_dir = os.path.join(cache_dir, f"ofw={output_feature_weight}")
+    cache_subdir = f"ofw={output_feature_weight}"
+    if use_delta_prob:
+        cache_subdir = f"{cache_subdir}_delta"
+    elif use_delta_logprob:
+        cache_subdir = f"{cache_subdir}_logdelta"
+    if normalize_per_part:
+        cache_subdir = f"{cache_subdir}_znorm"
+    cache_data_dir = os.path.join(cache_dir, cache_subdir)
     if not os.path.exists(cache_data_dir):
         os.makedirs(cache_data_dir)
     
@@ -76,11 +88,18 @@ def cache_data_per_dir(
             print(f"Z-scores cached to {os.path.join(model_data_dir, 'zscores.pkl')}")
     
     print("preprocessing data...", flush=True)
+    is_delta = use_delta_prob or use_delta_logprob
+    output_feature_dim = len(model_names) - 1 if is_delta else len(model_names)
+    norm_stats = {} if normalize_per_part else None
     data_array = preprocess_data(
         data_df=dataframe,
-        output_feature_dim=len(model_names),
+        output_feature_dim=output_feature_dim,
         output_feature_weight=output_feature_weight,
-        only_probs=only_probs
+        only_probs=only_probs,
+        use_delta_prob=use_delta_prob,
+        use_delta_logprob=use_delta_logprob,
+        normalize_per_part=normalize_per_part,
+        norm_stats_out=norm_stats,
     )
     
     print("caching data...", flush=True)
@@ -94,7 +113,14 @@ def cache_data_per_dir(
         "filename": cache_filename,
         "data_dir": data_dir,
         "model_names": model_names,
+        "normalize_per_part": normalize_per_part,
     }
+    if normalize_per_part and norm_stats:
+        import numpy as np
+        np.save(os.path.join(cache_data_dir, "znorm_mean.npy"), norm_stats["mean"])
+        np.save(os.path.join(cache_data_dir, "znorm_std.npy"), norm_stats["std"])
+        cached_data_info["embedding_dim"] = norm_stats["embedding_dim"]
+        cached_data_info["output_feature_dim"] = norm_stats["output_feature_dim"]
     print(cached_data_info, flush=True)
     with open(f"{cache_data_dir}/cached_data_info.json", "w") as f:
         json.dump(cached_data_info, f, indent=4)

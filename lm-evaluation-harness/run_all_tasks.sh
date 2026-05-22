@@ -16,11 +16,18 @@
 
 set -e
 source /home/nsrikant/miniconda3/etc/profile.d/conda.sh
+conda deactivate 2>/dev/null || true
+deactivate 2>/dev/null || true
 conda activate bbox_env
+
+# Allow code execution for humaneval/mbpp tasks
+export HF_ALLOW_CODE_EVAL="1"
 
 # Configuration
 CONFIG_FILE="${CONFIG_FILE:-./eval_config.json}"
+# MODEL_PATH="${MODEL_PATH:-LLM360/Amber}"
 MODEL_PATH="${MODEL_PATH:-allenai/Olmo-3-1025-7B}"
+
 MODEL_REVISION="${MODEL_REVISION:-main}"
 OUTPUT_DIR="${OUTPUT_DIR:-./eval_results/${MODEL_REVISION}}"
 GPU_MEMORY_UTILIZATION="${GPU_MEMORY_UTILIZATION:-0.9}"

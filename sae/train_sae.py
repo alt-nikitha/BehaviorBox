@@ -35,8 +35,9 @@ from sae_utils import (
 # may need to be adjusted depending on
 # 1) size of your data and 
 # 2) batch size
-log_eval_loss_every = 20000
-log_eval_act_freqs_every = 30000
+log_eval_loss_every = 50
+# log_eval_act_freqs_every = 30000
+log_eval_act_freqs_every = 2000
 checkpoint_every = 50000
 
 reset_dead_threshold = 0.15
@@ -166,6 +167,9 @@ def load_data(
     cache_dir: str,
     spill_dir: str,
     model_string: str,
+    use_delta_prob: bool = False,
+    use_delta_logprob: bool = False,
+    normalize_per_part: bool = False,
 ):
     dask_cfg.set({'distributed.scheduler.worker-ttl': None})
     dask_cfg.set({
@@ -174,7 +178,7 @@ def load_data(
         "distributed.worker.memory.terminate": 0.98,
     })
     client = Client(
-        n_workers=workers, memory_limit='48GB', processes=True, timeout='30s', local_directory=spill_dir
+        n_workers=workers, memory_limit='30GB', processes=True, timeout='30s', local_directory=spill_dir
     )
     print(client, flush=True)
     cache_data_filepaths = []
@@ -186,6 +190,9 @@ def load_data(
             data_dir=data_dir,
             model_names=model_names,
             output_feature_weight=output_feature_weight,
+            use_delta_prob=use_delta_prob,
+            use_delta_logprob=use_delta_logprob,
+            normalize_per_part=normalize_per_part,
         )
         cache_data_filepath = os.path.join(cache_data_dir, "preprocessed_data.dat")
         cache_data_filepaths.append(cache_data_filepath)
@@ -208,6 +215,173 @@ def get_train_eval_indices(
     train_indices = indices[:int(train_eval_ratio*num_samples)]
     eval_indices = indices[int(train_eval_ratio*num_samples):]
     return train_indices, eval_indices
+
+
+def filter_train_indices_by_variance(
+    data: np.ndarray,
+    train_indices: np.ndarray,
+    embedding_dim: int,
+    top_pct: float,
+    logger,
+    mode: str = "linear",
+) -> np.ndarray:
+    """Restrict train_indices to the top `top_pct` fraction by per-sample variance
+    across the prob/output block (columns embedding_dim:).
+
+    `mode` controls the metric:
+      - "linear": variance of raw values in the prob block (existing behavior).
+      - "log":    variance of log(clip(value, eps, inf)) -- rebalances toward
+                  relative changes, so rare-token emergence (1e-5 -> 1e-2) is
+                  weighed comparably to easy-token swings (0.1 -> 0.7).
+
+    Variance is computed over the full dataset and the top-X% set is then intersected
+    with the existing train split, so the eval split is unchanged (still drawn from the
+    full data distribution).
+    """
+    if top_pct is None or top_pct >= 1.0:
+        return train_indices
+    if not (0.0 < top_pct < 1.0):
+        raise ValueError(f"variance_filter_top_pct must be in (0, 1], got {top_pct}")
+    if mode not in ("linear", "log"):
+        raise ValueError(f"variance_filter_mode must be 'linear' or 'log', got {mode}")
+    print(
+        f"Computing per-sample prob-block variance for variance filtering "
+        f"(top {top_pct*100:.1f}%, mode={mode})...",
+        flush=True,
+    )
+    prob_block = np.asarray(data[:, embedding_dim:], dtype=np.float32)
+    if mode == "log":
+        # Caveat: assumes prob_block is in approximately linear-prob space.
+        # If you've enabled normalize_per_part or use_delta_logprob, prob_block
+        # is not raw probability -- log-mode will still run but the metric is
+        # `var(log|clip(x, eps, inf)|)`, which may not match the intuition.
+        eps = 1e-8
+        prob_block = np.log(np.maximum(np.abs(prob_block), eps))
+    variances = prob_block.var(axis=1)
+    n_keep_total = max(1, int(len(variances) * top_pct))
+    # argpartition gives a (potentially unordered) set of the top-k by variance
+    top_global = np.argpartition(-variances, n_keep_total - 1)[:n_keep_total]
+    keep_mask = np.zeros(len(variances), dtype=bool)
+    keep_mask[top_global] = True
+    filtered = train_indices[keep_mask[train_indices]]
+    msg = (
+        f"Variance filter ({mode}): kept {len(filtered)}/{len(train_indices)} train "
+        f"samples (global threshold = top {top_pct*100:.1f}% of {len(variances)} "
+        f"samples by var)"
+    )
+    logger.info(msg)
+    print(msg, flush=True)
+    return filtered
+
+
+def cluster_stratify_train_indices(
+    data: np.ndarray,
+    train_indices: np.ndarray,
+    embedding_dim: int,
+    n_clusters: int,
+    per_cluster: int,
+    logger,
+    mode: str = "linear",
+    seed: int = 0,
+    fit_subsample: int = 10_000_000,
+    predict_chunk_size: int = 1_000_000,
+) -> np.ndarray:
+    """Cluster training samples by their prob-block trajectory shape, then take an
+    equal-sized sample from each cluster.
+
+    This forces the training set to cover diverse trajectory shapes (flat-high,
+    flat-low, early-rise, late-rise, jump, ...) instead of being dominated by the
+    most common shape.
+
+    `mode`:
+      - "linear": cluster on raw prob-block values.
+      - "log":    cluster on log(clip(|prob|, eps, inf)) -- same rationale as the
+                  log-mode variance filter.
+
+    Memory handling:
+      - If `len(train_indices) > fit_subsample`, K-means is fit on a random subset
+        of that size, then cluster labels are predicted for the full train set in
+        chunks of `predict_chunk_size`. Default fit_subsample=10M handles datasets
+        up to that size in-memory; subsamples beyond.
+      - Pass `fit_subsample=0` to disable subsampling and force fit on all rows.
+
+    Returns: subset of `train_indices`, size ~= n_clusters * per_cluster
+    (less if some clusters are smaller than `per_cluster`).
+    """
+    if n_clusters is None or n_clusters <= 0 or per_cluster is None or per_cluster <= 0:
+        return train_indices
+    if mode not in ("linear", "log"):
+        raise ValueError(f"cluster_strat_mode must be 'linear' or 'log', got {mode}")
+    from sklearn.cluster import MiniBatchKMeans
+
+    rng = np.random.default_rng(seed)
+    n_train = len(train_indices)
+    eps = 1e-8
+
+    def _slice(rows: np.ndarray) -> np.ndarray:
+        """Materialize the prob block for the given absolute rows, applying mode."""
+        arr = np.asarray(data[rows, embedding_dim:], dtype=np.float32)
+        if mode == "log":
+            arr = np.log(np.maximum(np.abs(arr), eps))
+        return arr
+
+    use_subsample = fit_subsample and 0 < fit_subsample < n_train
+    if use_subsample:
+        fit_local = rng.choice(n_train, size=fit_subsample, replace=False)
+        fit_rows = train_indices[fit_local]
+        print(
+            f"Cluster-stratified sampling: fitting K-means on {fit_subsample}-sample "
+            f"subset of {n_train} train rows, k={n_clusters}, mode={mode}...",
+            flush=True,
+        )
+        fit_traj = _slice(fit_rows)
+    else:
+        print(
+            f"Cluster-stratified sampling: fitting K-means on all {n_train} train rows, "
+            f"k={n_clusters}, mode={mode}...",
+            flush=True,
+        )
+        fit_traj = _slice(train_indices)
+
+    km = MiniBatchKMeans(
+        n_clusters=n_clusters,
+        random_state=seed,
+        n_init=3,
+        batch_size=min(10000, max(1024, len(fit_traj) // 100)),
+        max_iter=100,
+    )
+    km.fit(fit_traj)
+    del fit_traj  # free memory before predict pass
+
+    # Predict labels for every train index, chunked to bound memory.
+    labels = np.empty(n_train, dtype=np.int32)
+    chunk = max(1, predict_chunk_size)
+    for start in range(0, n_train, chunk):
+        end = min(n_train, start + chunk)
+        chunk_rows = train_indices[start:end]
+        labels[start:end] = km.predict(_slice(chunk_rows))
+
+    chosen_local: list[int] = []
+    cluster_sizes = np.bincount(labels, minlength=n_clusters)
+    for c in range(n_clusters):
+        idx = np.where(labels == c)[0]
+        if len(idx) == 0:
+            continue
+        take = min(len(idx), per_cluster)
+        chosen_local.extend(rng.choice(idx, size=take, replace=False).tolist())
+    chosen_local_arr = np.array(chosen_local, dtype=np.int64)
+    filtered = train_indices[chosen_local_arr]
+    msg = (
+        f"Cluster-stratified sampling ({mode}): kept "
+        f"{len(filtered)}/{n_train} train samples "
+        f"(n_clusters={n_clusters}, per_cluster<= {per_cluster}; "
+        f"fit_subsample={'all' if not use_subsample else fit_subsample}; "
+        f"cluster sizes min/median/max = "
+        f"{cluster_sizes.min()}/{int(np.median(cluster_sizes))}/{cluster_sizes.max()})"
+    )
+    logger.info(msg)
+    print(msg, flush=True)
+    return filtered
 
 
 def train(
@@ -278,42 +452,197 @@ def train(
 
     batch_size=cfg["batch_size"]
     train_indices, eval_indices = get_train_eval_indices(data, data_shuffling_seed=cfg["data_shuffling_seed"])
-    
+
+    variance_filter_top_pct = cfg.get("variance_filter_top_pct", None)
+    variance_filter_mode = cfg.get("variance_filter_mode", "linear")
+    if variance_filter_top_pct is not None and variance_filter_top_pct < 1.0:
+        train_indices = filter_train_indices_by_variance(
+            data=data,
+            train_indices=train_indices,
+            embedding_dim=cfg.get("embedding_dim", 768),
+            top_pct=variance_filter_top_pct,
+            logger=logger,
+            mode=variance_filter_mode,
+        )
+
+    cluster_strat_k = cfg.get("cluster_strat_k", 0) or 0
+    cluster_strat_per_cluster = cfg.get("cluster_strat_per_cluster", 0) or 0
+    cluster_strat_mode = cfg.get("cluster_strat_mode", "linear")
+    if cluster_strat_k > 0 and cluster_strat_per_cluster > 0:
+        train_indices = cluster_stratify_train_indices(
+            data=data,
+            train_indices=train_indices,
+            embedding_dim=cfg.get("embedding_dim", 768),
+            n_clusters=cluster_strat_k,
+            per_cluster=cluster_strat_per_cluster,
+            logger=logger,
+            mode=cluster_strat_mode,
+            seed=cfg.get("seed", 42),
+        )
+
     use_freq_weighting = sample_weights is not None
-    logger.info(f"Beginning training... (frequency weighting: {use_freq_weighting})")
+    decoder_ortho_loss_weight = cfg.get("decoder_ortho_loss_weight", 0.0)
+    superimpose_loss_weight_static = float(cfg.get("superimpose_loss_weight", 0.0) or 0.0)
+
+    # GradNorm: when target_ratio is set (>0), the aux loss's weight is auto-tuned so
+    # its gradient norm on shared params equals target_ratio × reconstruction's grad
+    # norm. Updated every `gradnorm_every` steps with EMA smoothing. Static weights
+    # above are used as the starting value and as a fallback when GradNorm is off.
+    gradnorm_target_sup = float(cfg.get("gradnorm_target_sup", 0.0) or 0.0)
+    gradnorm_target_ortho = float(cfg.get("gradnorm_target_ortho", 0.0) or 0.0)
+    gradnorm_every = int(cfg.get("gradnorm_every", 50) or 50)
+    gradnorm_ema = float(cfg.get("gradnorm_ema", 0.9) or 0.9)
+    gradnorm_min_weight = float(cfg.get("gradnorm_min_weight", 1e-3) or 1e-3)
+    gradnorm_max_weight = float(cfg.get("gradnorm_max_weight", 1e6) or 1e6)
+    use_gradnorm_sup = gradnorm_target_sup > 0.0
+    use_gradnorm_ortho = gradnorm_target_ortho > 0.0
+    sup_weight_effective = superimpose_loss_weight_static if superimpose_loss_weight_static > 0 else 1.0
+    ortho_weight_effective = decoder_ortho_loss_weight if decoder_ortho_loss_weight > 0 else 1.0
+
+    logger.info(
+        f"Beginning training... (frequency weighting: {use_freq_weighting}, "
+        f"decoder_ortho_loss_weight: {decoder_ortho_loss_weight}, "
+        f"superimpose_loss_weight: {superimpose_loss_weight_static}, "
+        f"gradnorm: sup_target={gradnorm_target_sup} ortho_target={gradnorm_target_ortho} "
+        f"every={gradnorm_every})"
+    )
     encoder.train()
     for epoch in range(num_epochs):
         train_dataloader = DataLoader(data, batch_size, train_indices)
         background_loader = BackgroundDataLoader(train_dataloader)
         eval_dataloader = DataLoader(data, batch_size, eval_indices)
         total_batches = train_dataloader.num_batches * num_epochs
+        k_start = 100
+        k_end = cfg["topk"] # Your target k (e.g., 25)
+        # anneal_until_batch = int(0.3 * total_batches) # Anneal over first 30% of training
+
+        anneal_start_batch = int(0.1 * total_batches)
+        anneal_end_batch = int(0.5 * total_batches)   # Finish at 50% mark
+        # -----------------------------
         for i, batch in enumerate(background_loader):
             i += epoch * train_dataloader.num_batches
+            # if i < anneal_until_batch:
+            #     current_k = k_start - (k_start - k_end) * (i / anneal_until_batch)
+            # else:
+            #     current_k = k_end
+            # encoder.k = int(current_k)
+
+            if i < anneal_start_batch:
+                current_k = k_start
+            elif i < anneal_end_batch:
+                # Linear decay over the middle 60% of training
+                progress = (i - anneal_start_batch) / (anneal_end_batch - anneal_start_batch)
+                current_k = k_start - (k_start - k_end) * progress
+            else:
+                current_k = k_end
+            
+            encoder.k = int(current_k)
             if i <= start_batch:
                 continue
             batch = batch.to(cfg["device"])
-            # loss, _, penalty, _ = encoder(batch)
-            loss, _, _, l2_error_per_sample = encoder(batch, return_l2_error_per_sample=True)
-            
-            # Apply frequency weighting if available
+
+            # Forward — returns separate loss components so we can take per-loss
+            # gradients for GradNorm. Old `forward()` is preserved for callers that
+            # still expect the (loss, acts, penalty, l2_err) tuple.
+            components = encoder.forward_with_components(batch)
+            recon_loss_raw = components["recon_loss"]
+            sup_loss_raw = components["sup_loss"]
+            l2_error_per_sample = components["l2_error_per_sample"]
+
+            # Frequency weighting recomputes recon as weighted mean over per-sample
+            # errors. (l1 from base AutoEncoder isn't routed through this path; only
+            # the topk variants are GradNorm-targeted and l1_coeff is None for them.)
             if use_freq_weighting:
                 batch_indices = train_dataloader.batch_indices[i % train_dataloader.num_batches]
                 weights = torch.from_numpy(sample_weights[batch_indices]).to(cfg["device"])
-                weighted_l2_loss = (l2_error_per_sample.squeeze() * weights).mean()
-                if not cfg["topk"]:
-                    acts = encoder.enc(batch - encoder.dec.bias)
-                    acts = torch.nn.functional.relu(acts)
-                    l1_loss = cfg["l1_coeff"] * (acts.abs().sum(-1).mean())
-                    loss = weighted_l2_loss + l1_loss
-                else:
-                    loss = weighted_l2_loss
-            
+                recon_loss = (l2_error_per_sample.squeeze() * weights).mean()
+            else:
+                recon_loss = recon_loss_raw
+
+            with torch.no_grad():
+                mse = l2_error_per_sample.mean()
+                x_var_sq = (batch - batch.mean(0, keepdim=True)).pow(2)
+                if encoder.loss_weights is not None:
+                    x_var_sq = x_var_sq * encoder.loss_weights
+                var_x = x_var_sq.sum(-1).mean()
+                ev = (1.0 - mse / (var_x + 1e-8)).item()
+
+            # Ortho loss: computed when either the static weight is nonzero OR GradNorm
+            # is targeting it (so we have a tensor for autograd.grad).
+            ortho_loss = None
+            ortho_loss_val = None
+            if decoder_ortho_loss_weight > 0 or use_gradnorm_ortho:
+                W = encoder.dec.weight
+                W_col_norm = W / (W.norm(dim=0, keepdim=True) + 1e-8)
+                sims = W_col_norm.T @ W_col_norm
+                K = sims.shape[0]
+                off_diag_sq_sum = (sims ** 2).sum() - K
+                ortho_loss = off_diag_sq_sum / (K * (K - 1))
+                ortho_loss_val = ortho_loss.item()
+
+            # GradNorm update: every `gradnorm_every` batches, measure per-loss gradient
+            # norms on shared (enc+dec) weights and EMA-update effective weights so each
+            # aux loss's gradient is target_ratio × reconstruction's gradient.
+            # torch.autograd.grad does NOT touch .grad — safe to interleave with the
+            # subsequent combined backward() (which writes .grad as usual).
+            # allow_unused=True: superimpose touches only enc.weight, ortho only dec.weight,
+            # so each will report None for the unused tensor — treated as zero gradient.
+            def _grad_norm(loss_tensor, params):
+                grads = torch.autograd.grad(loss_tensor, params, retain_graph=True, allow_unused=True)
+                sq = sum(g.pow(2).sum() for g in grads if g is not None)
+                if isinstance(sq, int):  # all None — shouldn't happen, but be safe
+                    return 0.0
+                return torch.sqrt(sq).item()
+
+            if (use_gradnorm_sup or use_gradnorm_ortho) and i > 0 and i % gradnorm_every == 0:
+                shared = [encoder.enc.weight, encoder.dec.weight]
+                n_recon = _grad_norm(recon_loss, shared)
+
+                if use_gradnorm_sup and sup_loss_raw.requires_grad:
+                    n_sup = _grad_norm(sup_loss_raw, shared)
+                    if n_sup > 1e-12:
+                        target = gradnorm_target_sup * n_recon / n_sup
+                        sup_weight_effective = max(
+                            gradnorm_min_weight,
+                            min(gradnorm_max_weight,
+                                gradnorm_ema * sup_weight_effective + (1 - gradnorm_ema) * target),
+                        )
+
+                if use_gradnorm_ortho and ortho_loss is not None and ortho_loss.requires_grad:
+                    n_ortho = _grad_norm(ortho_loss, shared)
+                    if n_ortho > 1e-12:
+                        target = gradnorm_target_ortho * n_recon / n_ortho
+                        ortho_weight_effective = max(
+                            gradnorm_min_weight,
+                            min(gradnorm_max_weight,
+                                gradnorm_ema * ortho_weight_effective + (1 - gradnorm_ema) * target),
+                        )
+
+            # Resolve effective weights for this step
+            sup_w = sup_weight_effective if use_gradnorm_sup else superimpose_loss_weight_static
+            ortho_w = ortho_weight_effective if use_gradnorm_ortho else decoder_ortho_loss_weight
+
+            # Combine losses
+            loss = recon_loss
+            if sup_w > 0 and sup_loss_raw.requires_grad:
+                loss = loss + sup_w * sup_loss_raw
+            if ortho_w > 0 and ortho_loss is not None:
+                loss = loss + ortho_w * ortho_loss
+
             loss_dict = {
                 "epoch": epoch,
                 "batch": f"{i} / {total_batches}",
                 "loss": loss.item(),
-                # "penalty": penalty.item()
+                "recon_loss": recon_loss.item(),
+                "explained_variance": ev,
             }
+            if ortho_loss_val is not None:
+                loss_dict["decoder_ortho_loss"] = ortho_loss_val
+                loss_dict["decoder_ortho_weight"] = ortho_w
+            sup_loss_val = float(getattr(encoder, "_last_superimpose_loss", 0.0))
+            if sup_loss_val > 0 or sup_w > 0:
+                loss_dict["superimpose_loss"] = sup_loss_val
+                loss_dict["superimpose_weight"] = sup_w
             loss.backward()
             encoder.make_decoder_weights_and_grad_unit_norm()
             encoder_optim.step()
@@ -334,6 +663,9 @@ def train(
                         "total_eval_l2_loss": 0,
                         "total_eval_l1_loss": 0
                     }
+                total_resid_ss = 0.0
+                total_x_var_ss = 0.0
+                total_eval_samples = 0
                 # record loss on eval data
                 with torch.no_grad():
                     for eval_idx, eval_batch in enumerate(eval_dataloader):
@@ -349,10 +681,10 @@ def train(
                             # total_eval_loss_dict["total_penalty"] += penalty.item()
                         else:
                             loss, _, l2_loss, l1_loss = encoder(eval_batch)
+                            _, _, _, l2_error_per_sample = encoder(eval_batch, return_l2_error_per_sample=True)
                             if use_freq_weighting:
                                 batch_indices = eval_dataloader.batch_indices[eval_idx]
                                 weights = torch.from_numpy(sample_weights[batch_indices]).to(cfg["device"])
-                                _, _, _, l2_error_per_sample = encoder(eval_batch, return_l2_error_per_sample=True)
                                 weighted_l2_loss = (l2_error_per_sample.squeeze() * weights).mean()
                                 acts = encoder.enc(eval_batch - encoder.dec.bias)
                                 acts = torch.nn.functional.relu(acts)
@@ -362,9 +694,22 @@ def train(
                             total_eval_loss_dict["total_eval_loss"] += loss.item()
                             total_eval_loss_dict["total_eval_l2_loss"] += l2_loss.item()
                             total_eval_loss_dict["total_eval_l1_loss"] += l1_loss.item()
+
+                        bsz = eval_batch.shape[0]
+                        total_resid_ss += l2_error_per_sample.sum().item()
+                        # Apply the same per-dim loss_weights to the variance term so
+                        # ev = 1 - resid/var is apples-to-apples; otherwise resid is
+                        # weighted (~70x on prob block) but var isn't, breaking the metric.
+                        x_var_sq = (eval_batch - eval_batch.mean(0, keepdim=True)).pow(2)
+                        if encoder.loss_weights is not None:
+                            x_var_sq = x_var_sq * encoder.loss_weights
+                        total_x_var_ss += x_var_sq.sum().item()
+                        total_eval_samples += bsz
+                eval_ev = 1.0 - (total_resid_ss / (total_x_var_ss + 1e-8))
                 if cfg["topk"]:
                     avg_eval_loss_dict = {
                         "eval_loss": total_eval_loss_dict["total_eval_loss"] / num_eval_batches,
+                        "eval_explained_variance": eval_ev,
                         # "penalty": total_eval_loss_dict["total_penalty"] / num_eval_batches
                     }
                     wandb.log(avg_eval_loss_dict)
@@ -373,7 +718,8 @@ def train(
                     avg_eval_loss_dict = {
                             "eval_loss": total_eval_loss_dict["total_eval_loss"] / num_eval_batches,
                             "eval_l2_loss": total_eval_loss_dict["total_eval_l2_loss"] / num_eval_batches,
-                            "eval_l1_loss": total_eval_loss_dict["total_eval_l1_loss"] / num_eval_batches
+                            "eval_l1_loss": total_eval_loss_dict["total_eval_l1_loss"] / num_eval_batches,
+                            "eval_explained_variance": eval_ev,
                         }
                     wandb.log(avg_eval_loss_dict)
                     logger.info(avg_eval_loss_dict)
@@ -402,10 +748,11 @@ def train(
                     (total_batches - i) > (log_eval_act_freqs_every // 4):
                     logger.info("Resetting neurons...")
                     # if dict size is large, reset more of the dead features
-                    if cfg["dict_size"]/cfg["input_dim"] > 4:    
-                        to_be_reset = (freqs < 1e-6)
-                    else:
-                        to_be_reset = (freqs == 0)
+                    to_be_reset = (freqs == 0)
+                    # if cfg["dict_size"]/cfg["input_dim"] > 4:    
+                    #     to_be_reset = (freqs < 1e-6)
+                    # else:
+                    #     to_be_reset = (freqs == 0)
                     re_init(to_be_reset, encoder)
             if (i+1) % checkpoint_every == 0:
                 # checkpoint model
@@ -551,6 +898,24 @@ def train(
     default=False,
 )
 @click.option(
+    "--use_delta_prob",
+    help="Use consecutive prob deltas (p_i - p_{i+1}) instead of raw probs as output features",
+    type=bool,
+    default=False,
+)
+@click.option(
+    "--use_delta_logprob",
+    help="Use consecutive logprob deltas (log p_i - log p_{i+1}) as output features (mutually exclusive with --use_delta_prob)",
+    type=bool,
+    default=False,
+)
+@click.option(
+    "--decoder_ortho_loss_weight",
+    help="If > 0, add a loss penalizing squared off-diagonal cosine similarity between decoder dictionary directions",
+    type=float,
+    default=0.0,
+)
+@click.option(
     "--use_freq_weighting",
     help="Use inverse frequency weighting for rare tokens",
     type=bool,
@@ -567,6 +932,114 @@ def train(
     help="Power to raise inverse frequency to (higher = more extreme weighting)",
     type=float,
     default=1.0,
+)
+@click.option(
+    "--normalize_per_part",
+    help="Z-score normalize embedding and prob blocks independently (per-column). "
+         "Cached separately and reflected in the SAE folder name.",
+    type=bool,
+    default=False,
+)
+@click.option(
+    "--output_dim_loss_weight",
+    help="Per-dim loss weight applied to the prob/output block. Pass 'auto' to use "
+         "embedding_dim/output_feature_dim, or a float (e.g. 110). Default None = uniform.",
+    type=str,
+    default=None,
+)
+@click.option(
+    "--variance_filter_top_pct",
+    help="If set (e.g. 0.2), restrict TRAINING to the top-X fraction of samples by "
+         "per-sample variance across the prob/output block. Eval split is unchanged "
+         "so in-training eval still reflects the full data distribution.",
+    type=float,
+    default=None,
+)
+@click.option(
+    "--variance_filter_mode",
+    help="How to compute per-sample variance for the filter: 'linear' uses raw "
+         "prob-block values (default, existing behavior); 'log' uses log(|x|+eps), "
+         "which rebalances toward relative changes so rare-token emergence is "
+         "weighed comparably to easy-token swings. Assumes prob-block is in "
+         "approximately linear-prob space; see function docstring for caveats with "
+         "normalize_per_part or use_delta_logprob.",
+    type=click.Choice(["linear", "log"]),
+    default="linear",
+)
+@click.option(
+    "--cluster_strat_k",
+    help="If > 0, cluster training samples by their prob-trajectory shape into K "
+         "clusters (MiniBatchKMeans) and take an equal-sized sample from each. "
+         "Forces diversity across trajectory shapes (flat, early-rise, late-jump, ...). "
+         "Applied AFTER variance_filter if both are set.",
+    type=int,
+    default=0,
+)
+@click.option(
+    "--cluster_strat_per_cluster",
+    help="When --cluster_strat_k > 0, the (max) number of samples to take from each "
+         "cluster. Total kept <= cluster_strat_k * cluster_strat_per_cluster.",
+    type=int,
+    default=2000,
+)
+@click.option(
+    "--cluster_strat_mode",
+    help="Feature space used for clustering trajectories. Same options/meaning as "
+         "--variance_filter_mode.",
+    type=click.Choice(["linear", "log"]),
+    default="linear",
+)
+@click.option(
+    "--superimpose_loss_weight",
+    help="If > 0, add a within-feature curve consistency loss that pulls samples activating "
+         "the same feature toward similar min-max-normalized prob curves (mean L∞ distance to "
+         "the feature centroid). Matches the superimpose_sim metric used in analysis. "
+         "When --gradnorm_target_sup > 0, this is only the INITIAL value; the effective "
+         "weight is auto-tuned each step.",
+    type=float,
+    default=0.0,
+)
+@click.option(
+    "--gradnorm_target_sup",
+    help="If > 0, GradNorm-style auto-balance the superimpose loss weight so its gradient "
+         "norm on shared (enc+dec) weights equals this fraction of reconstruction's gradient "
+         "norm. Recommended: 0.05–0.2. Overrides --superimpose_loss_weight beyond the initial.",
+    type=float,
+    default=0.0,
+)
+@click.option(
+    "--gradnorm_target_ortho",
+    help="If > 0, GradNorm-style auto-balance the decoder ortho loss weight (same semantics "
+         "as --gradnorm_target_sup). Recommended: 0.05–0.2. Overrides --decoder_ortho_loss_weight.",
+    type=float,
+    default=0.0,
+)
+@click.option(
+    "--gradnorm_every",
+    help="Update GradNorm effective weights every N batches (cheaper than every step). "
+         "Default 50 → ~6% overhead.",
+    type=int,
+    default=50,
+)
+@click.option(
+    "--gradnorm_ema",
+    help="EMA decay for smoothing effective weight updates: w_new = ema*w_old + (1-ema)*target. "
+         "Default 0.9 (slow, stable).",
+    type=float,
+    default=0.9,
+)
+@click.option(
+    "--gradnorm_min_weight",
+    help="Lower clamp on GradNorm-tuned effective weights (default 1e-3).",
+    type=float,
+    default=1e-3,
+)
+@click.option(
+    "--gradnorm_max_weight",
+    help="Upper clamp on GradNorm-tuned effective weights (default 1e6). Prevents blowups "
+         "when an aux loss bottoms out (e.g., ortho near its geometric floor).",
+    type=float,
+    default=1e6,
 )
 def main(
     args: str,
@@ -585,10 +1058,27 @@ def main(
     temp_dir: str,
     workers: int,
     only_probs: bool,
+    use_delta_prob: bool,
+    use_delta_logprob: bool,
+    decoder_ortho_loss_weight: float,
     use_freq_weighting: bool,
     freq_weight_smoothing: float,
     freq_weight_power: float,
-):  
+    normalize_per_part: bool,
+    output_dim_loss_weight: str,
+    variance_filter_top_pct: float,
+    variance_filter_mode: str,
+    cluster_strat_k: int,
+    cluster_strat_per_cluster: int,
+    cluster_strat_mode: str,
+    superimpose_loss_weight: float,
+    gradnorm_target_sup: float,
+    gradnorm_target_ortho: float,
+    gradnorm_every: int,
+    gradnorm_ema: float,
+    gradnorm_min_weight: float,
+    gradnorm_max_weight: float,
+):
     logger = get_logger()
     continue_from_checkpoint = False
 
@@ -606,16 +1096,85 @@ def main(
         temp_dir = args_dict.get("temp_dir", temp_dir)
         workers = args_dict.get("workers", workers)
         only_probs = args_dict.get("only_probs", only_probs)
+        use_delta_prob = args_dict.get("use_delta_prob", use_delta_prob)
+        use_delta_logprob = args_dict.get("use_delta_logprob", use_delta_logprob)
+        decoder_ortho_loss_weight = args_dict.get("decoder_ortho_loss_weight", decoder_ortho_loss_weight)
         use_freq_weighting = args_dict.get("use_freq_weighting", use_freq_weighting)
         freq_weight_smoothing = args_dict.get("freq_weight_smoothing", freq_weight_smoothing)
         freq_weight_power = args_dict.get("freq_weight_power", freq_weight_power)
-    
+        normalize_per_part = args_dict.get("normalize_per_part", normalize_per_part)
+        output_dim_loss_weight = args_dict.get("output_dim_loss_weight", output_dim_loss_weight)
+        variance_filter_top_pct = args_dict.get("variance_filter_top_pct", variance_filter_top_pct)
+        variance_filter_mode = args_dict.get("variance_filter_mode", variance_filter_mode)
+        cluster_strat_k = args_dict.get("cluster_strat_k", cluster_strat_k)
+        cluster_strat_per_cluster = args_dict.get("cluster_strat_per_cluster", cluster_strat_per_cluster)
+        cluster_strat_mode = args_dict.get("cluster_strat_mode", cluster_strat_mode)
+        superimpose_loss_weight = args_dict.get("superimpose_loss_weight", superimpose_loss_weight)
+        gradnorm_target_sup = args_dict.get("gradnorm_target_sup", gradnorm_target_sup)
+        gradnorm_target_ortho = args_dict.get("gradnorm_target_ortho", gradnorm_target_ortho)
+        gradnorm_every = args_dict.get("gradnorm_every", gradnorm_every)
+        gradnorm_ema = args_dict.get("gradnorm_ema", gradnorm_ema)
+        gradnorm_min_weight = args_dict.get("gradnorm_min_weight", gradnorm_min_weight)
+        gradnorm_max_weight = args_dict.get("gradnorm_max_weight", gradnorm_max_weight)
+
     # if data_dirs are provided, sort them in natural order
     if len(data_dirs) > 1:    
         data_dirs = natsorted(data_dirs)
     
     cfg = get_config(config_path, output_feature_weight, seed)
+    if use_delta_prob and use_delta_logprob:
+        raise ValueError("use_delta_prob and use_delta_logprob are mutually exclusive")
     sae_name_prefix = f"{model_string}_seed={seed}_ofw={output_feature_weight}"
+    if use_delta_prob:
+        sae_name_prefix = f"{sae_name_prefix}_delta"
+    elif use_delta_logprob:
+        sae_name_prefix = f"{sae_name_prefix}_logdelta"
+    if decoder_ortho_loss_weight > 0:
+        sae_name_prefix = f"{sae_name_prefix}_ortho={decoder_ortho_loss_weight}"
+    if variance_filter_top_pct is not None and variance_filter_top_pct < 1.0:
+        mode_tag = "" if variance_filter_mode == "linear" else f"-{variance_filter_mode}"
+        sae_name_prefix = f"{sae_name_prefix}_varfilt={variance_filter_top_pct}{mode_tag}"
+    if cluster_strat_k and cluster_strat_k > 0:
+        cmode_tag = "" if cluster_strat_mode == "linear" else f"-{cluster_strat_mode}"
+        sae_name_prefix = (
+            f"{sae_name_prefix}_cstrat=k{cluster_strat_k}x{cluster_strat_per_cluster}{cmode_tag}"
+        )
+    if superimpose_loss_weight and float(superimpose_loss_weight) > 0:
+        sae_name_prefix = f"{sae_name_prefix}_sup={superimpose_loss_weight}"
+    if gradnorm_target_sup and float(gradnorm_target_sup) > 0:
+        sae_name_prefix = f"{sae_name_prefix}_gnsup={gradnorm_target_sup}"
+    if gradnorm_target_ortho and float(gradnorm_target_ortho) > 0:
+        sae_name_prefix = f"{sae_name_prefix}_gnortho={gradnorm_target_ortho}"
+    cfg["use_delta_prob"] = use_delta_prob
+    cfg["use_delta_logprob"] = use_delta_logprob
+    cfg["decoder_ortho_loss_weight"] = decoder_ortho_loss_weight
+    cfg["normalize_per_part"] = normalize_per_part
+    cfg["variance_filter_top_pct"] = variance_filter_top_pct
+    cfg["variance_filter_mode"] = variance_filter_mode
+    cfg["cluster_strat_k"] = cluster_strat_k
+    cfg["cluster_strat_per_cluster"] = cluster_strat_per_cluster
+    cfg["cluster_strat_mode"] = cluster_strat_mode
+    cfg["superimpose_loss_weight"] = float(superimpose_loss_weight) if superimpose_loss_weight else 0.0
+    cfg["gradnorm_target_sup"] = float(gradnorm_target_sup) if gradnorm_target_sup else 0.0
+    cfg["gradnorm_target_ortho"] = float(gradnorm_target_ortho) if gradnorm_target_ortho else 0.0
+    cfg["gradnorm_every"] = int(gradnorm_every) if gradnorm_every else 50
+    cfg["gradnorm_ema"] = float(gradnorm_ema) if gradnorm_ema is not None else 0.9
+    cfg["gradnorm_min_weight"] = float(gradnorm_min_weight) if gradnorm_min_weight is not None else 1e-3
+    cfg["gradnorm_max_weight"] = float(gradnorm_max_weight) if gradnorm_max_weight is not None else 1e6
+    # Normalize the loss-weight arg: None / "auto" / float
+    if output_dim_loss_weight is None or (isinstance(output_dim_loss_weight, str) and output_dim_loss_weight.lower() in ("none", "")):
+        parsed_odlw = None
+    elif isinstance(output_dim_loss_weight, str) and output_dim_loss_weight.lower() == "auto":
+        parsed_odlw = "auto"
+    else:
+        parsed_odlw = float(output_dim_loss_weight)
+    cfg["output_dim_loss_weight"] = parsed_odlw
+    # Record embedding/output split so the encoder can build per-dim loss weights
+    embedding_dim = cfg.get("embedding_dim", 768)
+    is_delta = use_delta_prob or use_delta_logprob
+    n_output_features = len(model_names) - 1 if is_delta else len(model_names)
+    cfg["embedding_dim"] = embedding_dim
+    cfg["output_feature_dim"] = n_output_features
     sae_model_name = get_sae_name(cfg, sae_name_prefix)
     cfg["name"] = sae_model_name
     cfg["model_names"] = model_names
@@ -674,7 +1233,9 @@ def main(
         cfg["model_checkpoint_dir"] = model_checkpoint_dir
 
         # update the input dimension of the SAE
-        cfg["input_dim"] = cfg["input_dim"] + len(model_names)
+        is_delta = use_delta_prob or use_delta_logprob
+        n_output_features = len(model_names) - 1 if is_delta else len(model_names)
+        cfg["input_dim"] = cfg["input_dim"] + n_output_features
 
         # start from the first data directory
         cached_data_idx = 0
@@ -689,7 +1250,14 @@ def main(
         # sort the data directories in natural order
         data_dir_names = natsorted(data_dir_names)
         for data_name in data_dir_names:
-            cache_data_dir = os.path.join(cache_models_dir, f"{data_name}/ofw={output_feature_weight}")
+            cache_subdir = f"ofw={output_feature_weight}"
+            if use_delta_prob:
+                cache_subdir = f"{cache_subdir}_delta"
+            elif use_delta_logprob:
+                cache_subdir = f"{cache_subdir}_logdelta"
+            if normalize_per_part:
+                cache_subdir = f"{cache_subdir}_znorm"
+            cache_data_dir = os.path.join(cache_models_dir, f"{data_name}/{cache_subdir}")
             data_path = os.path.join(cache_data_dir, "preprocessed_data.dat")
             data_info_path = os.path.join(cache_data_dir, "cached_data_info.json")
             if os.path.exists(data_path) and os.path.exists(data_info_path):
@@ -711,6 +1279,9 @@ def main(
             # cfg=cfg,
             spill_dir=spill_dir,
             model_string=model_string,
+            use_delta_prob=use_delta_prob,
+            use_delta_logprob=use_delta_logprob,
+            normalize_per_part=normalize_per_part,
         )
     else:
         cfg["train_data_dirs"] = cached_data_dirs
@@ -767,7 +1338,8 @@ def main(
         tempfile_path = os.path.join(temp_dir, tempfile_name)
         copy_temp_memmap(cached_data_filepath, tempfile_path)
         logger.info(f"Copied data to temporary path {tempfile_path}")
-        data = np.memmap(tempfile_path, dtype=dtype, mode='r', shape=shape)
+        # Load into RAM for fast random-access during training
+        data = np.array(np.memmap(tempfile_path, dtype=dtype, mode='r', shape=shape))
         
         # Load frequency weights if enabled
         sample_weights = None

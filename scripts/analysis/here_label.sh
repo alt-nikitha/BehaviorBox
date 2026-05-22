@@ -1,0 +1,69 @@
+
+set -a 
+source scripts/env_configs/.env
+set +a
+
+# Activate environment
+source ${MINICONDA_PATH}
+conda activate ${ENV_NAME}
+
+usage() {
+  echo "Usage: $0 [--sae_dir=PATH] [--labeling_model=STRING] [--min_acts=N] [--help]"
+  echo
+  echo "Options:"
+  echo "  --sae_dir=PATH      Directory containing SAE model and outputs"
+  echo "  --labeling_model=STRING Model to use for labeling"
+  echo "  --min_acts=N       Skip features with fewer than N top activations (default: 50)"
+  echo "  --help             Display this help message"
+  exit 1
+}
+
+min_acts=10
+
+# Parse named arguments
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --sae_dir=*)
+      sae_dir="${1#*=}"
+      shift
+      ;;
+    --labeling_model=*)
+      labeling_model="${1#*=}"
+      shift
+      ;;
+    --min_acts=*)
+      min_acts="${1#*=}"
+      shift
+      ;;
+    --help)
+      usage
+      ;;
+    *)
+      echo "Unknown option: $1"
+      usage
+      ;;
+  esac
+done
+
+# Validate required arguments
+if [ -z "$sae_dir" ]; then
+  echo "Error: --sae_dir is required"
+  usage
+fi
+
+echo "Running on node: $HOSTNAME"
+echo "SAE directory: $sae_dir"
+echo "Labeling model: $labeling_model"
+
+cd analysis/autolabel
+
+mkdir -p $sae_dir/feature_labels
+python automatic_labels.py \
+    --sae_dir $sae_dir \
+    --labeling_model $labeling_model \
+    --min_acts $min_acts
+
+python filter_and_validate_labels.py \
+    --sae_dir $sae_dir \
+    --labeling_model $labeling_model \
+    --min_acts $min_acts

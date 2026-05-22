@@ -12,7 +12,8 @@ from labeling_utils import \
 
 LITELLM_API_KEY = os.environ.get("LITELLM_API_KEY")
 LITELLM_BASE_URL = os.environ.get("LITELLM_BASE_URL")
-MAX_REQUESTS = 10
+# MAX_REQUESTS = 10
+MAX_REQUESTS = 50
 
 system_prompt = """I will provide you with the label, the word, and the context in which the word appears. \
 The word in context will be surrounded by askterisks (e.g. *word*). \
