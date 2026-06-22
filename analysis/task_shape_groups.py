@@ -187,7 +187,7 @@ st.caption("Cluster benchmark tasks by the shape of their performance trajectory
            "cluster have approximately the same acquisition shape.")
 
 all_datasets = sorted(set().union(*(tpaths.keys() for tpaths in tasks.values())))
-all_datasets = [d for d in all_datasets if "early" in d and "late" in d and "0.8" in d and "znorm" in d]
+all_datasets = [d for d in all_datasets if "early" in d and "late" in d and "0.8" in d and "znorm" in d and "log" in d]
 col_ds, col_metric = st.columns([2, 1])
 with col_ds:
     dataset_name = st.selectbox("Dataset (model)", all_datasets, key="tsg_dataset")

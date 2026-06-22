@@ -20,8 +20,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-DEFAULT_CACHE = Path("/home/nsrikant/.cache/n_only_early_and_late_olmo3/"
-                     "olmo_256000_unseen/ofw=0.7_znorm")
+DEFAULT_CACHE = Path("/home/nsrikant/.cache/n_only_early_and_late_olmo3/olmo_256000_unseen/ofw=0.8_znorm")
 
 
 @lru_cache(maxsize=8)

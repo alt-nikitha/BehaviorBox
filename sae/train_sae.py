@@ -274,6 +274,50 @@ def filter_train_indices_by_variance(
     return filtered
 
 
+def filter_train_indices_by_word_ids(
+    train_indices: np.ndarray,
+    cache_data_dir: str,
+    subset_path: str,
+    logger,
+) -> np.ndarray:
+    """Restrict train_indices to memmap rows whose word_id is in `subset_path`.
+
+    `subset_path` is a JSONL with one object per line carrying a "word_id" field
+    (e.g. the jump-interval balanced sample). Alignment is by `word_ids.pkl`,
+    which is row-aligned to the cached memmap. The eval split is untouched, so
+    evaluation still reflects the full data distribution.
+    """
+    keep = set()
+    with open(subset_path) as f:
+        for line in f:
+            line = line.strip()
+            if line:
+                keep.add(str(json.loads(line)["word_id"]))
+
+    wid_path = os.path.join(cache_data_dir, "word_ids.pkl")
+    if not os.path.exists(wid_path):
+        # word_ids.pkl is written one level up from the ofw=*/ memmap subdir
+        wid_path = os.path.join(os.path.dirname(cache_data_dir), "word_ids.pkl")
+    word_ids = pd.read_pickle(wid_path)
+    wid_arr = np.asarray([str(w) for w in word_ids])
+
+    mask = np.isin(wid_arr, list(keep))
+    filtered = train_indices[mask[train_indices]]
+    msg = (
+        f"word_id subset filter: kept {len(filtered)}/{len(train_indices)} train "
+        f"rows (subset has {len(keep)} ids; {int(mask.sum())} matched in memmap) "
+        f"from {subset_path}"
+    )
+    logger.info(msg)
+    print(msg, flush=True)
+    if len(filtered) == 0:
+        raise RuntimeError(
+            "word_id subset filter kept 0 train rows -- check that subset "
+            "word_ids match the cache's word_ids.pkl format."
+        )
+    return filtered
+
+
 def cluster_stratify_train_indices(
     data: np.ndarray,
     train_indices: np.ndarray,
@@ -453,6 +497,15 @@ def train(
     batch_size=cfg["batch_size"]
     train_indices, eval_indices = get_train_eval_indices(data, data_shuffling_seed=cfg["data_shuffling_seed"])
 
+    train_word_id_subset = cfg.get("train_word_id_subset", None)
+    if train_word_id_subset:
+        train_indices = filter_train_indices_by_word_ids(
+            train_indices=train_indices,
+            cache_data_dir=cfg.get("_word_ids_cache_dir", ""),
+            subset_path=train_word_id_subset,
+            logger=logger,
+        )
+
     variance_filter_top_pct = cfg.get("variance_filter_top_pct", None)
     variance_filter_mode = cfg.get("variance_filter_mode", "linear")
     if variance_filter_top_pct is not None and variance_filter_top_pct < 1.0:
@@ -507,10 +560,21 @@ def train(
         f"every={gradnorm_every})"
     )
     encoder.train()
+    # Data-side rescale (znorm path only): divide inputs by sqrt(sum of per-dim loss
+    # weights) so total weighted variance ~= 1 and recon_loss reads ~O(1) instead of
+    # ~hundreds. Uniform scalar => preserves the odlw block balance and cancels in EV.
+    # AdamW makes the resulting global gradient rescale ~invariant, so lr is unchanged.
+    if cfg.get("normalize_per_part", False):
+        _S = encoder.loss_weights.sum().item() if encoder.loss_weights is not None else float(cfg["input_dim"])
+        data_input_scale = 1.0 / np.sqrt(_S)
+    else:
+        data_input_scale = 1.0
     for epoch in range(num_epochs):
         train_dataloader = DataLoader(data, batch_size, train_indices)
         background_loader = BackgroundDataLoader(train_dataloader)
-        eval_dataloader = DataLoader(data, batch_size, eval_indices)
+        # Evaluate on the exact subset the SAE was trained on (train_indices, after all
+        # variance/word_id/cluster filtering) rather than the held-out eval split.
+        eval_dataloader = DataLoader(data, batch_size, train_indices)
         total_batches = train_dataloader.num_batches * num_epochs
         k_start = 100
         k_end = cfg["topk"] # Your target k (e.g., 25)
@@ -539,7 +603,7 @@ def train(
             encoder.k = int(current_k)
             if i <= start_batch:
                 continue
-            batch = batch.to(cfg["device"])
+            batch = batch.to(cfg["device"]) * data_input_scale
 
             # Forward — returns separate loss components so we can take per-loss
             # gradients for GradNorm. Old `forward()` is preserved for callers that
@@ -669,7 +733,7 @@ def train(
                 # record loss on eval data
                 with torch.no_grad():
                     for eval_idx, eval_batch in enumerate(eval_dataloader):
-                        eval_batch = eval_batch.to(cfg["device"])
+                        eval_batch = eval_batch.to(cfg["device"]) * data_input_scale
                         if cfg["topk"]:
                             # loss, _, penalty, _ = encoder(eval_batch)
                             loss, _, _, l2_error_per_sample = encoder(eval_batch, return_l2_error_per_sample=True)
@@ -943,9 +1007,19 @@ def train(
 @click.option(
     "--output_dim_loss_weight",
     help="Per-dim loss weight applied to the prob/output block. Pass 'auto' to use "
-         "embedding_dim/output_feature_dim, or a float (e.g. 110). Default None = uniform.",
+         "(ofw/(1-ofw)) * embedding_dim/output_feature_dim, or a float (e.g. 110). "
+         "Default None = uniform.",
     type=str,
     default=None,
+)
+@click.option(
+    "--checkpoint_weight_scheme",
+    help="Distribute the per-dim prob loss weight across checkpoints. 'uniform' (default) "
+         "weights every checkpoint equally. 'log_step' weights checkpoint j by log(step_j) "
+         "(normalized to mean 1), tilting toward later checkpoints while preserving the "
+         "block-level prob:emb loss ratio. Requires model_names of the form '*stepNNNN*'.",
+    type=click.Choice(["uniform", "log_step"]),
+    default="uniform",
 )
 @click.option(
     "--variance_filter_top_pct",
@@ -1066,6 +1140,7 @@ def main(
     freq_weight_power: float,
     normalize_per_part: bool,
     output_dim_loss_weight: str,
+    checkpoint_weight_scheme: str,
     variance_filter_top_pct: float,
     variance_filter_mode: str,
     cluster_strat_k: int,
@@ -1083,9 +1158,11 @@ def main(
     continue_from_checkpoint = False
 
     # if a path to an args file is provided, load the args
+    train_word_id_subset = None
     if args is not None:
         with open(args, "r") as f:
             args_dict = json.load(f)
+        train_word_id_subset = args_dict.get("train_word_id_subset", train_word_id_subset)
         cache_dir = args_dict.get("cache_dir", cache_dir)
         checkpoint_dir = args_dict.get("checkpoint_dir", checkpoint_dir)
         data_dirs = args_dict.get("train_data_dirs", data_dirs)
@@ -1104,6 +1181,7 @@ def main(
         freq_weight_power = args_dict.get("freq_weight_power", freq_weight_power)
         normalize_per_part = args_dict.get("normalize_per_part", normalize_per_part)
         output_dim_loss_weight = args_dict.get("output_dim_loss_weight", output_dim_loss_weight)
+        checkpoint_weight_scheme = args_dict.get("checkpoint_weight_scheme", checkpoint_weight_scheme)
         variance_filter_top_pct = args_dict.get("variance_filter_top_pct", variance_filter_top_pct)
         variance_filter_mode = args_dict.get("variance_filter_mode", variance_filter_mode)
         cluster_strat_k = args_dict.get("cluster_strat_k", cluster_strat_k)
@@ -1139,6 +1217,9 @@ def main(
         sae_name_prefix = (
             f"{sae_name_prefix}_cstrat=k{cluster_strat_k}x{cluster_strat_per_cluster}{cmode_tag}"
         )
+    if train_word_id_subset:
+        subset_tag = os.path.splitext(os.path.basename(train_word_id_subset))[0]
+        sae_name_prefix = f"{sae_name_prefix}_subset={subset_tag}"
     if superimpose_loss_weight and float(superimpose_loss_weight) > 0:
         sae_name_prefix = f"{sae_name_prefix}_sup={superimpose_loss_weight}"
     if gradnorm_target_sup and float(gradnorm_target_sup) > 0:
@@ -1154,6 +1235,7 @@ def main(
     cfg["cluster_strat_k"] = cluster_strat_k
     cfg["cluster_strat_per_cluster"] = cluster_strat_per_cluster
     cfg["cluster_strat_mode"] = cluster_strat_mode
+    cfg["train_word_id_subset"] = train_word_id_subset
     cfg["superimpose_loss_weight"] = float(superimpose_loss_weight) if superimpose_loss_weight else 0.0
     cfg["gradnorm_target_sup"] = float(gradnorm_target_sup) if gradnorm_target_sup else 0.0
     cfg["gradnorm_target_ortho"] = float(gradnorm_target_ortho) if gradnorm_target_ortho else 0.0
@@ -1169,15 +1251,16 @@ def main(
     else:
         parsed_odlw = float(output_dim_loss_weight)
     cfg["output_dim_loss_weight"] = parsed_odlw
+    cfg["checkpoint_weight_scheme"] = checkpoint_weight_scheme or "uniform"
     # Record embedding/output split so the encoder can build per-dim loss weights
     embedding_dim = cfg.get("embedding_dim", 768)
     is_delta = use_delta_prob or use_delta_logprob
     n_output_features = len(model_names) - 1 if is_delta else len(model_names)
     cfg["embedding_dim"] = embedding_dim
     cfg["output_feature_dim"] = n_output_features
+    cfg["model_names"] = model_names
     sae_model_name = get_sae_name(cfg, sae_name_prefix)
     cfg["name"] = sae_model_name
-    cfg["model_names"] = model_names
     save_dir = f"{save_dir}/{sae_model_name}"
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
@@ -1373,6 +1456,10 @@ def main(
             else:
                 logger.warning(f"Frequency weighting enabled but unigram_freqs.csv not found at {unigram_freq_path}. "
                               f"Run compute_unigram_freqs.py first. Training without frequency weighting for this dataset.")
+
+        # Parent of the ofw=*/ memmap dir, where word_ids.pkl lives. Used by the
+        # optional train_word_id_subset filter to align rows to word_ids.
+        cfg["_word_ids_cache_dir"] = os.path.dirname(cache_dir)
 
         final_checkpoint_path, encoder = train(
             data=data,

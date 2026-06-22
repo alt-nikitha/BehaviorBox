@@ -8,6 +8,7 @@ import os
 import pandas as pd
 import pickle
 import queue
+import re
 import seaborn as sns
 import sys
 import threading
@@ -16,6 +17,82 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from tqdm import tqdm
+
+
+CHECKPOINT_WEIGHT_SCHEMES = ("uniform", "log_step")
+
+
+def parse_checkpoint_steps(model_names):
+    """Extract training-step integers from model name strings like 'olmo3-stage1-step1000'.
+
+    Returns a list of ints aligned with model_names. Raises ValueError if any name
+    has no parseable step.
+    """
+    steps = []
+    pat = re.compile(r"step(\d+)")
+    for name in model_names:
+        m = pat.search(str(name))
+        if m is None:
+            raise ValueError(f"Could not parse training step from model name: {name!r}")
+        steps.append(int(m.group(1)))
+    return steps
+
+
+def build_per_dim_loss_weights(cfg, dtype):
+    """Build the per-dim loss-weight vector for the SAE objective.
+
+    Returns either a torch.Tensor of shape (cfg['input_dim'],) or None (uniform).
+
+    Composition:
+      1. tail_w_base: scalar from output_dim_loss_weight ('auto' → ofw-derived ratio).
+      2. checkpoint_weight_scheme: reshapes the prob-block weights across checkpoints
+         while preserving their mean (so the block:block loss ratio is unchanged).
+    """
+    odlw = cfg.get("output_dim_loss_weight", None)
+    emb_dim = int(cfg.get("embedding_dim", 768))
+    out_dim = int(cfg.get("output_feature_dim", 0))
+    input_dim = int(cfg["input_dim"])
+    scheme = cfg.get("checkpoint_weight_scheme", "uniform") or "uniform"
+
+    if odlw is None or out_dim <= 0:
+        return None
+
+    if isinstance(odlw, str) and odlw == "auto":
+        ofw = cfg.get("output_feature_weight", None)
+        if ofw is not None and 0.0 < float(ofw) < 1.0:
+            ratio = float(ofw) / (1.0 - float(ofw))
+        else:
+            ratio = 1.0
+        tail_w_base = ratio * float(emb_dim) / float(out_dim)
+    else:
+        tail_w_base = float(odlw)
+
+    if scheme == "uniform":
+        tail_weights = np.full(out_dim, tail_w_base, dtype=np.float32)
+    elif scheme == "log_step":
+        model_names = cfg.get("model_names", []) or []
+        steps = parse_checkpoint_steps(model_names)
+        # If using deltas, output_feature_dim is len(model_names) - 1; align to the
+        # later checkpoint in each consecutive pair.
+        if cfg.get("use_delta_prob", False) or cfg.get("use_delta_logprob", False):
+            steps = steps[1:]
+        if len(steps) != out_dim:
+            raise ValueError(
+                f"checkpoint_weight_scheme=log_step expects {out_dim} parsed steps, "
+                f"got {len(steps)} from model_names={model_names}"
+            )
+        g = np.log(np.asarray(steps, dtype=np.float64))
+        g_mean_normed = g / g.mean()  # mean = 1, preserves total prob-block budget
+        tail_weights = (tail_w_base * g_mean_normed).astype(np.float32)
+    else:
+        raise ValueError(
+            f"Unknown checkpoint_weight_scheme={scheme!r}. "
+            f"Valid: {CHECKPOINT_WEIGHT_SCHEMES}"
+        )
+
+    weights = torch.ones(input_dim, dtype=dtype)
+    weights[emb_dim:emb_dim + out_dim] = torch.tensor(tail_weights, dtype=dtype)
+    return weights
 
 sae_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '.'))
 if sae_root not in sys.path:
@@ -51,6 +128,9 @@ def get_sae_name(cfg: dict, sae_name_prefix: str):
     odlw = cfg.get("output_dim_loss_weight", None)
     if odlw is not None:
         base = f"{base}_odlw={odlw}"
+    ckpt_scheme = cfg.get("checkpoint_weight_scheme", "uniform") or "uniform"
+    if ckpt_scheme != "uniform":
+        base = f"{base}_ckptw={ckpt_scheme}"
     return base
 
 
@@ -209,6 +289,7 @@ def get_config(
     cfg.setdefault("embedding_dim", 768)
     cfg.setdefault("output_feature_dim", 0)
     cfg.setdefault("superimpose_loss_weight", 0.0)
+    cfg.setdefault("checkpoint_weight_scheme", "uniform")
     return cfg
 
 
@@ -257,29 +338,11 @@ class AutoEncoder(nn.Module):
         self._out_dim = cfg.get("output_feature_dim", 0)
         self._last_superimpose_loss = 0.0
 
-        # Per-dim loss weights: 1.0 on embedding dims, output_dim_loss_weight on prob dims.
-        # If output_dim_loss_weight == "auto", the per-dim prob weight is set so that the
-        # prob block's total MSE contribution matches the ratio implied by
-        # output_feature_weight (ofw):
-        #     tail_w = (ofw / (1-ofw)) * (embedding_dim / output_feature_dim)
-        # so total_prob_loss / total_emb_loss == ofw / (1-ofw).
-        # Falls back to embedding_dim / output_feature_dim (i.e. 50:50) when ofw is unset
-        # or not in (0, 1).
-        odlw = cfg.get("output_dim_loss_weight", None)
-        emb_dim = cfg.get("embedding_dim", 768)
-        out_dim = cfg.get("output_feature_dim", 0)
-        if odlw is not None and out_dim > 0:
-            if isinstance(odlw, str) and odlw == "auto":
-                ofw = cfg.get("output_feature_weight", None)
-                if ofw is not None and 0.0 < float(ofw) < 1.0:
-                    ratio = float(ofw) / (1.0 - float(ofw))
-                else:
-                    ratio = 1.0
-                tail_w = ratio * float(emb_dim) / float(out_dim)
-            else:
-                tail_w = float(odlw)
-            weights = torch.ones(cfg["input_dim"], dtype=dtype)
-            weights[emb_dim:emb_dim + out_dim] = tail_w
+        # Per-dim loss weights: embeddings get 1.0; prob dims get a per-checkpoint
+        # vector built by build_per_dim_loss_weights. See that function for semantics
+        # of output_dim_loss_weight ('auto' → ofw-derived) and checkpoint_weight_scheme.
+        weights = build_per_dim_loss_weights(cfg, dtype)
+        if weights is not None:
             self.register_buffer("loss_weights", weights)
         else:
             self.loss_weights = None

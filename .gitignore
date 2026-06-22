@@ -106,3 +106,7 @@ Thumbs.db
 **old_analysis**
 **precomputed_*
 **/eval_results_olmo3_**
+**analysis/*.jsonl
+**analysis/*.html
+**analysis/*.pkl
+**wandb/*

@@ -39,7 +39,9 @@ MODEL_FAMILIES = {
             # "OLMo3-7b-256k-3000-k50-0.8-delta-ortho": "/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_olmo_256000/n_moreearly_olmo3_seed=42_ofw=0.8_delta_ortho=0.001_N=3000_k=50_lp=None"
             # "OLMo3-7b-256k-3000-k10-0.8-delta-znorm-odlw=auto-varfilt=0.2": "/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_olmo_256000/n_moreearly_olmo3_seed=42_ofw=0.8_varfilt=0.2_N=3000_k=10_lp=None_znorm_odlw=auto",
             
-            "OLMo3-7b-256k-3000-k25-0.8-early-and-late-checkpoints-odlw-znorm":"/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_olmo_256000_early_and_late/n_only_early_and_late_olmo3_seed=42_ofw=0.8_N=3000_k=25_lp=None_znorm_odlw=auto"
+            # "OLMo3-7b-256k-3000-k25-0.8-early-and-late-checkpoints-odlw-znorm-log_step":"/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_olmo_256000_early_and_late/n_only_early_and_late_olmo3_seed=42_ofw=0.8_N=3000_k=25_lp=None_znorm_odlw=auto_ckptw=log_step"
+            # "OLMo3-7b-256k-3000-k25-0.8-early-and-late-checkpoints-odlw-znorm-sampled_jumps":"/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_olmo_256000_early_and_late/n_only_early_and_late_olmo3_seed=42_ofw=0.8_subset=sae_sample_jump_perbucket_min_dedup_N=3000_k=25_lp=None_znorm_odlw=auto"
+            "OLMo3-7b-256k-3000-k25-0.8-early-and-late-checkpoints-odlw-znorm-sampled_trajectory_centroids":"/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_olmo_256000_early_and_late/n_only_early_and_late_olmo3_seed=42_ofw=0.8_subset=sae_sample_by_task_family_k6_346k_N=3000_k=25_lp=None_znorm_odlw=auto"
 
 
 

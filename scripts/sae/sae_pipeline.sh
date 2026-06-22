@@ -35,7 +35,8 @@ usage() {
   echo "  --freq_smoothing=NUMBER          Smoothing factor for frequency weights (default: 1.0)"
   echo "  --freq_power=NUMBER              Power to raise inverse frequency to (default: 1.0)"
   echo "  --normalize_per_part             Z-score embedding/prob blocks independently before training"
-  echo "  --output_dim_loss_weight=STRING  Per-dim loss weight on prob block: 'auto' (=emb_dim/output_dim), a float, or unset"
+  echo "  --output_dim_loss_weight=STRING  Per-dim loss weight on prob block: 'auto' ((ofw/(1-ofw))*emb_dim/output_dim), a float, or unset"
+  echo "  --checkpoint_weight_scheme=STR   Per-checkpoint weighting across prob block: 'uniform' (default) or 'log_step'"
   echo "  --variance_filter_top_pct=NUMBER Restrict TRAINING to top-X fraction of samples by per-sample prob-block variance (eval still uses full data)"
   echo "  --variance_filter_mode=STRING    'linear' (default) or 'log' -- metric for variance filter"
   echo "  --cluster_strat_k=NUMBER         If > 0, K-means cluster trajectories and sample evenly from each cluster (applied after variance filter)"
@@ -57,6 +58,7 @@ freq_smoothing=1.0
 freq_power=1.0
 normalize_per_part=False
 output_dim_loss_weight=""
+checkpoint_weight_scheme=""
 variance_filter_top_pct=""
 variance_filter_mode=""
 cluster_strat_k=""
@@ -127,6 +129,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --output_dim_loss_weight=*)
       output_dim_loss_weight="${1#*=}"
+      shift
+      ;;
+    --checkpoint_weight_scheme=*)
+      checkpoint_weight_scheme="${1#*=}"
       shift
       ;;
     --variance_filter_top_pct=*)
@@ -221,6 +227,7 @@ if [ "$use_freq_weighting" = "True" ]; then
 fi
 echo "Normalize per part: $normalize_per_part"
 echo "Output dim loss weight: ${output_dim_loss_weight:-<none>}"
+echo "Checkpoint weight scheme: ${checkpoint_weight_scheme:-<uniform>}"
 echo "Variance filter top pct: ${variance_filter_top_pct:-<none>}"
 
 export NCCL_P2P_DISABLE=1
@@ -263,6 +270,9 @@ cd sae
 train_extra_args=()
 if [ -n "$output_dim_loss_weight" ]; then
     train_extra_args+=(--output_dim_loss_weight "$output_dim_loss_weight")
+fi
+if [ -n "$checkpoint_weight_scheme" ]; then
+    train_extra_args+=(--checkpoint_weight_scheme "$checkpoint_weight_scheme")
 fi
 if [ -n "$variance_filter_top_pct" ]; then
     train_extra_args+=(--variance_filter_top_pct "$variance_filter_top_pct")
@@ -332,6 +342,9 @@ echo "Training complete. Running eval."
 eval_extra_args=()
 if [ -n "$output_dim_loss_weight" ]; then
     eval_extra_args+=(--output_dim_loss_weight "$output_dim_loss_weight")
+fi
+if [ -n "$checkpoint_weight_scheme" ]; then
+    eval_extra_args+=(--checkpoint_weight_scheme "$checkpoint_weight_scheme")
 fi
 if [ -n "$variance_filter_top_pct" ]; then
     eval_extra_args+=(--variance_filter_top_pct "$variance_filter_top_pct")

@@ -266,6 +266,12 @@ def get_eval_metrics_and_topk_feature_acts(
     default=None,
 )
 @click.option(
+    "--checkpoint_weight_scheme",
+    help="Checkpoint weighting scheme used at training time (must match for SAE folder lookup).",
+    type=click.Choice(["uniform", "log_step"]),
+    default="uniform",
+)
+@click.option(
     "--variance_filter_top_pct",
     help="Variance filter fraction used at training time (must match for SAE folder lookup). "
          "Eval still runs over the full dataset.",
@@ -341,6 +347,7 @@ def main(
     decoder_ortho_loss_weight: float = 0.0,
     normalize_per_part: bool = False,
     output_dim_loss_weight: str = None,
+    checkpoint_weight_scheme: str = "uniform",
     variance_filter_top_pct: float = None,
     variance_filter_mode: str = "linear",
     cluster_strat_k: int = 0,
@@ -363,11 +370,13 @@ def main(
         decoder_ortho_loss_weight = args_dict.get("decoder_ortho_loss_weight", decoder_ortho_loss_weight)
         normalize_per_part = args_dict.get("normalize_per_part", normalize_per_part)
         output_dim_loss_weight = args_dict.get("output_dim_loss_weight", output_dim_loss_weight)
+        checkpoint_weight_scheme = args_dict.get("checkpoint_weight_scheme", checkpoint_weight_scheme)
         variance_filter_top_pct = args_dict.get("variance_filter_top_pct", variance_filter_top_pct)
         variance_filter_mode = args_dict.get("variance_filter_mode", variance_filter_mode)
         cluster_strat_k = args_dict.get("cluster_strat_k", cluster_strat_k)
         cluster_strat_per_cluster = args_dict.get("cluster_strat_per_cluster", cluster_strat_per_cluster)
         cluster_strat_mode = args_dict.get("cluster_strat_mode", cluster_strat_mode)
+        train_word_id_subset = args_dict.get("train_word_id_subset", None)
         superimpose_loss_weight = args_dict.get("superimpose_loss_weight", superimpose_loss_weight)
         if use_delta_prob and use_delta_logprob:
             raise ValueError("use_delta_prob and use_delta_logprob are mutually exclusive")
@@ -389,6 +398,9 @@ def main(
                     sae_name_prefix = (
                         f"{sae_name_prefix}_cstrat=k{cluster_strat_k}x{cluster_strat_per_cluster}{cmode_tag}"
                     )
+                if train_word_id_subset:
+                    subset_tag = os.path.splitext(os.path.basename(train_word_id_subset))[0]
+                    sae_name_prefix = f"{sae_name_prefix}_subset={subset_tag}"
                 if superimpose_loss_weight and float(superimpose_loss_weight) > 0:
                     sae_name_prefix = f"{sae_name_prefix}_sup={superimpose_loss_weight}"
                 # Match the suffixes get_sae_name appends for these flags
@@ -399,6 +411,7 @@ def main(
                     orig_cfg["output_dim_loss_weight"] = "auto"
                 else:
                     orig_cfg["output_dim_loss_weight"] = float(output_dim_loss_weight)
+                orig_cfg["checkpoint_weight_scheme"] = checkpoint_weight_scheme or "uniform"
                 sae_model_name = get_sae_name(orig_cfg, sae_name_prefix)
                 base_sae_dir = f"{args_dict['train_save_dir']}/{sae_model_name}"
         if not self_eval_mode:

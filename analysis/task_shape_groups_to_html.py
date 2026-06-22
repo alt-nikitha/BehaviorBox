@@ -9,9 +9,9 @@ Tab 2: features assigned to each task centroid (from the precomputed pickle), wi
 
 Usage:
     python task_shape_groups_to_html.py \
-        --dataset OLMo3-7b-256k-3000-k25-0.8-early-and-late-checkpoints-odlw-znorm \
+        --dataset OLMo3-7b-256k-3000-k25-0.8-early-and-late-checkpoints-odlw-znorm-log_step \
         --metric area \
-        --out task_shape_groups.html
+        --out task_shape_groups_2.html
 """
 
 import argparse
@@ -410,6 +410,84 @@ def render_tab2(pre, metric_name, top_n_per_task=50, max_samples=50):
     return "<div class='tab2'>" + "".join(parts) + "</div>"
 
 
+def render_tab3(pre, metric_name, top_n_per_task=50, max_samples=50):
+    """Per task, show top-specific features: median(d_others) - d_task ranked
+    high-to-low. These features fit this task much better than the rest."""
+    spec_pos = pre.get("specificity_pos", {})
+    spec_neg = pre.get("specificity_neg", {})
+    feature_meta = pre["feature_meta"]
+    feature_samples = pre["feature_samples"]
+    task_names = sorted(pre["task_curves"].keys())
+
+    parts = [
+        "<div class='tab3-intro'>"
+        "<p>Per task, features are ranked by <b>specificity</b> = "
+        "<code>median(d to other tasks) − d to this task</code> "
+        "(positive curves and flipped curves shown separately). "
+        "Higher values mean the feature's trajectory fits this task notably "
+        "better than the rest — i.e. the pretraining content captured by that "
+        "feature is implicated specifically (not causally) in this task.</p>"
+        "</div>"
+    ]
+
+    for t in task_names:
+        md = TASK_METADATA.get(t, {})
+        desc = TASK_DESCRIPTIONS.get(t, "")
+        pos_rows = spec_pos.get(t, [])[:top_n_per_task]
+        neg_rows = spec_neg.get(t, [])[:top_n_per_task]
+
+        def feat_rows(rows, idx_prefix):
+            blocks = []
+            for entry in rows:
+                fid, specificity, d_task, med_others = entry
+                meta = feature_meta.get(fid, {})
+                samples = feature_samples.get(fid, []) or []
+                def k(s):
+                    v = (s.get("_task_dists") or {}).get(t)
+                    return (v is None, v if v is not None else float("inf"))
+                ordered = sorted(samples, key=k)[:max_samples]
+                samples_html = render_samples_table(ordered, dist_key=t,
+                                                    dist_label=f"z-{pre['metric']} to {t}")
+                head = (
+                    f"<summary>"
+                    f"<span class='fid'>#{esc(fid)}</span>"
+                    f"<span class='metric'>spec={specificity:+.4f}</span>"
+                    f"<span class='metric'>d_task={d_task:.4f}</span>"
+                    f"<span class='metric'>med_others={med_others:.4f}</span>"
+                    f"<span class='metric'>med_std={meta.get('median_std', float('nan')):.4f}</span>"
+                    f"<span class='metric'>n_tasks={meta.get('n_tasks', '?')}</span>"
+                    f"<span class='desc'>{esc(meta.get('desc',''))}</span>"
+                    f"</summary>"
+                )
+                blocks.append(
+                    f"<details class='feature' id='{esc(idx_prefix)}-{esc(fid)}'>{head}{samples_html}</details>"
+                )
+            if not blocks:
+                blocks.append("<div class='empty'>No features ranked.</div>")
+            return "".join(blocks)
+
+        header = (
+            f"<div class='cluster-meta'>"
+            f"<h3>{esc(t)} "
+            f"<span class='tag'>{esc(md.get('type','?'))}</span>"
+            f"<span class='tag'>{esc(md.get('format','?'))}</span>"
+            f"<span class='tag'>{esc(md.get('domain','?'))}</span></h3>"
+            f"<p class='task-desc'>{esc(desc)}</p>"
+            f"<p class='counts'>positive ranked: {len(spec_pos.get(t, []))} · "
+            f"negative ranked: {len(spec_neg.get(t, []))} "
+            f"(showing top {top_n_per_task} each)</p>"
+            f"</div>"
+        )
+        parts.append(
+            f"<section class='cluster-row'>{header}"
+            f"<div class='feat-cols'>"
+            f"<div class='col'><h4>Top-specific positive features <small>({len(pos_rows)})</small></h4>{feat_rows(pos_rows, f't3-{t}-pos')}</div>"
+            f"<div class='col'><h4>Top-specific negative (flipped) features <small>({len(neg_rows)})</small></h4>{feat_rows(neg_rows, f't3-{t}-neg')}</div>"
+            f"</div></section>"
+        )
+    return "<div class='tab3'>" + "".join(parts) + "</div>"
+
+
 CSS = """
 * { box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -479,7 +557,7 @@ function showTab(name) {
 """
 
 
-def render_html(tab1_html, tab2_html, dataset_name, metric_name, summary):
+def render_html(tab1_html, tab2_html, tab3_html, dataset_name, metric_name, summary):
     return f"""<!doctype html>
 <html><head><meta charset='utf-8'><title>Task Shape Groups — {esc(dataset_name)}</title>
 <style>{CSS}</style></head><body>
@@ -489,10 +567,12 @@ def render_html(tab1_html, tab2_html, dataset_name, metric_name, summary):
   <div class='tabs'>
     <button id='btn-tab1' class='active' onclick="showTab('tab1')">Task clusters → matched features</button>
     <button id='btn-tab2' onclick="showTab('tab2')">Features assigned to each task</button>
+    <button id='btn-tab3' onclick="showTab('tab3')">Task-specific features (contrastive)</button>
   </div>
 </header>
 <div id='panel-tab1' class='tab-panel active'>{tab1_html}</div>
 <div id='panel-tab2' class='tab-panel'>{tab2_html}</div>
+<div id='panel-tab3' class='tab-panel'>{tab3_html}</div>
 <script>{JS}</script>
 </body></html>"""
 
@@ -538,12 +618,17 @@ def main():
                        top_n_per_task=args.top_n_tab2,
                        max_samples=args.max_samples)
 
+    print("rendering tab 3…")
+    tab3 = render_tab3(pre, metric_name,
+                       top_n_per_task=args.top_n_tab2,
+                       max_samples=args.max_samples)
+
     summary = (
         f"{len(tsg_data)} tasks → {auto_k} clusters · "
         f"{len(pre['feature_curves'])} features assigned to "
         f"{len(pre['task_curves'])} task centroids"
     )
-    out_html = render_html(tab1, tab2, args.dataset, metric_name, summary)
+    out_html = render_html(tab1, tab2, tab3, args.dataset, metric_name, summary)
 
     with open(args.out, "w") as f:
         f.write(out_html)

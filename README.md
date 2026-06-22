@@ -1,7 +1,7 @@
 # BehaviorBox
 <img src="media/logo.webp" style="float: left; margin-right: 20px; width: 170px;" alt="BehaviorBox logo">
 
-`BehaviorBox` is a bottom-up automatic behavior discovery method to compare language models on next word prediction. Given a corpus of text, `BehaviorBox` extracts fine-grained, salient features—along with natural language descriptions for each—where one model outperforms another. These features are based on both semantic and structural qualities of the word (via a contextual embedding) as well as how easily a LM can predict it (the probability of that word under the LM). Some example feature labels found by `BehaviorBox`, which describe groups of words that one LM is better at predicting than another, are:
+`BehaviorBox2.0` is a bottom-up automatic behavior discovery method to compare language models across training checkpoints on next word prediction. Given a corpus of text, `BehaviorBox` extracts fine-grained, salient pre-training data features—along with natural language descriptions. These features are based on both semantic and structural qualities of the word (via a contextual embedding) as well as the shared training trajectory of that word under the LM. Some example feature labels found by `BehaviorBox`, which describe groups of words are:
 <br clear="all">
 
 > Negative contractions in English informal or vernacular dialogue ("didn't", "wouldn't", "carn't")
@@ -45,13 +45,13 @@ To get input features, from the repository root run:
 bash scripts/data_generation/get_input_features.sh \
     --data=/path/to/data.jsonl \
     --output_dir=/path/to/output \
-    --batch_size=5
+    --batch_size=500
 
 # For Slurm
 sbatch scripts/data_generation/get_input_features.sh \
     --data=/path/to/data.jsonl \
     --output_dir=/path/to/output \
-    --batch_size=5
+    --batch_size=500
 ```
 
 You will need to adjust batch size depending on the length of the documents being processed as well as your memory constraints (a good starting batch size is 5 or 10). Depending on the length of the text and the amount of available GPU memory, some text may not be able to be processed even with batch size 1.
@@ -88,6 +88,12 @@ The expected output is:
 
 Note that the parquet files actually save *log-probabilities*; we transform these to probabilities when doing feature extraction.
 
+To run multiple checkpoints at once:
+```
+sbatch get_all_output_features_array.sh
+```
+In this script, you will have to modify the data and output directories,  and checkpoints (`REVISIONS`) for the corresponding `MODEL_ID` from huggingface. Additionally, provide appropriate array ranges for the slurm jobs based on number of checkpoints.
+
 ## Extracting Features
 Using the data we generated in the previous step, we can now train a SAE, which decomposes the performance-aware contextual embeddings into a sparse representation. Each dimension of this sparse representation is considered a feature.
 
@@ -106,13 +112,21 @@ Then run:
 ```bash
 # For bash
 bash scripts/sae/sae_pipeline.sh \
-    --args=/path/to/args.json \
-    --config_path=/path/to/config.json
+    --exp_cfg=/path/to/exp_config.json \
+    --hp_cfg=/path/to/hyper_params_config.json \
+    --num_epochs=3 \
+    --normalize_per_part \
+    --output_dim_loss_weight=auto \
+    --checkpoint_weight_scheme=log_step
 
 # For Slurm
 sbatch scripts/sae/sae_pipeline.sh \
-    --args=/path/to/args.json \
-    --config_path=/path/to/config.json
+    --exp_cfg=/path/to/exp_config.json \
+    --hp_cfg=/path/to/hyper_params_config.json \
+    --num_epochs=3 \
+    --normalize_per_part \
+    --output_dim_loss_weight=auto \
+    --checkpoint_weight_scheme=log_step
 ```
 
 The expected outputs are:
@@ -129,10 +143,32 @@ The expected outputs are:
 To generate then validate the labels:
 ```bash
 # For bash
-bash scripts/analysis/label_features.sh --sae_dir=/path/to/sae
+bash scripts/analysis/label_features.sh --sae_dir=/path/to/sae --labeling_model="gemini/gemini-2.5-pro"
 
 # For Slurm
-sbatch scripts/analysis/label_features.sh --sae_dir=/path/to/sae
+sbatch scripts/analysis/label_features.sh --sae_dir=/path/to/sae --labeling_model="gemini/gemini-2.5-pro"
 ```
 
 The `sae_dir` is the directory where the model was saved during training.
+
+## Evaluating Checkpoint Performance on Downstream tasks
+The labeled SAE features are aggregated for comparison with downstream task performance.
+To obtain checkpoint performances,
+```
+cd lm-evaluation-harness && 
+sbatch run_all.sh
+
+```
+Make sure to check the `eval_config.json` for the configuration used for each eval task and `checkpoints_info/olmo3_7b_checkpoints.txt` for the list of checkpoints to be used.
+
+## Analysis
+
+```cd analysis && python preprocess_features_generic.py --task all```
+
+```cd analysis && python precompute_task_shape_groups.py```
+
+To visualize features associated with task performance, run
+```cd analysis &&  python task_shape_groups_curves_to_html.py```
+
+make sure to check that the right SAE feature directory and corresponding model stem are used for all files. The metric we use is area.
+

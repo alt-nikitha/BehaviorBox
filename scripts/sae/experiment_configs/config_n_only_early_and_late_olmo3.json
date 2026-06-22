@@ -25,5 +25,6 @@
     "eval_save_dir": "/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_olmo_256000_early_and_late",
     "dict_size": 3000,
     "only_probs": false,
-    "device": "cuda"
+    "device": "cuda",
+    "train_word_id_subset": "/home/nsrikant/BehaviorBoxNew/analysis/sae_sample_by_task_gsm8k_blimp_942k.jsonl"
 }
