@@ -25,6 +25,8 @@ def cache_data_per_dir(
     use_delta_prob: bool = False,
     use_delta_logprob: bool = False,
     normalize_per_part: bool = False,
+    znorm_prob_per_sample: bool = False,
+    znorm_prob_eps: float = 1e-2,
 ) -> str:
     if use_delta_prob and use_delta_logprob:
         raise ValueError("use_delta_prob and use_delta_logprob are mutually exclusive")
@@ -39,6 +41,8 @@ def cache_data_per_dir(
         cache_subdir = f"{cache_subdir}_logdelta"
     if normalize_per_part:
         cache_subdir = f"{cache_subdir}_znorm"
+    if znorm_prob_per_sample:
+        cache_subdir = f"{cache_subdir}_pznorm={znorm_prob_eps}"
     cache_data_dir = os.path.join(cache_dir, cache_subdir)
     if not os.path.exists(cache_data_dir):
         os.makedirs(cache_data_dir)
@@ -99,6 +103,8 @@ def cache_data_per_dir(
         use_delta_prob=use_delta_prob,
         use_delta_logprob=use_delta_logprob,
         normalize_per_part=normalize_per_part,
+        znorm_prob_per_sample=znorm_prob_per_sample,
+        znorm_prob_eps=znorm_prob_eps,
         norm_stats_out=norm_stats,
     )
     
@@ -114,7 +120,13 @@ def cache_data_per_dir(
         "data_dir": data_dir,
         "model_names": model_names,
         "normalize_per_part": normalize_per_part,
+        "znorm_prob_per_sample": znorm_prob_per_sample,
     }
+    if znorm_prob_per_sample:
+        # Record the block split so the analysis memmap reader (_load_index) can
+        # slice the prob block. output_feature_dim is the checkpoint count above.
+        cached_data_info["embedding_dim"] = 0 if only_probs else 768
+        cached_data_info["output_feature_dim"] = output_feature_dim
     if normalize_per_part and norm_stats:
         import numpy as np
         np.save(os.path.join(cache_data_dir, "znorm_mean.npy"), norm_stats["mean"])

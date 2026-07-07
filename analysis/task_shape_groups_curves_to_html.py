@@ -26,10 +26,14 @@ from scipy import stats
 
 ANALYSIS_DIR = os.path.dirname(os.path.abspath(__file__))
 
+# VALID_TASKS = {
+#     "arc_challenge", "bbh", "hellaswag", "piqa", "winogrande", "csqa",
+#     "medmcqa", "mmlu_stem", "mmlu_social_sciences", "mmlu_other",
+#     "blimp", "coqa", "gsm8k", "lambada", "naturalqs",
+# }
+
 VALID_TASKS = {
-    "arc_challenge", "bbh", "hellaswag", "piqa", "winogrande", "csqa",
-    "medmcqa", "mmlu_stem", "mmlu_social_sciences", "mmlu_other",
-    "blimp", "coqa", "gsm8k", "lambada", "naturalqs",
+    "gsm8k"
 }
 
 TASK_METADATA = {
@@ -810,7 +814,7 @@ document.addEventListener('toggle', function(ev){
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dataset",
-                    default="OLMo3-7b-256k-3000-k25-0.8-early-and-late-checkpoints-odlw-znorm-sampled_trajectory_centroids")
+                    default="olmo-gsm8k")
     ap.add_argument("--metric", default="area", choices=list(DISTANCE_FNS))
     ap.add_argument("--combo-weight", type=float, default=0.25,
                     help="spearman_combo blend weight w (level vs diff); must "
@@ -821,6 +825,8 @@ def main():
                     help="Top features per task column (tab 2).")
     ap.add_argument("--max-samples", type=int, default=50,
                     help="Max samples shown per feature.")
+    ap.add_argument("--tab2-only", action="store_true",
+                    help="Skip clustering (tab 1) and tab 3; render tab 2 only.")
     args = ap.parse_args()
 
     global COMBO_WEIGHT
@@ -835,22 +841,25 @@ def main():
     tsg_data = load_all_tasks_for_dataset(args.dataset)
     print(f"  {len(tsg_data)} tasks")
 
-    print("clustering…")
-    clusters, task_curves, task_ckpts, auto_k = compute_task_clusters(
-        tsg_data, distance_fn)
-    print(f"  k = {auto_k}")
-
-    print("scoring features per cluster…")
-    cluster_feat_scores = compute_cluster_feature_scores(
-        clusters, tsg_data, distance_fn, ckpts=task_ckpts)
-
-    print("building raw cluster curves…")
-    cluster_raw = build_cluster_raw_curves(clusters, tsg_data)
-
     plot_specs = {}
-    print("rendering tab 1…")
-    tab1 = render_tab1(clusters, cluster_feat_scores, cluster_raw,
-                       args.top_n, args.max_samples, plot_specs)
+    if args.tab2_only:
+        clusters, auto_k, tab1, tab3 = {}, 0, "", ""
+    else:
+        print("clustering…")
+        clusters, task_curves, task_ckpts, auto_k = compute_task_clusters(
+            tsg_data, distance_fn)
+        print(f"  k = {auto_k}")
+
+        print("scoring features per cluster…")
+        cluster_feat_scores = compute_cluster_feature_scores(
+            clusters, tsg_data, distance_fn, ckpts=task_ckpts)
+
+        print("building raw cluster curves…")
+        cluster_raw = build_cluster_raw_curves(clusters, tsg_data)
+
+        print("rendering tab 1…")
+        tab1 = render_tab1(clusters, cluster_feat_scores, cluster_raw,
+                           args.top_n, args.max_samples, plot_specs)
 
     pkl = precompute_path(args.dataset, metric_name)
     if not os.path.exists(pkl):
@@ -866,9 +875,10 @@ def main():
     tab2 = render_tab2(pre, task_raw, args.top_n_tab2,
                        args.max_samples, plot_specs)
 
-    print("rendering tab 3…")
-    tab3 = render_tab3(pre, task_raw, args.top_n_tab2,
-                       args.max_samples, plot_specs)
+    if not args.tab2_only:
+        print("rendering tab 3…")
+        tab3 = render_tab3(pre, task_raw, args.top_n_tab2,
+                           args.max_samples, plot_specs)
 
     summary = (
         f"{len(tsg_data)} tasks · k={auto_k} clusters · "
@@ -877,6 +887,8 @@ def main():
     )
 
     plots_json = json.dumps(plot_specs)
+    a1, a2 = ("", " class='active'") if args.tab2_only else (" class='active'", "")
+    p1, p2 = ("", " active") if args.tab2_only else (" active", "")
     html_doc = f"""<!doctype html>
 <html><head><meta charset='utf-8'>
 <title>Task Shape Groups — Curves + Features — {esc(args.dataset)}</title>
@@ -886,13 +898,13 @@ def main():
   <h1>Task Shape Groups — Curves + Features</h1>
   <div class='meta'>Dataset: <code>{esc(args.dataset)}</code> · metric: <code>{esc(metric_name)}</code> · {summary}</div>
   <div class='tabs'>
-    <button id='btn-tab1' class='active' onclick="showTab('tab1')">Task clusters → matched features</button>
-    <button id='btn-tab2' onclick="showTab('tab2')">Features assigned to each task</button>
+    <button id='btn-tab1'{a1} onclick="showTab('tab1')">Task clusters → matched features</button>
+    <button id='btn-tab2'{a2} onclick="showTab('tab2')">Features assigned to each task</button>
     <button id='btn-tab3' onclick="showTab('tab3')">Task-specific features (contrastive)</button>
   </div>
 </header>
-<div id='panel-tab1' class='tab-panel active'>{tab1}</div>
-<div id='panel-tab2' class='tab-panel'>{tab2}</div>
+<div id='panel-tab1' class='tab-panel{p1}'>{tab1}</div>
+<div id='panel-tab2' class='tab-panel{p2}'>{tab2}</div>
 <div id='panel-tab3' class='tab-panel'>{tab3}</div>
 <script>const PLOTS = {plots_json};{JS_TEMPLATE}</script>
 </body></html>"""

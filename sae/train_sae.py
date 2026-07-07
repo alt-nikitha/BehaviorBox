@@ -170,6 +170,8 @@ def load_data(
     use_delta_prob: bool = False,
     use_delta_logprob: bool = False,
     normalize_per_part: bool = False,
+    znorm_prob_per_sample: bool = False,
+    znorm_prob_eps: float = 1e-2,
 ):
     dask_cfg.set({'distributed.scheduler.worker-ttl': None})
     dask_cfg.set({
@@ -193,6 +195,8 @@ def load_data(
             use_delta_prob=use_delta_prob,
             use_delta_logprob=use_delta_logprob,
             normalize_per_part=normalize_per_part,
+            znorm_prob_per_sample=znorm_prob_per_sample,
+            znorm_prob_eps=znorm_prob_eps,
         )
         cache_data_filepath = os.path.join(cache_data_dir, "preprocessed_data.dat")
         cache_data_filepaths.append(cache_data_filepath)
@@ -204,17 +208,59 @@ def get_train_eval_indices(
     train_eval_ratio: float = 0.9,
     data_shuffling_seed: int = 0,
     split_seed: int = 0,
+    pool_indices: np.ndarray = None,
 ) -> tuple[list[int], list[int]]:
-    np.random.seed(split_seed)
-    num_samples = data.shape[0]
-    indices = np.arange(num_samples)
+    if pool_indices is None:
+        indices = np.arange(data.shape[0])
+    else:
+        # Restrict the train/eval split to a given pool (e.g. the word_id subset), so the
+        # held-out eval split is drawn from the SAME pool the SAE trains on rather than the
+        # full corpus.
+        indices = np.asarray(pool_indices).copy()
     np.random.seed(data_shuffling_seed)
     print(f"Shuffling data with seed={data_shuffling_seed}...", flush=True)
     np.random.shuffle(indices)
-    # split the data into 90% train and 10% eval
-    train_indices = indices[:int(train_eval_ratio*num_samples)]
-    eval_indices = indices[int(train_eval_ratio*num_samples):]
+    # split into 90% train and 10% eval
+    n_train = int(train_eval_ratio * len(indices))
+    train_indices = indices[:n_train]
+    eval_indices = indices[n_train:]
     return train_indices, eval_indices
+
+
+def get_word_id_subset_indices(
+    cache_data_dir: str,
+    subset_path: str,
+    logger,
+) -> np.ndarray:
+    """Return all memmap row indices whose word_id is in `subset_path` (a JSONL with a
+    "word_id" field per line). Alignment is by word_ids.pkl, row-aligned to the memmap.
+    Used to restrict the train/eval POOL to the subset before splitting, so the held-out
+    eval split is drawn from the same subset the SAE trains on."""
+    keep = set()
+    with open(subset_path) as f:
+        for line in f:
+            line = line.strip()
+            if line:
+                keep.add(str(json.loads(line)["word_id"]))
+    wid_path = os.path.join(cache_data_dir, "word_ids.pkl")
+    if not os.path.exists(wid_path):
+        # word_ids.pkl is written one level up from the ofw=*/ memmap subdir
+        wid_path = os.path.join(os.path.dirname(cache_data_dir), "word_ids.pkl")
+    word_ids = pd.read_pickle(wid_path)
+    wid_arr = np.asarray([str(w) for w in word_ids])
+    mask = np.isin(wid_arr, list(keep))
+    subset_indices = np.where(mask)[0]
+    msg = (
+        f"word_id subset pool: {len(subset_indices)} rows match subset "
+        f"({len(keep)} ids) from {subset_path}"
+    )
+    logger.info(msg)
+    print(msg, flush=True)
+    if len(subset_indices) == 0:
+        raise RuntimeError(
+            "word_id subset matched 0 rows -- check subset word_id format vs word_ids.pkl"
+        )
+    return subset_indices
 
 
 def filter_train_indices_by_variance(
@@ -495,15 +541,21 @@ def train(
     })
 
     batch_size=cfg["batch_size"]
-    train_indices, eval_indices = get_train_eval_indices(data, data_shuffling_seed=cfg["data_shuffling_seed"])
-
     train_word_id_subset = cfg.get("train_word_id_subset", None)
     if train_word_id_subset:
-        train_indices = filter_train_indices_by_word_ids(
-            train_indices=train_indices,
+        # Restrict to the subset FIRST, then split into train/held-out, so the held-out
+        # eval split consists of subset (e.g. gsm8k-shaped) tokens -- not general corpus.
+        subset_indices = get_word_id_subset_indices(
             cache_data_dir=cfg.get("_word_ids_cache_dir", ""),
             subset_path=train_word_id_subset,
             logger=logger,
+        )
+        train_indices, eval_indices = get_train_eval_indices(
+            data, data_shuffling_seed=cfg["data_shuffling_seed"], pool_indices=subset_indices,
+        )
+    else:
+        train_indices, eval_indices = get_train_eval_indices(
+            data, data_shuffling_seed=cfg["data_shuffling_seed"],
         )
 
     variance_filter_top_pct = cfg.get("variance_filter_top_pct", None)
@@ -569,19 +621,53 @@ def train(
         data_input_scale = 1.0 / np.sqrt(_S)
     else:
         data_input_scale = 1.0
+
+    # Early stopping on held-out eval loss. Only arms AFTER k-annealing completes
+    # (during the anneal, loss rises by construction as k drops, so it isn't a valid
+    # convergence signal). The best-scoring weights are kept and restored before the
+    # final save. patience=0 disables it (default), preserving the original behavior.
+    early_stopping_patience = int(cfg.get("early_stopping_patience", 0) or 0)
+    early_stopping_min_delta = float(cfg.get("early_stopping_min_delta", 0.0) or 0.0)
+    use_early_stopping = early_stopping_patience > 0
+    # "epoch": anneal finishes within the first epoch (fixed warmup budget), so raising
+    # num_epochs just adds post-anneal training at k_end. "total" (default): anneal is
+    # proportional to total_batches (original behavior).
+    anneal_anchor = cfg.get("anneal_anchor", "total") or "total"
+    best_eval_loss = float("inf")
+    best_state = None
+    best_step = -1
+    patience_counter = 0
+    should_stop = False
+    if use_early_stopping:
+        logger.info(
+            f"Early stopping ENABLED: patience={early_stopping_patience}, "
+            f"min_delta={early_stopping_min_delta}, anneal_anchor={anneal_anchor}"
+        )
+
     for epoch in range(num_epochs):
         train_dataloader = DataLoader(data, batch_size, train_indices)
         background_loader = BackgroundDataLoader(train_dataloader)
-        # Evaluate on the exact subset the SAE was trained on (train_indices, after all
-        # variance/word_id/cluster filtering) rather than the held-out eval split.
-        eval_dataloader = DataLoader(data, batch_size, train_indices)
+        # Eval loss / explained variance are computed on the HELD-OUT split
+        # (eval_indices, drawn from the full data distribution before any
+        # variance/word_id/cluster filtering) to measure generalization.
+        eval_dataloader = DataLoader(data, batch_size, eval_indices)
+        # Activation-frequency stats and the dead-neuron reset (re_init) stay on the
+        # training data the SAE actually sees, so features are reset based on what's
+        # dead on the training stream rather than on held-out data.
+        freq_dataloader = DataLoader(data, batch_size, train_indices)
         total_batches = train_dataloader.num_batches * num_epochs
         k_start = 100
         k_end = cfg["topk"] # Your target k (e.g., 25)
         # anneal_until_batch = int(0.3 * total_batches) # Anneal over first 30% of training
 
-        anneal_start_batch = int(0.1 * total_batches)
-        anneal_end_batch = int(0.5 * total_batches)   # Finish at 50% mark
+        # Anneal over a budget anchored to either one epoch or the full run (see
+        # anneal_anchor above). One-epoch anchoring keeps the warmup fixed as you
+        # extend num_epochs for early stopping.
+        anneal_anchor_batches = (
+            train_dataloader.num_batches if anneal_anchor == "epoch" else total_batches
+        )
+        anneal_start_batch = int(0.1 * anneal_anchor_batches)
+        anneal_end_batch = int(0.5 * anneal_anchor_batches)   # Finish at 50% mark
         # -----------------------------
         for i, batch in enumerate(background_loader):
             i += epoch * train_dataloader.num_batches
@@ -787,9 +873,36 @@ def train(
                         }
                     wandb.log(avg_eval_loss_dict)
                     logger.info(avg_eval_loss_dict)
+
+                # Early stopping: only in the post-anneal (fixed-k) regime.
+                if use_early_stopping and i >= anneal_end_batch:
+                    cur_eval_loss = avg_eval_loss_dict["eval_loss"]
+                    if cur_eval_loss < best_eval_loss - early_stopping_min_delta:
+                        best_eval_loss = cur_eval_loss
+                        best_step = i
+                        patience_counter = 0
+                        best_state = {
+                            k: v.detach().cpu().clone()
+                            for k, v in encoder.state_dict().items()
+                        }
+                    else:
+                        patience_counter += 1
+                        logger.info(
+                            f"Early stopping: no improvement "
+                            f"({patience_counter}/{early_stopping_patience}); "
+                            f"best eval_loss={best_eval_loss:.6f} @ step {best_step}"
+                        )
+                        if patience_counter >= early_stopping_patience:
+                            msg = (
+                                f"Early stopping triggered at step {i}; best "
+                                f"eval_loss={best_eval_loss:.6f} @ step {best_step}"
+                            )
+                            logger.info(msg)
+                            print(msg, flush=True)
+                            should_stop = True
             if (i+1) % log_eval_act_freqs_every == 0:
-                logger.info("Getting activation frequencies on eval data...")
-                freqs, l0 = get_freqs_and_l0_norm(eval_dataloader, encoder, cfg)
+                logger.info("Getting activation frequencies on training data...")
+                freqs, l0 = get_freqs_and_l0_norm(freq_dataloader, encoder, cfg)
                 freq_dict = {
                     "dead": (freqs == 0).float().mean().item(),
                     "below_1e-6": (freqs < 1e-6).float().mean().item(),
@@ -832,9 +945,23 @@ def train(
                     json.dump(cfg, f, indent=4)
                 logger.info(f"Model saved to {model_checkpoint_dir}/checkpoint_{i}.pt")
             cur_step = i
+            if should_stop:
+                break
+        if should_stop:
+            break
+
+    # Restore the best-scoring weights (by held-out eval loss) before the final save,
+    # so we keep the best model rather than the last (possibly-overfit) one.
+    if use_early_stopping and best_state is not None:
+        logger.info(
+            f"Restoring best model (eval_loss={best_eval_loss:.6f} @ step {best_step}) "
+            f"before final save"
+        )
+        encoder.load_state_dict({k: v.to(cfg["device"]) for k, v in best_state.items()})
+
     # get final activation frequencies
     logger.info("Getting final activation frequencies...")
-    freqs, l0 = get_freqs_and_l0_norm(eval_dataloader, encoder, cfg)
+    freqs, l0 = get_freqs_and_l0_norm(freq_dataloader, encoder, cfg)
     wandb.log({
         "dead": (freqs == 0).float().mean().item(),
         "below_1e-6": (freqs < 1e-6).float().mean().item(),
@@ -1005,6 +1132,46 @@ def train(
     default=False,
 )
 @click.option(
+    "--znorm_prob_per_sample",
+    help="Per-sample z-norm the prob block across checkpoints (shape-only), so the "
+         "SAE clusters tokens by trajectory shape (matches the analysis z_full metric). "
+         "Embedding block left as-is; block balance handled by the ofw scaling (no odlw "
+         "needed). Mutually exclusive with --normalize_per_part.",
+    type=bool,
+    default=False,
+)
+@click.option(
+    "--znorm_prob_eps",
+    help="Std floor for --znorm_prob_per_sample: divides by sqrt(var + eps**2) so "
+         "near-flat curves collapse toward 0 instead of being amplified into noise. "
+         "Larger = more aggressive suppression of low-amplitude curves.",
+    type=float,
+    default=1e-2,
+)
+@click.option(
+    "--early_stopping_patience",
+    help="Stop training after this many consecutive held-out eval checks with no "
+         "improvement (only arms AFTER k-annealing completes). 0 = disabled (default). "
+         "Set --num_epochs as an upper bound; the best model is restored before saving.",
+    type=int,
+    default=0,
+)
+@click.option(
+    "--early_stopping_min_delta",
+    help="Minimum decrease in held-out eval loss to count as an improvement for early "
+         "stopping (default 0.0).",
+    type=float,
+    default=0.0,
+)
+@click.option(
+    "--anneal_anchor",
+    help="k-anneal budget anchor: 'epoch' finishes annealing within the first epoch "
+         "(fixed warmup; extra epochs add post-anneal training at k_end), 'total' "
+         "(default) ties the anneal to total_batches (original behavior).",
+    type=click.Choice(["total", "epoch"]),
+    default="total",
+)
+@click.option(
     "--output_dim_loss_weight",
     help="Per-dim loss weight applied to the prob/output block. Pass 'auto' to use "
          "(ofw/(1-ofw)) * embedding_dim/output_feature_dim, or a float (e.g. 110). "
@@ -1139,6 +1306,11 @@ def main(
     freq_weight_smoothing: float,
     freq_weight_power: float,
     normalize_per_part: bool,
+    znorm_prob_per_sample: bool,
+    znorm_prob_eps: float,
+    early_stopping_patience: int,
+    early_stopping_min_delta: float,
+    anneal_anchor: str,
     output_dim_loss_weight: str,
     checkpoint_weight_scheme: str,
     variance_filter_top_pct: float,
@@ -1180,6 +1352,11 @@ def main(
         freq_weight_smoothing = args_dict.get("freq_weight_smoothing", freq_weight_smoothing)
         freq_weight_power = args_dict.get("freq_weight_power", freq_weight_power)
         normalize_per_part = args_dict.get("normalize_per_part", normalize_per_part)
+        znorm_prob_per_sample = args_dict.get("znorm_prob_per_sample", znorm_prob_per_sample)
+        znorm_prob_eps = args_dict.get("znorm_prob_eps", znorm_prob_eps)
+        early_stopping_patience = args_dict.get("early_stopping_patience", early_stopping_patience)
+        early_stopping_min_delta = args_dict.get("early_stopping_min_delta", early_stopping_min_delta)
+        anneal_anchor = args_dict.get("anneal_anchor", anneal_anchor)
         output_dim_loss_weight = args_dict.get("output_dim_loss_weight", output_dim_loss_weight)
         checkpoint_weight_scheme = args_dict.get("checkpoint_weight_scheme", checkpoint_weight_scheme)
         variance_filter_top_pct = args_dict.get("variance_filter_top_pct", variance_filter_top_pct)
@@ -1230,6 +1407,11 @@ def main(
     cfg["use_delta_logprob"] = use_delta_logprob
     cfg["decoder_ortho_loss_weight"] = decoder_ortho_loss_weight
     cfg["normalize_per_part"] = normalize_per_part
+    cfg["znorm_prob_per_sample"] = znorm_prob_per_sample
+    cfg["znorm_prob_eps"] = znorm_prob_eps
+    cfg["early_stopping_patience"] = int(early_stopping_patience) if early_stopping_patience else 0
+    cfg["early_stopping_min_delta"] = float(early_stopping_min_delta) if early_stopping_min_delta else 0.0
+    cfg["anneal_anchor"] = anneal_anchor or "total"
     cfg["variance_filter_top_pct"] = variance_filter_top_pct
     cfg["variance_filter_mode"] = variance_filter_mode
     cfg["cluster_strat_k"] = cluster_strat_k
@@ -1340,6 +1522,8 @@ def main(
                 cache_subdir = f"{cache_subdir}_logdelta"
             if normalize_per_part:
                 cache_subdir = f"{cache_subdir}_znorm"
+            if znorm_prob_per_sample:
+                cache_subdir = f"{cache_subdir}_pznorm={znorm_prob_eps}"
             cache_data_dir = os.path.join(cache_models_dir, f"{data_name}/{cache_subdir}")
             data_path = os.path.join(cache_data_dir, "preprocessed_data.dat")
             data_info_path = os.path.join(cache_data_dir, "cached_data_info.json")
@@ -1365,6 +1549,8 @@ def main(
             use_delta_prob=use_delta_prob,
             use_delta_logprob=use_delta_logprob,
             normalize_per_part=normalize_per_part,
+            znorm_prob_per_sample=znorm_prob_per_sample,
+            znorm_prob_eps=znorm_prob_eps,
         )
     else:
         cfg["train_data_dirs"] = cached_data_dirs

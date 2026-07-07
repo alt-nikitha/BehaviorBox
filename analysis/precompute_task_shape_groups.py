@@ -15,7 +15,7 @@ What gets computed:
     sample's word_id can't be resolved against the memmap.
 
 Usage:
-    python precompute_task_shape_groups.py --dataset <model_stem> --metric area
+    python precompute_task_shape_groups.py --dataset olmo-gsm8k --metric area
     python precompute_task_shape_groups.py --dataset <model_stem> --metric mse
 
 Output: precomputed_task_shape/<dataset>__<metric>.pkl

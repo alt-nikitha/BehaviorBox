@@ -125,6 +125,8 @@ def get_sae_name(cfg: dict, sae_name_prefix: str):
             base = f"N={cfg['dict_size']}_k={cfg['topk']}_lp={cfg['dec_penalty_coeff']}"
     if cfg.get("normalize_per_part", False):
         base = f"{base}_znorm"
+    if cfg.get("znorm_prob_per_sample", False):
+        base = f"{base}_pznorm={cfg.get('znorm_prob_eps', 1e-2)}"
     odlw = cfg.get("output_dim_loss_weight", None)
     if odlw is not None:
         base = f"{base}_odlw={odlw}"
@@ -285,6 +287,11 @@ def get_config(
         cfg["l1_coeff"] = None
     cfg["seed"] = seed
     cfg.setdefault("normalize_per_part", False)
+    cfg.setdefault("znorm_prob_per_sample", False)
+    cfg.setdefault("znorm_prob_eps", 1e-2)
+    cfg.setdefault("early_stopping_patience", 0)
+    cfg.setdefault("early_stopping_min_delta", 0.0)
+    cfg.setdefault("anneal_anchor", "total")
     cfg.setdefault("output_dim_loss_weight", None)
     cfg.setdefault("embedding_dim", 768)
     cfg.setdefault("output_feature_dim", 0)

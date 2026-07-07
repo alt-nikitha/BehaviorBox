@@ -69,6 +69,15 @@ def get_eval_metrics_and_topk_feature_acts(
         topk_dict: dict, containing the top k activations for each feature in the SAE
     """
     batch_size = 512
+    # Match train-time data-side rescale (znorm path): training divides inputs by
+    # sqrt(sum of per-dim loss weights) so total weighted variance ~= 1. Apply the same
+    # scale here so the model receives inputs at the scale its weights expect and the
+    # reported mse is comparable (~O(1) instead of summed/odlw-weighted hundreds).
+    if cfg.get("normalize_per_part", False):
+        _S = encoder.loss_weights.sum().item() if encoder.loss_weights is not None else float(cfg["input_dim"])
+        data_input_scale = 1.0 / np.sqrt(_S)
+    else:
+        data_input_scale = 1.0
     topk_acts = torch.full((topk, cfg["dict_size"]), -np.inf).to(cfg["device"])
     topk_indices = torch.full((topk, cfg["dict_size"]), -1, dtype=torch.long).to(cfg["device"])
 
@@ -91,7 +100,7 @@ def get_eval_metrics_and_topk_feature_acts(
         if save_activations:
             with NpyAppendArray(save_file) as npaa:
                 for i, batch in tqdm(enumerate(background_loader)):
-                    batch = batch.to(cfg["device"]) # 512 x input_dim
+                    batch = batch.to(cfg["device"]) * data_input_scale # 512 x input_dim
                     random_indices = np.random.choice(batch.shape[0], num_random_indices, replace=False)
                     _, batch_acts, _, error_per_sample = encoder(batch, return_acts=True, return_l2_error_per_sample=True)
                     mse = mse * (num_samples / (num_samples + batch.shape[0])) + torch.sum(error_per_sample).item() / (num_samples + batch.shape[0])
@@ -108,7 +117,7 @@ def get_eval_metrics_and_topk_feature_acts(
                     topk_indices = torch.gather(indices, 0, sorted_indices)
         else:
             for i, batch in tqdm(enumerate(background_loader)):
-                batch = batch.to(cfg["device"])
+                batch = batch.to(cfg["device"]) * data_input_scale
                 _, batch_acts, _, error_per_sample = encoder(batch, return_acts=True, return_l2_error_per_sample=True)
                 mse = mse * (num_samples / (num_samples + batch.shape[0])) + torch.sum(error_per_sample).item() / (num_samples + batch.shape[0])
                 num_samples += batch.shape[0]
@@ -259,6 +268,18 @@ def get_eval_metrics_and_topk_feature_acts(
     default=False,
 )
 @click.option(
+    "--znorm_prob_per_sample",
+    help="Per-sample prob-block z-norm used at training time (must match for SAE folder lookup).",
+    type=bool,
+    default=False,
+)
+@click.option(
+    "--znorm_prob_eps",
+    help="Std floor for --znorm_prob_per_sample used at training time (must match for SAE folder lookup).",
+    type=float,
+    default=1e-2,
+)
+@click.option(
     "--output_dim_loss_weight",
     help="Per-dim loss weight on prob block used at training time (must match for SAE folder lookup): "
          "'auto', a float, or unset",
@@ -309,6 +330,15 @@ def get_eval_metrics_and_topk_feature_acts(
     default=0.0,
 )
 @click.option(
+    "--eval_word_id_subset",
+    help="Restrict feature construction (top activations / curves) to word_ids in this "
+         "JSONL. Default (unset) = use the SAE's own train_word_id_subset, so features are "
+         "built from the full train+held-out pool the SAE trained on. Pass 'none' to scan "
+         "the whole corpus (old behavior), or a path to override.",
+    type=str,
+    default=None,
+)
+@click.option(
     "--self_eval_mode",
     help="Self Eval Mode",
     type=bool,
@@ -346,6 +376,8 @@ def main(
     use_delta_logprob: bool = False,
     decoder_ortho_loss_weight: float = 0.0,
     normalize_per_part: bool = False,
+    znorm_prob_per_sample: bool = False,
+    znorm_prob_eps: float = 1e-2,
     output_dim_loss_weight: str = None,
     checkpoint_weight_scheme: str = "uniform",
     variance_filter_top_pct: float = None,
@@ -354,6 +386,7 @@ def main(
     cluster_strat_per_cluster: int = 2000,
     cluster_strat_mode: str = "linear",
     superimpose_loss_weight: float = 0.0,
+    eval_word_id_subset: str = None,
     self_eval_mode: bool = True,
     train_data_dirs: list = [],
     eval_data_dirs: list = []
@@ -369,6 +402,8 @@ def main(
         use_delta_logprob = args_dict.get("use_delta_logprob", use_delta_logprob)
         decoder_ortho_loss_weight = args_dict.get("decoder_ortho_loss_weight", decoder_ortho_loss_weight)
         normalize_per_part = args_dict.get("normalize_per_part", normalize_per_part)
+        znorm_prob_per_sample = args_dict.get("znorm_prob_per_sample", znorm_prob_per_sample)
+        znorm_prob_eps = args_dict.get("znorm_prob_eps", znorm_prob_eps)
         output_dim_loss_weight = args_dict.get("output_dim_loss_weight", output_dim_loss_weight)
         checkpoint_weight_scheme = args_dict.get("checkpoint_weight_scheme", checkpoint_weight_scheme)
         variance_filter_top_pct = args_dict.get("variance_filter_top_pct", variance_filter_top_pct)
@@ -378,6 +413,7 @@ def main(
         cluster_strat_mode = args_dict.get("cluster_strat_mode", cluster_strat_mode)
         train_word_id_subset = args_dict.get("train_word_id_subset", None)
         superimpose_loss_weight = args_dict.get("superimpose_loss_weight", superimpose_loss_weight)
+        eval_word_id_subset = args_dict.get("eval_word_id_subset", eval_word_id_subset)
         if use_delta_prob and use_delta_logprob:
             raise ValueError("use_delta_prob and use_delta_logprob are mutually exclusive")
         if config_path:
@@ -405,6 +441,8 @@ def main(
                     sae_name_prefix = f"{sae_name_prefix}_sup={superimpose_loss_weight}"
                 # Match the suffixes get_sae_name appends for these flags
                 orig_cfg["normalize_per_part"] = normalize_per_part
+                orig_cfg["znorm_prob_per_sample"] = znorm_prob_per_sample
+                orig_cfg["znorm_prob_eps"] = znorm_prob_eps
                 if output_dim_loss_weight is None or (isinstance(output_dim_loss_weight, str) and output_dim_loss_weight.lower() in ("none", "")):
                     orig_cfg["output_dim_loss_weight"] = None
                 elif isinstance(output_dim_loss_weight, str) and output_dim_loss_weight.lower() == "auto":
@@ -447,6 +485,8 @@ def main(
     use_delta_prob = base_cfg.get("use_delta_prob", use_delta_prob)
     use_delta_logprob = base_cfg.get("use_delta_logprob", use_delta_logprob)
     normalize_per_part = base_cfg.get("normalize_per_part", normalize_per_part)
+    znorm_prob_per_sample = base_cfg.get("znorm_prob_per_sample", znorm_prob_per_sample)
+    znorm_prob_eps = base_cfg.get("znorm_prob_eps", znorm_prob_eps)
     cache_subdir = f"ofw={base_cfg['output_feature_weight']}"
     if use_delta_prob:
         cache_subdir = f"{cache_subdir}_delta"
@@ -454,6 +494,8 @@ def main(
         cache_subdir = f"{cache_subdir}_logdelta"
     if normalize_per_part:
         cache_subdir = f"{cache_subdir}_znorm"
+    if znorm_prob_per_sample:
+        cache_subdir = f"{cache_subdir}_pznorm={znorm_prob_eps}"
     print("Loading data...", flush=True)
     data_dir_names = [os.path.basename(d) for d in data_dirs]
     cached_dataset_dirs = [f"{cache_dir}/{model_string}/{os.path.basename(d)}" for d in data_dir_names]
@@ -479,6 +521,8 @@ def main(
                 use_delta_prob=use_delta_prob,
                 use_delta_logprob=use_delta_logprob,
                 normalize_per_part=normalize_per_part,
+                znorm_prob_per_sample=znorm_prob_per_sample,
+                znorm_prob_eps=znorm_prob_eps,
             )
     all_data = []
     all_word_ids = []
@@ -538,6 +582,42 @@ def main(
     for model in base_cfg["model_names"]:
         all_logprobs[model] = np.concatenate(all_logprobs[model], axis=0)
         all_zscores[model] = np.concatenate(all_zscores[model], axis=0)
+
+    # Restrict feature construction to a word_id subset so the representative tokens (and
+    # their curves) come from the same pool the SAE trained on (train + held-out), rather
+    # than the full corpus. Default: the SAE's own train_word_id_subset; 'none' = full corpus.
+    eval_subset_path = eval_word_id_subset
+    if eval_subset_path is None:
+        eval_subset_path = base_cfg.get("train_word_id_subset", None)
+    elif isinstance(eval_subset_path, str) and eval_subset_path.strip().lower() in ("none", ""):
+        eval_subset_path = None
+    if eval_subset_path:
+        keep = set()
+        with open(eval_subset_path) as f:
+            for line in f:
+                line = line.strip()
+                if line:
+                    keep.add(str(json.loads(line)["word_id"]))
+        wid_arr = np.array([str(w) for w in all_word_ids])
+        mask_full = np.isin(wid_arr, list(keep))
+        n_keep = int(mask_full.sum())
+        print(
+            f"Restricting feature construction to {n_keep}/{len(all_word_ids)} rows "
+            f"in {eval_subset_path}",
+            flush=True,
+        )
+        if n_keep == 0:
+            raise RuntimeError("eval_word_id_subset matched 0 rows in the loaded data")
+        filtered_data, offset = [], 0
+        for chunk in all_data:
+            n = chunk.shape[0]
+            filtered_data.append(chunk[mask_full[offset:offset + n]])
+            offset += n
+        all_data = filtered_data
+        all_word_ids = wid_arr[mask_full].tolist()
+        for model in base_cfg["model_names"]:
+            all_logprobs[model] = all_logprobs[model][mask_full]
+            all_zscores[model] = all_zscores[model][mask_full]
 
     print(f"Getting eval metrics and top {k} activations...", flush=True)
     eval_metrics, topk_dict = get_eval_metrics_and_topk_feature_acts(

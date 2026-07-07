@@ -41,9 +41,9 @@ MODEL_FAMILIES = {
             
             # "OLMo3-7b-256k-3000-k25-0.8-early-and-late-checkpoints-odlw-znorm-log_step":"/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_olmo_256000_early_and_late/n_only_early_and_late_olmo3_seed=42_ofw=0.8_N=3000_k=25_lp=None_znorm_odlw=auto_ckptw=log_step"
             # "OLMo3-7b-256k-3000-k25-0.8-early-and-late-checkpoints-odlw-znorm-sampled_jumps":"/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_olmo_256000_early_and_late/n_only_early_and_late_olmo3_seed=42_ofw=0.8_subset=sae_sample_jump_perbucket_min_dedup_N=3000_k=25_lp=None_znorm_odlw=auto"
-            "OLMo3-7b-256k-3000-k25-0.8-early-and-late-checkpoints-odlw-znorm-sampled_trajectory_centroids":"/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_olmo_256000_early_and_late/n_only_early_and_late_olmo3_seed=42_ofw=0.8_subset=sae_sample_by_task_family_k6_346k_N=3000_k=25_lp=None_znorm_odlw=auto"
-
-
+            # "OLMo3-7b-256k-3000-k25-0.8-early-and-late-checkpoints-odlw-znorm-sampled_trajectory_centroids":"/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_olmo_256000_early_and_late/n_only_early_and_late_olmo3_seed=42_ofw=0.8_subset=sae_sample_by_task_family_k6_346k_N=3000_k=25_lp=None_znorm_odlw=auto"
+            # "olmo-blimp-gsm8k":"/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_olmo_256000_early_and_late/n_only_early_and_late_olmo3_seed=42_ofw=0.8_subset=sae_sample_by_task_gsm8k_blimp_942k_N=3000_k=25_lp=None_znorm_odlw=auto"
+            "olmo-gsm8k":"/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_olmo_256000_early_and_late/n_only_early_and_late_olmo3_seed=42_ofw=0.8_subset=sae_sample_by_task_gsm8k_942k_N=3000_k=25_lp=None_znorm_odlw=auto"
 
 
 
@@ -680,7 +680,7 @@ def get_available_tasks(eval_results_dir):
     for checkpoint_dir in glob.glob(os.path.join(eval_results_dir, "*")):
         if os.path.isdir(checkpoint_dir):
             for task_dir in glob.glob(os.path.join(checkpoint_dir, "*")):
-                if os.path.isdir(task_dir):
+                if os.path.isdir(task_dir) and ("gsm" in task_dir):
                     tasks.add(os.path.basename(task_dir))
     return sorted(tasks)
 

@@ -7,7 +7,7 @@
 #SBATCH --cpus-per-task=20
 #SBATCH --time=48:00:00
 #SBATCH --partition=general
-#SBATCH --exclude=babel-m5-32,babel-n9-32,babel-n9-28,babel-p9-28
+#SBATCH --exclude=babel-u5-28
 
 
 set -a 
@@ -57,6 +57,11 @@ use_freq_weighting=False
 freq_smoothing=1.0
 freq_power=1.0
 normalize_per_part=False
+znorm_prob_per_sample=False
+znorm_prob_eps=""
+early_stopping_patience=""
+early_stopping_min_delta=""
+anneal_anchor=""
 output_dim_loss_weight=""
 checkpoint_weight_scheme=""
 variance_filter_top_pct=""
@@ -125,6 +130,26 @@ while [[ $# -gt 0 ]]; do
       ;;
     --normalize_per_part)
       normalize_per_part=True
+      shift
+      ;;
+    --znorm_prob_per_sample)
+      znorm_prob_per_sample=True
+      shift
+      ;;
+    --znorm_prob_eps=*)
+      znorm_prob_eps="${1#*=}"
+      shift
+      ;;
+    --early_stopping_patience=*)
+      early_stopping_patience="${1#*=}"
+      shift
+      ;;
+    --early_stopping_min_delta=*)
+      early_stopping_min_delta="${1#*=}"
+      shift
+      ;;
+    --anneal_anchor=*)
+      anneal_anchor="${1#*=}"
       shift
       ;;
     --output_dim_loss_weight=*)
@@ -268,6 +293,18 @@ cd sae
 #     --workers 8
 
 train_extra_args=()
+if [ -n "$znorm_prob_eps" ]; then
+    train_extra_args+=(--znorm_prob_eps "$znorm_prob_eps")
+fi
+if [ -n "$early_stopping_patience" ]; then
+    train_extra_args+=(--early_stopping_patience "$early_stopping_patience")
+fi
+if [ -n "$early_stopping_min_delta" ]; then
+    train_extra_args+=(--early_stopping_min_delta "$early_stopping_min_delta")
+fi
+if [ -n "$anneal_anchor" ]; then
+    train_extra_args+=(--anneal_anchor "$anneal_anchor")
+fi
 if [ -n "$output_dim_loss_weight" ]; then
     train_extra_args+=(--output_dim_loss_weight "$output_dim_loss_weight")
 fi
@@ -328,6 +365,7 @@ python train_sae.py \
     --freq_weight_smoothing $freq_smoothing \
     --freq_weight_power $freq_power \
     --normalize_per_part $normalize_per_part \
+    --znorm_prob_per_sample $znorm_prob_per_sample \
     "${train_extra_args[@]}"
 
 if [ $? -ne 0 ]; then
@@ -340,6 +378,9 @@ fi
 echo "Training complete. Running eval."
 
 eval_extra_args=()
+if [ -n "$znorm_prob_eps" ]; then
+    eval_extra_args+=(--znorm_prob_eps "$znorm_prob_eps")
+fi
 if [ -n "$output_dim_loss_weight" ]; then
     eval_extra_args+=(--output_dim_loss_weight "$output_dim_loss_weight")
 fi
@@ -377,6 +418,7 @@ python eval_sae.py \
     --use_delta_logprob $use_delta_logprob \
     --decoder_ortho_loss_weight $decoder_ortho_loss_weight \
     --normalize_per_part $normalize_per_part \
+    --znorm_prob_per_sample $znorm_prob_per_sample \
     --save_activations True \
     "${eval_extra_args[@]}"
 

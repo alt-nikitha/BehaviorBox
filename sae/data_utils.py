@@ -178,6 +178,8 @@ def preprocess_data(
     use_delta_prob: bool = False,
     use_delta_logprob: bool = False,
     normalize_per_part: bool = False,
+    znorm_prob_per_sample: bool = False,
+    znorm_prob_eps: float = 1e-2,
     norm_stats_out: dict = None,
 ) -> da.Array:
     if use_delta_prob and use_delta_logprob:
@@ -258,6 +260,36 @@ def preprocess_data(
         deltas = vals[:, :-1] - vals[:, 1:]
         data = da.concatenate([embed, deltas], axis=1)
         data = data.rechunk({0: data.chunks[0], 1: -1})
+
+    if znorm_prob_per_sample:
+        # Per-sample z-norm of the prob block ACROSS CHECKPOINTS: each token's prob
+        # trajectory is mapped to zero mean / unit-ish std over its OWN checkpoints,
+        # so the SAE clusters on trajectory *shape* (matching the analysis z_full
+        # metric) instead of level/amplitude. The embedding block is left untouched.
+        # Std is floored with sqrt(var + eps**2) so near-flat curves collapse toward
+        # 0 rather than being amplified into noise. Block-level magnitude balance is
+        # then handled by the ofw scaling below (so no output_dim_loss_weight needed).
+        if normalize_per_part:
+            raise ValueError(
+                "znorm_prob_per_sample and normalize_per_part are mutually exclusive"
+            )
+        print(
+            f"Per-sample z-norming prob block across checkpoints (eps={znorm_prob_eps})",
+            flush=True,
+        )
+
+        def znorm_prob_per_sample_block(block, input_feature_dim, eps):
+            block = block.astype(np.float32)
+            prob = block[:, input_feature_dim:]
+            mean = prob.mean(axis=1, keepdims=True)
+            std = np.sqrt(prob.var(axis=1, keepdims=True) + eps ** 2)
+            block[:, input_feature_dim:] = (prob - mean) / std
+            return block.astype(np.float16)
+
+        data = data.map_blocks(
+            znorm_prob_per_sample_block, input_feature_dim, znorm_prob_eps,
+            dtype=np.float16,
+        )
 
     if normalize_per_part:
         # Per-column z-score, computed independently on the embedding block and the
