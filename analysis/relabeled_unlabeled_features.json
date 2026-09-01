@@ -1,0 +1,7 @@
+{
+  "209": "The verb \"means\"/\"represents\"/\"shall mean\" introducing a definition (legal terms, code comments).",
+  "396": "The interrogative/relative adverb \"how\" introducing a question or manner clause.",
+  "585": "Period characters in dotted leader lines (table-of-contents rows, cost tables).",
+  "1036": "The comma used as a clause separator (weak; contexts are machine-translated/garbled prose).",
+  "979": "Short nouns doubling as data-column or variable names (age, date, era, resource)."
+}

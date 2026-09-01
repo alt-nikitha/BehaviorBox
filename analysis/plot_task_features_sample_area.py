@@ -41,8 +41,8 @@ import pandas as pd
 # -----------------------------------------------------------------------------
 EVAL_RESULTS_DIR = "/home/nsrikant/BehaviorBoxNew/lm-evaluation-harness/eval_results_olmo3"
 COLUMN_PREFIX = "olmo3-"
-SAE_FOLDER = "/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_olmo_256000_early_and_late/n_only_early_and_late_olmo3_seed=42_ofw=0.25_subset=sae_sample_by_task_gsm8k_942k_N=3000_k=25_lp=None_pznorm=0.01"
-CACHE_DIR = "/home/nsrikant/.cache/n_only_early_and_late_olmo3/olmo_256000_unseen/ofw=0.25_pznorm=0.01"
+SAE_FOLDER = "/data/user_data/nsrikant/bbox_data/sae_outputs/sae_outputs_olmo_256000_early_and_late/n_only_early_and_late_olmo3_seed=42_ofw=0.5_psign_subset=sae_sample_by_tau_alltasks_t0.7_n1856450_N=3000_k=25_lp=None"
+CACHE_DIR = "/home/nsrikant/.cache/n_only_early_and_late_olmo3/olmo_256000_unseen/ofw=0.5_pznorm=0.01"
 
 METRIC_PREFERENCE = [
     "acc_norm,none", "acc,none",
@@ -91,6 +91,67 @@ def load_task_curve(task, eval_dir, ckpt_names):
         val = results.get(result_key, {}).get(metric_used)
         perf.append(float(val) if val is not None else None)
     return perf, metric_used
+
+
+def build_families(task_z, threshold, metric="euclid"):
+    """Group task curves into families by curve SHAPE, then return each family's SHARED
+    curve. Tasks with the same trajectory shape can't earn separate features, so the
+    family — not the task — is the natural unit to rank features against.
+
+    metric:
+      'euclid' (default) — distance = mean |Δz| per checkpoint between z-curves. Respects
+        WHEN the rise happens, so early-risers and late-risers land in different families.
+        This is the shape-correct default; cut at `threshold` (raw mean|Δz|, e.g. 0.6).
+      'jump' — distance between unit-normalized DIFFERENCE (jump-timing) profiles; groups
+        by where the biggest gains occur. Cut at `threshold` (e.g. 0.9).
+      'tau' — 1 - Kendall tau of the orderings. WARNING: tau only checks rank agreement,
+        and since nearly every task curve is monotone-ish it saturates and OVER-MERGES
+        early- and late-risers into one family. Kept for comparison; `threshold` is the
+        min within-family tau (e.g. 0.75) -> cut distance 1-threshold.
+
+    Family curve = mean of members' z-curves, re-z-normed. Returns (fam_z, fam_members),
+    families ordered by size desc, keyed 'family1', 'family2', ... All surviving task
+    curves span the full checkpoint set, so members share one idx set."""
+    from scipy.cluster.hierarchy import linkage, fcluster
+    from scipy.spatial.distance import squareform, pdist
+    names = sorted(task_z)
+    n = len(names)
+    Z = np.vstack([np.asarray(task_z[t][1], float) for t in names])
+    if metric == "tau":
+        tau = np.eye(n)
+        for i in range(n):
+            for j in range(i + 1, n):
+                tau[i, j] = tau[j, i] = _kendall(Z[i], Z[j])
+        D = np.clip(1 - tau, 0, None)
+        cut = 1 - threshold
+    elif metric == "jump":
+        Zd = np.diff(Z, axis=1)
+        Zd = Zd / (np.linalg.norm(Zd, axis=1, keepdims=True) + 1e-9)
+        D = squareform(pdist(Zd, metric="euclidean"))
+        cut = threshold
+    else:  # 'euclid' — mean |Δz| per checkpoint
+        D = squareform(pdist(Z, metric="euclidean")) / np.sqrt(Z.shape[1])
+        cut = threshold
+    np.fill_diagonal(D, 0)
+    if n == 1:
+        labels = np.array([1])
+    else:
+        L = linkage(squareform(D, checks=False), method="average")
+        labels = fcluster(L, t=cut, criterion="distance")
+    groups = {}
+    for t, c in zip(names, labels):
+        groups.setdefault(c, []).append(t)
+    fam_z, fam_members = {}, {}
+    for rank, c in enumerate(sorted(groups, key=lambda c: -len(groups[c])), 1):
+        members = groups[c]
+        idxs = task_z[members[0]][0]
+        z = z_full(np.mean([task_z[m][1] for m in members], axis=0))
+        if z is None:
+            continue
+        key = f"family{rank}"
+        fam_z[key] = (list(idxs), z)
+        fam_members[key] = members
+    return fam_z, fam_members
 
 
 def znorm(values):
@@ -184,6 +245,62 @@ def z_full(vec):
     return None if sd < 1e-9 else (v - v.mean()) / sd
 
 
+def _pearson(a, b):
+    """Pearson correlation; NaN if either input is (near-)constant."""
+    a = np.asarray(a, dtype=float); b = np.asarray(b, dtype=float)
+    a = a - a.mean(); b = b - b.mean()
+    den = np.sqrt((a * a).sum()) * np.sqrt((b * b).sum())
+    return float((a * b).sum() / den) if den > 1e-12 else float("nan")
+
+
+def _pearson_rows(rows, tv):
+    """Pearson of each row of `rows` (n,k) with `tv` (k,). Returns (n,); NaN for
+    (near-)constant rows."""
+    r = np.asarray(rows, float); t = np.asarray(tv, float)
+    r = r - r.mean(axis=1, keepdims=True); t = t - t.mean()
+    num = (r * t).sum(axis=1)
+    den = np.sqrt((r * r).sum(axis=1)) * np.sqrt((t * t).sum())
+    out = np.full(r.shape[0], np.nan)
+    ok = den > 1e-12
+    out[ok] = num[ok] / den[ok]
+    return out
+
+
+def _kendall(a, b):
+    """Kendall tau-b between two curves via pairwise sign agreement. Depends only on
+    the ranking of the checkpoints, so it is invariant to the per-curve z-norm and,
+    unlike Pearson, does not saturate near 1 on short monotone-ish trajectories. NaN
+    if either side has no resolvable (non-tied) pairs."""
+    a = np.asarray(a, float); b = np.asarray(b, float)
+    k = len(a)
+    if k < 2:
+        return float("nan")
+    iu, ju = np.triu_indices(k, k=1)
+    sa = np.sign(a[ju] - a[iu]); sb = np.sign(b[ju] - b[iu])
+    nx = (sa != 0).sum(); ny = (sb != 0).sum()
+    if nx == 0 or ny == 0:
+        return float("nan")
+    return float((sa * sb).sum() / np.sqrt(nx * ny))
+
+
+def _kendall_rows(rows, tv):
+    """Kendall tau-b of each row of `rows` (n,k) with `tv` (k,). Returns (n,); NaN for
+    rows with no resolvable pairs."""
+    r = np.asarray(rows, float); t = np.asarray(tv, float)
+    k = r.shape[1]
+    if k < 2:
+        return np.full(r.shape[0], np.nan)
+    iu, ju = np.triu_indices(k, k=1)
+    sr = np.sign(r[:, ju] - r[:, iu])            # (n, npairs)
+    st = np.sign(t[ju] - t[iu])                  # (npairs,)
+    ny = (st != 0).sum()
+    nx = (sr != 0).sum(axis=1).astype(float)     # (n,)
+    out = np.full(r.shape[0], np.nan)
+    ok = (nx > 0) & (ny > 0)
+    out[ok] = (sr[ok] @ st) / np.sqrt(nx[ok] * ny)
+    return out
+
+
 # -----------------------------------------------------------------------------
 # Area metric (vectorized over a feature's samples)
 # -----------------------------------------------------------------------------
@@ -196,19 +313,73 @@ def _areas(rows, tvals):
     return np.mean(np.abs(rows - tvals), axis=1)
 
 
-def score_against_task(S, task_z, ckpt_names, diff):
+def score_against_task(S, task_z, ckpt_names, diff, acts=None, act_top_k=0):
     """S: (n_samples, n_ckpts) z-curves. Returns dict of the four scalars +
-    per-sample positive areas (for sorting samples in the view)."""
+    per-sample positive areas (for sorting samples in the view).
+
+    If act_top_k>0 and acts given, restrict to the act_top_k strongest-activating
+    samples BEFORE scoring, so the median-based metrics (area_of_med, med_of_area)
+    reflect the feature's canonical members instead of being diluted by the weakly-
+    activating tail of the top-50."""
+    if act_top_k and acts is not None and 0 < act_top_k < S.shape[0]:
+        keep = np.argsort(-np.asarray(acts, dtype=float))[:act_top_k]
+        S = S[keep]
     idxs, tvals = task_z
     if not idxs or max(idxs) >= S.shape[1]:
         nan = float("nan")
         return {"med_of_area_pos": nan, "med_of_area_neg": nan,
                 "area_of_med_pos": nan, "area_of_med_neg": nan,
                 "best_of_area_pos": nan, "best_of_area_neg": nan,
+                "pearson_pos": nan, "pearson_neg": nan,
+                "diff_pearson_pos": nan, "diff_pearson_neg": nan,
+                "med_of_pearson_pos": nan, "med_of_pearson_neg": nan,
+                "med_of_diff_pearson_pos": nan, "med_of_diff_pearson_neg": nan,
+                "best_of_pearson_pos": nan, "best_of_pearson_neg": nan,
+                "best_of_diff_pearson_pos": nan, "best_of_diff_pearson_neg": nan,
+                "kendall_pos": nan, "kendall_neg": nan,
+                "med_of_kendall_pos": nan, "med_of_kendall_neg": nan,
+                "best_of_kendall_pos": nan, "best_of_kendall_neg": nan,
                 "per_sample_pos": np.full(S.shape[0], nan),
                 "per_sample_neg": np.full(S.shape[0], nan)}
     sub = S[:, np.array(idxs, dtype=int)]
     tv = np.asarray(tvals, dtype=float)
+
+    # Pearson-correlation metrics on the feature's median curve vs the task curve
+    # (computed on the RAW z-curves, independent of --diff). Stored signed: the pos
+    # column ranks by highest corr, the neg column by most anti-correlated. diff_pearson
+    # correlates the consecutive-difference (jump-shape) curves instead of the levels.
+    med_raw = np.median(sub, axis=0)
+    pear = _pearson(med_raw, tv)
+    dpear = _pearson(np.diff(med_raw), np.diff(tv)) if len(tv) >= 3 else float("nan")
+    # Per-sample correlations -> med_of_pearson (median = consistency) and
+    # best_of_pearson (max = the single best-correlated sample, corr analog of
+    # best_of_area). neg column uses the most anti-correlated sample.
+    _psr = _pearson_rows(sub, tv)
+    _has = bool(np.isfinite(_psr).any())
+    med_pear = float(np.nanmedian(_psr)) if _has else float("nan")
+    best_pear_pos = float(np.nanmax(_psr)) if _has else float("nan")
+    best_pear_neg = float(-np.nanmin(_psr)) if _has else float("nan")
+    if len(tv) >= 3:
+        _psrd = _pearson_rows(np.diff(sub, axis=1), np.diff(tv))
+        _hasd = bool(np.isfinite(_psrd).any())
+        med_dpear = float(np.nanmedian(_psrd)) if _hasd else float("nan")
+        best_dpear_pos = float(np.nanmax(_psrd)) if _hasd else float("nan")
+        best_dpear_neg = float(-np.nanmin(_psrd)) if _hasd else float("nan")
+    else:
+        med_dpear = best_dpear_pos = best_dpear_neg = float("nan")
+
+    # Kendall tau (rank-agreement) analogs of the pearson metrics, on the RAW z-curves.
+    # kendall: tau of the feature's median curve vs the task curve. med_of_kendall:
+    # median over samples of each sample's own tau (consistency). best_of_kendall: the
+    # single best-matching sample. Rank-based, so no saturation on short monotone curves
+    # and consistent with the SAE's pairwise-sign grouping.
+    kend = _kendall(med_raw, tv)
+    _ksr = _kendall_rows(sub, tv)
+    _hask = bool(np.isfinite(_ksr).any())
+    med_kend = float(np.nanmedian(_ksr)) if _hask else float("nan")
+    best_kend_pos = float(np.nanmax(_ksr)) if _hask else float("nan")
+    best_kend_neg = float(-np.nanmin(_ksr)) if _hask else float("nan")
+
     if diff:
         sub, tv = np.diff(sub, axis=1), np.diff(tv)
         # Renormalize the differenced task curve to unit variance too, so the
@@ -241,6 +412,18 @@ def score_against_task(S, task_z, ckpt_names, diff):
         # best single sample: the feature's closest-matching individual curve
         "best_of_area_pos": float(np.min(ps_pos)),
         "best_of_area_neg": float(np.min(ps_neg)),
+        # correlation of the median curve with the task curve (signed; higher=better)
+        "pearson_pos": pear, "pearson_neg": -pear,
+        "diff_pearson_pos": dpear, "diff_pearson_neg": -dpear,
+        "med_of_pearson_pos": med_pear, "med_of_pearson_neg": -med_pear,
+        "med_of_diff_pearson_pos": med_dpear, "med_of_diff_pearson_neg": -med_dpear,
+        "best_of_pearson_pos": best_pear_pos, "best_of_pearson_neg": best_pear_neg,
+        "best_of_diff_pearson_pos": best_dpear_pos,
+        "best_of_diff_pearson_neg": best_dpear_neg,
+        # Kendall tau (rank agreement); signed, higher=better
+        "kendall_pos": kend, "kendall_neg": -kend,
+        "med_of_kendall_pos": med_kend, "med_of_kendall_neg": -med_kend,
+        "best_of_kendall_pos": best_kend_pos, "best_of_kendall_neg": best_kend_neg,
         "per_sample_pos": ps_pos,
         "per_sample_neg": ps_neg,
     }
@@ -374,13 +557,53 @@ def main():
     ap.add_argument("--column-prefix", default=COLUMN_PREFIX)
     ap.add_argument("--tasks", nargs="+", default=None,
                     help="Eval task subfolder names. Default: auto-discover all.")
+    ap.add_argument("--family-tau", type=float, default=None,
+                    help="If set, turn on FAMILY mode: group tasks by curve shape and rank "
+                         "features against each family's SHARED curve instead of per task. "
+                         "Value is the clustering cut threshold, interpreted per "
+                         "--family-metric (euclid: max mean|Δz|, e.g. 0.6; tau: min "
+                         "within-family tau, e.g. 0.75; jump: max profile dist, e.g. 0.9).")
+    ap.add_argument("--family-metric", default="euclid",
+                    choices=["euclid", "jump", "tau"],
+                    help="Distance for grouping task curves into families. "
+                         "euclid (default): mean |Δz| per checkpoint — sees WHEN the rise "
+                         "happens, so early- and late-risers separate (the shape-correct "
+                         "choice). jump: unit difference-profile distance (groups by where "
+                         "gains occur). tau: 1-Kendall — WARNING, saturates on monotone "
+                         "curves and OVER-MERGES early+late risers; comparison only.")
+    ap.add_argument("--contrast", action="store_true", default=False,
+                    help="Family mode only: rank each family by DISCRIMINATIVE fit — "
+                         "score(feat,fam_k) minus the best score against any other family "
+                         "— so shape-generic features (that match every family) drop out "
+                         "and only family-specific shapes survive. Needs a higher=better "
+                         "--rank-by (kendall/pearson variants).")
     ap.add_argument("--rank-by", default="best_of_area",
-                    choices=["best_of_area", "area_of_med", "med_of_area"],
-                    help="Which metric ranks features per task. Default "
-                         "best_of_area: the feature's single closest-matching "
-                         "sample curve.")
+                    choices=["best_of_area", "area_of_med", "med_of_area",
+                             "pearson", "diff_pearson",
+                             "med_of_pearson", "med_of_diff_pearson",
+                             "best_of_pearson", "best_of_diff_pearson",
+                             "kendall", "med_of_kendall", "best_of_kendall"],
+                    help="Which metric ranks features per task. area/best: lower=better. "
+                         "pearson: corr of the feature's MEDIAN curve with the task curve. "
+                         "med_of_pearson: median over samples of each sample's own corr "
+                         "with the task (consistency). diff_ variants use jump-shape "
+                         "(consecutive-difference) curves. corr metrics: higher=better. "
+                         "kendall/med_of_kendall/best_of_kendall: rank-agreement (tau-b) "
+                         "analogs of the pearson trio; rank-based so no saturation on "
+                         "short monotone curves, and consistent with the pairwise-sign "
+                         "SAE grouping. higher=better.")
     ap.add_argument("--diff", action="store_true", default=False,
                     help="First-difference z-curves before integrating.")
+    ap.add_argument("--show-negative", action="store_true", default=False,
+                    help="Also render the anti-aligned (negative) column. Off by "
+                         "default — only the curve-aligned features are shown.")
+    ap.add_argument("--act-top-k", type=int, default=0,
+                    help="If >0, score each feature using only its N strongest-activating "
+                         "samples (median-based metrics reflect canonical members, not the "
+                         "weakly-activating tail). 0 = use all top-50.")
+    ap.add_argument("--min-samples", type=int, default=50,
+                    help="Drop features with fewer than this many activating samples "
+                         "(rare/weak features). Default 50; set 0 to keep all.")
     ap.add_argument("--top-n", type=int, default=25, help="Top features per column.")
     ap.add_argument("--max-samples", type=int, default=30,
                     help="Samples listed in the table per feature.")
@@ -406,6 +629,11 @@ def main():
         if tz is None:
             print(f"  [skip] {t}: no usable curve")
             continue
+        # Require every checkpoint valid; drop the task otherwise.
+        n_valid, n_total = len(tz[0]), len(perf)
+        if n_valid < n_total:
+            print(f"  [skip] {t}: only {n_valid}/{n_total} valid")
+            continue
         task_z[t] = tz
         task_perf_raw[t] = perf
         task_metric[t] = metric
@@ -413,6 +641,20 @@ def main():
     if not task_z:
         raise SystemExit("No usable task curves.")
     task_names = sorted(task_z)
+
+    # Family mode: collapse tasks into shape-families and rank features against the
+    # family's shared curve. Downstream code treats each family as a virtual "task".
+    if args.family_tau is not None:
+        fam_z, fam_members = build_families(task_z, args.family_tau, args.family_metric)
+        task_z = fam_z
+        task_metric = {k: " + ".join(m) for k, m in fam_members.items()}
+        task_perf_raw = {}
+        task_names = list(fam_z)   # already size-ordered (family1 = largest)
+        print(f"\nGrouped {sum(len(m) for m in fam_members.values())} tasks into "
+              f"{len(task_names)} families (metric={args.family_metric}, "
+              f"thr={args.family_tau}):")
+        for k in task_names:
+            print(f"  {k}: {task_metric[k]}")
 
     # feature -> sample word_ids + activations
     csv_path = os.path.join(args.sae_folder, "top-50_activations.csv")
@@ -445,8 +687,12 @@ def main():
 
     # Per feature: build z-curve matrix S, raw median, sample metadata, scores.
     feats = {}
+    n_dropped_small = 0
     for i, fid in enumerate(fids, 1):
         sub = grouped[fid]
+        if args.min_samples and len(sub) < args.min_samples:
+            n_dropped_small += 1
+            continue
         S_rows, smeta = [], []
         for wid, act in zip(sub["word_id"].astype(str), sub["act_value"]):
             raw = curves.get(wid)
@@ -463,7 +709,9 @@ def main():
         if not S_rows:
             continue
         S = np.vstack(S_rows)
-        scores = {t: score_against_task(S, task_z[t], model_names, args.diff)
+        acts = np.array([m["act"] if m["act"] is not None else 0.0 for m in smeta])
+        scores = {t: score_against_task(S, task_z[t], model_names, args.diff,
+                                        acts=acts, act_top_k=args.act_top_k)
                   for t in task_names}
         feats[fid] = {
             "sample_z": S,          # (n_samples, n_ckpts) unit-var sample curves
@@ -472,7 +720,9 @@ def main():
         }
         if i % 500 == 0:
             print(f"  {i}/{len(fids)}")
-    print(f"Scored {len(feats)} features")
+    print(f"Scored {len(feats)} features"
+          + (f" (dropped {n_dropped_small} with <{args.min_samples} samples)"
+             if args.min_samples else ""))
 
     # Full-length z-normalized task curves for plotting (None where missing).
     def task_z_full(t):
@@ -507,11 +757,43 @@ def main():
     for t in task_names:
         def column(sign, color, label):
             key = f"{args.rank_by}_{sign}"
-            ranked = sorted(
-                ((fid, fd["scores"][t][key]) for fid, fd in feats.items()
-                 if fd["scores"][t][key] == fd["scores"][t][key]
-                 and desc_of.get(fid, "").strip()),
-                key=lambda x: x[1])[:args.top_n]
+            # correlation metrics: higher is better -> sort descending; area/best: ascending
+            higher_better = args.rank_by in ("pearson", "diff_pearson",
+                                             "med_of_pearson", "med_of_diff_pearson",
+                                             "best_of_pearson",
+                                             "best_of_diff_pearson",
+                                             "kendall", "med_of_kendall",
+                                             "best_of_kendall")
+            mult = -1.0 if higher_better else 1.0
+            contrast_of = {}
+            if args.contrast and args.family_tau is not None and len(task_names) > 1:
+                # discriminative fit: this family's score minus the best score the same
+                # feature earns against ANY other family. Shape-generic features match
+                # every family, so their contrast collapses toward 0 and they drop out;
+                # a family-specific shape stays high. Uses the same key as --rank-by.
+                cand = []
+                for fid, fd in feats.items():
+                    if not desc_of.get(fid, "").strip():
+                        continue
+                    v = fd["scores"][t][key]
+                    if v != v:
+                        continue
+                    others = [fd["scores"][tt][key] for tt in task_names if tt != t]
+                    others = [o for o in others if o == o]
+                    if not others:
+                        c = v
+                    else:
+                        c = (v - max(others)) if higher_better else (min(others) - v)
+                    contrast_of[fid] = c
+                    cand.append((fid, v, c))
+                ranked = [(fid, v) for fid, v, _ in
+                          sorted(cand, key=lambda x: -x[2])[:args.top_n]]
+            else:
+                ranked = sorted(
+                    ((fid, fd["scores"][t][key]) for fid, fd in feats.items()
+                     if fd["scores"][t][key] == fd["scores"][t][key]
+                     and desc_of.get(fid, "").strip()),
+                    key=lambda x: mult * x[1])[:args.top_n]
             blocks = []
             for fid, score in ranked:
                 fd = feats[fid]
@@ -540,7 +822,16 @@ def main():
                     f"<span class='metric'>best_sample={sc['best_of_area_'+sign]:.4f}</span>"
                     f"<span class='metric'>area_of_med={sc['area_of_med_'+sign]:.4f}</span>"
                     f"<span class='metric'>med_of_area={sc['med_of_area_'+sign]:.4f}</span>"
-                    f"<span class='metric'>n={len(fd['samples'])}</span>")
+                    f"<span class='metric'>pearson={sc['pearson_'+sign]:+.3f}</span>"
+                    f"<span class='metric'>Δpearson={sc['diff_pearson_'+sign]:+.3f}</span>"
+                    f"<span class='metric'>medP={sc['med_of_pearson_'+sign]:+.3f}</span>"
+                    f"<span class='metric'>ΔmedP={sc['med_of_diff_pearson_'+sign]:+.3f}</span>"
+                    f"<span class='metric'>τ={sc['kendall_'+sign]:+.3f}</span>"
+                    f"<span class='metric'>medτ={sc['med_of_kendall_'+sign]:+.3f}</span>"
+                    f"<span class='metric'>bestτ={sc['best_of_kendall_'+sign]:+.3f}</span>"
+                    + (f"<span class='metric'>contrast={contrast_of[fid]:+.3f}</span>"
+                       if fid in contrast_of else "")
+                    + f"<span class='metric'>n={len(fd['samples'])}</span>")
                 blocks.append(render_feature_block(
                     fid, desc_of.get(fid, ""), metrics, p, render_samples_table(shown)))
             if not blocks:
@@ -548,18 +839,20 @@ def main():
             return (f"<div class='col'><h4>{label} <small>({len(ranked)})</small></h4>"
                     f"{''.join(blocks)}</div>")
 
-        header = (f"<h3>{esc(t)} <small>metric={esc(task_metric[t])}</small></h3>"
+        _lbl = "members" if args.family_tau is not None else "metric"
+        header = (f"<h3>{esc(t)} <small>{_lbl}={esc(task_metric[t])}</small></h3>"
                   f"<p class='counts'>ranked by {esc(args.rank_by)} "
                   f"({'differenced' if args.diff else 'raw'} z-curves) · "
                   f"showing top {args.top_n} each</p>")
+        cols = column('pos', '#1976d2', 'Positive (curve-aligned)')
+        if args.show_negative:
+            cols += column('neg', '#c62828', 'Negative (anti-aligned)')
         sections.append(
-            f"<section class='task-row'>{header}<div class='feat-cols'>"
-            f"{column('pos', '#1976d2', 'Positive (curve-aligned)')}"
-            f"{column('neg', '#c62828', 'Negative (anti-aligned)')}"
-            f"</div></section>")
+            f"<section class='task-row'>{header}<div class='feat-cols'>{cols}</div></section>")
 
     summary = (f"{len(task_names)} tasks · {len(feats)} features · "
-               f"rank-by {args.rank_by} · top-{args.top_n} per side")
+               f"rank-by {args.rank_by} · top-{args.top_n}"
+               f"{' per side' if args.show_negative else ' (positive only)'}")
     doc = f"""<!doctype html><html><head><meta charset='utf-8'>
 <title>Per-task features — sample area — {esc(Path(args.sae_folder).name)}</title>
 <script src='https://cdn.plot.ly/plotly-2.27.0.min.js'></script>

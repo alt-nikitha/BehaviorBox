@@ -1,0 +1,24 @@
+#!/bin/bash
+#SBATCH --job-name=fam0_only_pca_groups
+#SBATCH --output=./slurm-out/analysis/fam0_only_pca_groups_%j.out
+#SBATCH --nodes=1
+#SBATCH --mem=60GB
+#SBATCH --cpus-per-task=32
+#SBATCH --time=0:30:00
+#SBATCH --partition=cpu
+
+set -a
+source scripts/env_configs/.env
+set +a
+
+# Activate environment
+source ${MINICONDA_PATH}
+conda activate ${ENV_NAME}
+
+echo "Running on node: $HOSTNAME"
+
+cd analysis
+python fam0_only_pca_groups.py \
+    --min-r 0.85 --max-l1 0.3 --per-family 548236 \
+    --exclude-family 3 --target-family 0 \
+    --n-easy 5000 --n-pcs 6 --n-bins 5 --per-bin 8

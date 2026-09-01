@@ -180,10 +180,17 @@ def preprocess_data(
     normalize_per_part: bool = False,
     znorm_prob_per_sample: bool = False,
     znorm_prob_eps: float = 1e-2,
+    pairwise_sign: bool = False,
     norm_stats_out: dict = None,
 ) -> da.Array:
     if use_delta_prob and use_delta_logprob:
         raise ValueError("use_delta_prob and use_delta_logprob are mutually exclusive")
+    if pairwise_sign and znorm_prob_per_sample:
+        raise ValueError(
+            "pairwise_sign and znorm_prob_per_sample are mutually exclusive: the sign "
+            "encoding is already scale-free, and z-norming it would destroy the +/-1 "
+            "structure that makes L2 distance equal to Kendall tau"
+        )
     def block_to_probs(block, input_feature_dim):
         block[:, input_feature_dim:] = np.exp(block[:, input_feature_dim:])
         return block
@@ -260,6 +267,41 @@ def preprocess_data(
         deltas = vals[:, :-1] - vals[:, 1:]
         data = da.concatenate([embed, deltas], axis=1)
         data = data.rechunk({0: data.chunks[0], 1: -1})
+
+    if pairwise_sign:
+        # Replace the C-checkpoint trajectory with the signs of all C*(C-1)/2 pairwise
+        # differences: s_ij = sign(p_j - p_i) for i<j, in {-1, 0, +1} (0 on ties).
+        #
+        # For two tokens a, b this makes the dot product exactly the Kendall numerator:
+        #   a . b = #concordant - #discordant = n_pairs * tau_ab
+        #   ||a - b||^2 = 2 * n_pairs * (1 - tau_ab)
+        # so Euclidean distance is strictly monotone in tau, and every L2-based part of
+        # the pipeline (SAE reconstruction MSE, KMeans stratification) groups tokens by
+        # rank agreement instead of by curve values. Unlike Pearson r on the raw curves
+        # -- which saturates near 0.95 for almost any pair of 11-point trajectories --
+        # tau has real dynamic range and an exact permutation null.
+        #
+        # Note this widens the output block from C to C*(C-1)/2 (11 -> 55), which the
+        # caller must reflect in output_feature_dim. The ofw scaling downstream measures
+        # the block norm empirically, so it rebalances on its own.
+        print("Encoding trajectory as pairwise checkpoint signs", flush=True)
+        data = data.rechunk({0: data.chunks[0], 1: -1})
+        n_ckpt = data.shape[1] - input_feature_dim
+        iu, ju = np.triu_indices(n_ckpt, k=1)
+
+        def pairwise_sign_block(block, input_feature_dim, iu, ju):
+            block = block.astype(np.float32)
+            prob = block[:, input_feature_dim:]
+            signs = np.sign(prob[:, ju] - prob[:, iu])
+            return np.concatenate(
+                [block[:, :input_feature_dim], signs], axis=1
+            ).astype(np.float16)
+
+        data = data.map_blocks(
+            pairwise_sign_block, input_feature_dim, iu, ju,
+            dtype=np.float16,
+            chunks=(data.chunks[0], (input_feature_dim + len(iu),)),
+        )
 
     if znorm_prob_per_sample:
         # Per-sample z-norm of the prob block ACROSS CHECKPOINTS: each token's prob

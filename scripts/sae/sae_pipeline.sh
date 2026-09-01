@@ -58,10 +58,12 @@ freq_smoothing=1.0
 freq_power=1.0
 normalize_per_part=False
 znorm_prob_per_sample=False
+pairwise_sign=False
 znorm_prob_eps=""
 early_stopping_patience=""
 early_stopping_min_delta=""
 anneal_anchor=""
+no_anneal_k=False
 output_dim_loss_weight=""
 checkpoint_weight_scheme=""
 variance_filter_top_pct=""
@@ -136,6 +138,10 @@ while [[ $# -gt 0 ]]; do
       znorm_prob_per_sample=True
       shift
       ;;
+    --pairwise_sign)
+      pairwise_sign=True
+      shift
+      ;;
     --znorm_prob_eps=*)
       znorm_prob_eps="${1#*=}"
       shift
@@ -150,6 +156,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --anneal_anchor=*)
       anneal_anchor="${1#*=}"
+      shift
+      ;;
+    --no_anneal_k)
+      no_anneal_k=True
       shift
       ;;
     --output_dim_loss_weight=*)
@@ -305,6 +315,9 @@ fi
 if [ -n "$anneal_anchor" ]; then
     train_extra_args+=(--anneal_anchor "$anneal_anchor")
 fi
+if [ "$no_anneal_k" = "True" ]; then
+    train_extra_args+=(--no_anneal_k)
+fi
 if [ -n "$output_dim_loss_weight" ]; then
     train_extra_args+=(--output_dim_loss_weight "$output_dim_loss_weight")
 fi
@@ -366,6 +379,7 @@ python train_sae.py \
     --freq_weight_power $freq_power \
     --normalize_per_part $normalize_per_part \
     --znorm_prob_per_sample $znorm_prob_per_sample \
+    --pairwise_sign $pairwise_sign \
     "${train_extra_args[@]}"
 
 if [ $? -ne 0 ]; then
@@ -378,6 +392,9 @@ fi
 echo "Training complete. Running eval."
 
 eval_extra_args=()
+if [ "$no_anneal_k" = "True" ]; then
+    eval_extra_args+=(--no_anneal_k)
+fi
 if [ -n "$znorm_prob_eps" ]; then
     eval_extra_args+=(--znorm_prob_eps "$znorm_prob_eps")
 fi
@@ -419,6 +436,7 @@ python eval_sae.py \
     --decoder_ortho_loss_weight $decoder_ortho_loss_weight \
     --normalize_per_part $normalize_per_part \
     --znorm_prob_per_sample $znorm_prob_per_sample \
+    --pairwise_sign $pairwise_sign \
     --save_activations True \
     "${eval_extra_args[@]}"
 

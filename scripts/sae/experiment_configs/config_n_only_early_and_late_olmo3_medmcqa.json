@@ -26,5 +26,5 @@
     "dict_size": 3000,
     "only_probs": false,
     "device": "cuda",
-    "train_word_id_subset": "/home/nsrikant/BehaviorBoxNew/analysis/sae_sample_by_family_blimp_n3000000.jsonl"
+    "train_word_id_subset": "/home/nsrikant/BehaviorBoxNew/analysis/sae_sample_by_family_medmcqa_n3000000.jsonl"
 }

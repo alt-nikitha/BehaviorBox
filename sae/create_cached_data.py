@@ -27,6 +27,7 @@ def cache_data_per_dir(
     normalize_per_part: bool = False,
     znorm_prob_per_sample: bool = False,
     znorm_prob_eps: float = 1e-2,
+    pairwise_sign: bool = False,
 ) -> str:
     if use_delta_prob and use_delta_logprob:
         raise ValueError("use_delta_prob and use_delta_logprob are mutually exclusive")
@@ -43,6 +44,8 @@ def cache_data_per_dir(
         cache_subdir = f"{cache_subdir}_znorm"
     if znorm_prob_per_sample:
         cache_subdir = f"{cache_subdir}_pznorm={znorm_prob_eps}"
+    if pairwise_sign:
+        cache_subdir = f"{cache_subdir}_psign"
     cache_data_dir = os.path.join(cache_dir, cache_subdir)
     if not os.path.exists(cache_data_dir):
         os.makedirs(cache_data_dir)
@@ -94,6 +97,15 @@ def cache_data_per_dir(
     print("preprocessing data...", flush=True)
     is_delta = use_delta_prob or use_delta_logprob
     output_feature_dim = len(model_names) - 1 if is_delta else len(model_names)
+    if pairwise_sign:
+        # the trajectory block becomes one dim per checkpoint PAIR, not per checkpoint
+        n_ckpt = output_feature_dim
+        output_feature_dim = n_ckpt * (n_ckpt - 1) // 2
+        print(
+            f"pairwise_sign: output block {n_ckpt} checkpoints -> "
+            f"{output_feature_dim} pairwise signs",
+            flush=True,
+        )
     norm_stats = {} if normalize_per_part else None
     data_array = preprocess_data(
         data_df=dataframe,
@@ -105,6 +117,7 @@ def cache_data_per_dir(
         normalize_per_part=normalize_per_part,
         znorm_prob_per_sample=znorm_prob_per_sample,
         znorm_prob_eps=znorm_prob_eps,
+        pairwise_sign=pairwise_sign,
         norm_stats_out=norm_stats,
     )
     

@@ -274,6 +274,19 @@ def get_eval_metrics_and_topk_feature_acts(
     default=False,
 )
 @click.option(
+    "--pairwise_sign",
+    help="Pairwise checkpoint-sign encoding used at training time (must match for SAE "
+         "folder lookup and cache path).",
+    type=bool,
+    default=False,
+)
+@click.option(
+    "--anneal_k/--no_anneal_k",
+    help="Must match training: --no_anneal_k adds the _nok suffix to the SAE dir name "
+         "for folder lookup.",
+    default=True,
+)
+@click.option(
     "--znorm_prob_eps",
     help="Std floor for --znorm_prob_per_sample used at training time (must match for SAE folder lookup).",
     type=float,
@@ -378,6 +391,8 @@ def main(
     normalize_per_part: bool = False,
     znorm_prob_per_sample: bool = False,
     znorm_prob_eps: float = 1e-2,
+    pairwise_sign: bool = False,
+    anneal_k: bool = True,
     output_dim_loss_weight: str = None,
     checkpoint_weight_scheme: str = "uniform",
     variance_filter_top_pct: float = None,
@@ -404,6 +419,8 @@ def main(
         normalize_per_part = args_dict.get("normalize_per_part", normalize_per_part)
         znorm_prob_per_sample = args_dict.get("znorm_prob_per_sample", znorm_prob_per_sample)
         znorm_prob_eps = args_dict.get("znorm_prob_eps", znorm_prob_eps)
+        pairwise_sign = args_dict.get("pairwise_sign", pairwise_sign)
+        anneal_k = args_dict.get("anneal_k", anneal_k)
         output_dim_loss_weight = args_dict.get("output_dim_loss_weight", output_dim_loss_weight)
         checkpoint_weight_scheme = args_dict.get("checkpoint_weight_scheme", checkpoint_weight_scheme)
         variance_filter_top_pct = args_dict.get("variance_filter_top_pct", variance_filter_top_pct)
@@ -420,6 +437,10 @@ def main(
             orig_cfg = get_config(config_path)
             if base_sae_dir is None:
                 sae_name_prefix = f"{model_string}_seed={seed}_ofw={ofw}"
+                if pairwise_sign:
+                    sae_name_prefix = f"{sae_name_prefix}_psign"
+                if not anneal_k:
+                    sae_name_prefix = f"{sae_name_prefix}_nok"
                 if use_delta_prob:
                     sae_name_prefix = f"{sae_name_prefix}_delta"
                 elif use_delta_logprob:
@@ -443,6 +464,7 @@ def main(
                 orig_cfg["normalize_per_part"] = normalize_per_part
                 orig_cfg["znorm_prob_per_sample"] = znorm_prob_per_sample
                 orig_cfg["znorm_prob_eps"] = znorm_prob_eps
+                orig_cfg["pairwise_sign"] = pairwise_sign
                 if output_dim_loss_weight is None or (isinstance(output_dim_loss_weight, str) and output_dim_loss_weight.lower() in ("none", "")):
                     orig_cfg["output_dim_loss_weight"] = None
                 elif isinstance(output_dim_loss_weight, str) and output_dim_loss_weight.lower() == "auto":
@@ -496,6 +518,8 @@ def main(
         cache_subdir = f"{cache_subdir}_znorm"
     if znorm_prob_per_sample:
         cache_subdir = f"{cache_subdir}_pznorm={znorm_prob_eps}"
+    if base_cfg.get("pairwise_sign", pairwise_sign):
+        cache_subdir = f"{cache_subdir}_psign"
     print("Loading data...", flush=True)
     data_dir_names = [os.path.basename(d) for d in data_dirs]
     cached_dataset_dirs = [f"{cache_dir}/{model_string}/{os.path.basename(d)}" for d in data_dir_names]
